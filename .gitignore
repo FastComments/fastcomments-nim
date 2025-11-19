@@ -1,0 +1,24 @@
+# Nim build artifacts
+nimcache/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+tests/test_sso
+tests/test_sso_integration
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+
+# OpenAPI Generator metadata
+.openapi-generator/
+.openapi-generator-ignore
