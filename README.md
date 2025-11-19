@@ -35,24 +35,35 @@ that can be made directly from a browser/mobile device/etc without authenticatio
 
 ### Using Authenticated APIs (DefaultAPI)
 
-**Important:**
-1. You must set your API key as a header on the HttpClient before making authenticated requests. If you don't, requests will fail with a 401 error.
+**Important:** Authenticated endpoints require your API key to be set as the `x-api-key` header.
 
 ```nim
 import httpclient
 import fastcomments
 import fastcomments/apis/api_default
 import fastcomments/models/model_comment_data
-import config
 
 let client = newHttpClient()
-client.headers["User-Agent"] = config.useragent
-client.headers["api_key"] = "YOUR_API_KEY_HERE"
+client.headers["x-api-key"] = "your-api-key"
 
-# Now make authenticated API calls
-let (response, httpResponse) = client.getComments(
-  "your-tenant-id",
-  0, 0, 0, false, 0, 0, 0, "your-url-id", "", "", "", "", "", SortDirections.DESC
+# Make authenticated API calls
+let (response, httpResponse) = getComments(
+  httpClient = client,
+  tenantId = "your-tenant-id",
+  page = 0,
+  limit = 0,
+  skip = 0,
+  asTree = false,
+  skipChildren = 0,
+  limitChildren = 0,
+  maxTreeDepth = 0,
+  urlId = "your-url-id",
+  userId = "",
+  anonUserId = "",
+  contextUserId = "",
+  hashTag = "",
+  parentId = "",
+  direction = SortDirections.DESC
 )
 
 if response.isSome:
@@ -69,17 +80,40 @@ Public endpoints don't require authentication:
 import httpclient
 import fastcomments
 import fastcomments/apis/api_public
-import config
 
 let client = newHttpClient()
-client.headers["User-Agent"] = config.useragent
 
 # Make public API calls
-let (response, httpResponse) = client.getCommentsPublic(
-  "your-tenant-id",
-  "your-url-id",
-  0, SortDirections.DESC, "", 0, 0, 0, 0, false, "", false, false, false, "",
-  "", false, false, false, 0, false, "", "", @[], "", "", "", ""
+let (response, httpResponse) = getCommentsPublic(
+  httpClient = client,
+  tenantId = "your-tenant-id",
+  urlId = "your-url-id",
+  page = 0,
+  direction = SortDirections.DESC,
+  sso = "",
+  skip = 0,
+  skipChildren = 0,
+  limit = 0,
+  limitChildren = 0,
+  countChildren = false,
+  fetchPageForCommentId = "",
+  includeConfig = false,
+  countAll = false,
+  includei10n = false,
+  locale = "",
+  modules = "",
+  isCrawler = false,
+  includeNotificationCount = false,
+  asTree = false,
+  maxTreeDepth = 0,
+  useFullTranslationIds = false,
+  parentId = "",
+  searchText = "",
+  hashTags = @[],
+  userId = "",
+  customConfigStr = "",
+  afterCommentId = "",
+  beforeCommentId = ""
 )
 
 if response.isSome:
@@ -90,7 +124,7 @@ if response.isSome:
 
 ### Common Issues
 
-1. **401 "missing-api-key" error**: Make sure you set `client.headers["api_key"] = "YOUR_KEY"` before making DefaultAPI requests.
+1. **401 authentication error**: Make sure you set the `x-api-key` header on your HttpClient before making DefaultAPI requests: `client.headers["x-api-key"] = "your-api-key"`
 2. **Wrong API class**: Use `api_default` for server-side authenticated requests, `api_public` for client-side/public requests.
 
 ## Making API Calls
@@ -104,15 +138,27 @@ import httpclient
 import options
 import fastcomments
 import fastcomments/apis/api_default
-import config
 
 let client = newHttpClient()
-client.headers["User-Agent"] = config.useragent
-client.headers["api_key"] = "your-api-key"
+client.headers["x-api-key"] = "your-api-key"
 
-let (response, httpResponse) = client.getComments(
-  "your-tenant-id",
-  0, 0, 0, false, 0, 0, 0, "your-url-id", "", "", "", "", "", SortDirections.DESC
+let (response, httpResponse) = getComments(
+  httpClient = client,
+  tenantId = "your-tenant-id",
+  page = 0,
+  limit = 0,
+  skip = 0,
+  asTree = false,
+  skipChildren = 0,
+  limitChildren = 0,
+  maxTreeDepth = 0,
+  urlId = "your-url-id",
+  userId = "",
+  anonUserId = "",
+  contextUserId = "",
+  hashTag = "",
+  parentId = "",
+  direction = SortDirections.DESC
 )
 
 if httpResponse.code == Http200:
@@ -140,8 +186,12 @@ For SSO examples, see below.
 ```nim
 import fastcomments/sso
 
-let user = newSimpleSSOUserData("user-123", "user@example.com", "https://example.com/avatar.jpg")
-let sso = newSimple(user)
+let user = newSimpleSSOUserData(
+  userId = "user-123",
+  email = "user@example.com",
+  avatar = "https://example.com/avatar.jpg"
+)
+let sso = newSimple(simpleUserData = user)
 let token = sso.createToken()
 
 echo "SSO Token: ", token
@@ -152,10 +202,15 @@ echo "SSO Token: ", token
 ```nim
 import fastcomments/sso
 
-let user = newSecureSSOUserData("user-123", "user@example.com", "johndoe", "https://example.com/avatar.jpg")
+let user = newSecureSSOUserData(
+  userId = "user-123",
+  email = "user@example.com",
+  username = "johndoe",
+  avatar = "https://example.com/avatar.jpg"
+)
 
 let apiKey = "your-api-key"
-let sso = newSecure(apiKey, user)
+let sso = newSecure(apiKey = apiKey, secureUserData = user)
 let token = sso.createToken()
 
 echo "Secure SSO Token: ", token

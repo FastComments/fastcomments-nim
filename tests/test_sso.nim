@@ -14,14 +14,23 @@ suite "SSO Helpers Tests":
     let timestamp = getTime().toUnix()
     let userData = "test_data_base64"
 
-    let result = createVerificationHash(API_KEY, timestamp, userData)
+    let result = createVerificationHash(
+      apiKey = API_KEY,
+      timestamp = timestamp,
+      userDataJsonBase64 = userData
+    )
 
     check result.len > 0
     check result.len == 64
 
 suite "SecureSSOUserData Tests":
   test "CreateUserData":
-    let user = newSecureSSOUserData(USER_ID, EMAIL, USERNAME, AVATAR)
+    let user = newSecureSSOUserData(
+      userId = USER_ID,
+      email = EMAIL,
+      username = USERNAME,
+      avatar = AVATAR
+    )
 
     check user.userId == USER_ID
     check user.email == EMAIL
@@ -30,7 +39,11 @@ suite "SecureSSOUserData Tests":
 
 suite "SimpleSSOUserData Tests":
   test "CreateUserData":
-    let user = newSimpleSSOUserData(USER_ID, EMAIL, AVATAR)
+    let user = newSimpleSSOUserData(
+      userId = USER_ID,
+      email = EMAIL,
+      avatar = AVATAR
+    )
 
     check user.userId == USER_ID
     check user.email == EMAIL
@@ -38,15 +51,24 @@ suite "SimpleSSOUserData Tests":
 
 suite "FastCommentsSSO Tests":
   test "CreateSecureSSO":
-    let user = newSecureSSOUserData(USER_ID, EMAIL, USERNAME, AVATAR)
-    let sso = newSecure(API_KEY, user)
+    let user = newSecureSSOUserData(
+      userId = USER_ID,
+      email = EMAIL,
+      username = USERNAME,
+      avatar = AVATAR
+    )
+    let sso = newSecure(apiKey = API_KEY, secureUserData = user)
 
     let token = sso.createToken()
     check token.len > 0
 
   test "CreateSimpleSSO":
-    let user = newSimpleSSOUserData(USER_ID, EMAIL, AVATAR)
-    let sso = newSimple(user)
+    let user = newSimpleSSOUserData(
+      userId = USER_ID,
+      email = EMAIL,
+      avatar = AVATAR
+    )
+    let sso = newSimple(simpleUserData = user)
 
     let token = sso.createToken()
     check token.len > 0
