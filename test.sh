@@ -16,7 +16,7 @@ nim c -r tests/test_sso.nim
 
 echo ""
 echo "Running integration tests..."
-nim c -r tests/test_sso_integration.nim
+nim c -d:ssl -r tests/test_sso_integration.nim
 
 echo ""
 echo "✓ All tests passed!"
