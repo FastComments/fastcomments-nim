@@ -1,11 +1,12 @@
 import unittest
-import std/[os, times, strutils, options, httpclient]
+import std/[os, times, strutils, options, httpclient, json, tables]
 import ../src/fastcomments/sso
 import ../client/fastcomments
 import ../client/fastcomments/apis/api_public
 import ../client/fastcomments/apis/api_default
 import ../client/fastcomments/models/model_comment_data
 import ../client/fastcomments/models/model_api_status
+import ../client/fastcomments/models/model_record_string_string_or_number_value
 
 proc getAPIKey(): string =
   let apiKey = getEnv("FASTCOMMENTS_API_KEY")
@@ -68,6 +69,10 @@ suite "SSO Integration Tests":
 
     check httpResponse.code == Http200
     check response.isSome
+    if response.isSome:
+      let resp = response.get()
+      check resp.status == APIStatus.SUCCESS
+      check resp.comments.isSome
 
   test "PublicAPI with secure SSO":
     let apiKey = getAPIKey()
@@ -91,6 +96,8 @@ suite "SSO Integration Tests":
     commentData.comment = "Test from Nim SDK"
     commentData.commenterName = user.username
     commentData.date = timestamp
+    commentData.meta = newJObject()
+    commentData.questionValues = initTable[string, RecordStringStringOrNumberValue]()
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -142,7 +149,8 @@ suite "SSO Integration Tests":
     check getResponse.isSome
     if getResponse.isSome:
       let resp = getResponse.get()
-      check resp.comments.len >= 1
+      check resp.comments.isSome
+      check resp.comments.get().len >= 1
 
   test "DefaultAPI with API key - Fetch Comments":
     let apiKey = getAPIKey()
@@ -169,6 +177,8 @@ suite "SSO Integration Tests":
     commentData.comment = "Test from Nim SDK at " & $timestamp
     commentData.commenterName = user.username
     commentData.date = timestamp
+    commentData.meta = newJObject()
+    commentData.questionValues = initTable[string, RecordStringStringOrNumberValue]()
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -215,8 +225,9 @@ suite "SSO Integration Tests":
     if getResponse.isSome:
       let resp = getResponse.get()
       check resp.status == APIStatus.SUCCESS
-      check resp.comments.len >= 1
-      echo "✓ Retrieved ", resp.comments.len, " comments with DefaultAPI"
+      check resp.comments.isSome
+      check resp.comments.get().len >= 1
+      echo "✓ Retrieved ", resp.comments.get().len, " comments with DefaultAPI"
       echo "✓ Successfully verified DefaultAPI authentication with API key works!"
 
     authClient.close()
@@ -246,6 +257,8 @@ suite "SSO Integration Tests":
     commentData.comment = "Test from Nim SDK at " & $timestamp
     commentData.commenterName = user.username
     commentData.date = timestamp
+    commentData.meta = newJObject()
+    commentData.questionValues = initTable[string, RecordStringStringOrNumberValue]()
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -303,15 +316,16 @@ suite "SSO Integration Tests":
       let resp = getResponse.get()
 
       # Verify no error code
-      check resp.code == ""
+      check resp.code.isNone or resp.code.get() == ""
 
       # Verify comments are present
-      check resp.comments.len >= 1
-      echo "✓ Retrieved ", resp.comments.len, " comments"
+      check resp.comments.isSome
+      check resp.comments.get().len >= 1
+      echo "✓ Retrieved ", resp.comments.get().len, " comments"
 
       # Verify we can find our comment
       var foundOurComment = false
-      for comment in resp.comments:
+      for comment in resp.comments.get():
         if comment.commentHTML != "":
           let commentText = comment.commentHTML
           if $timestamp in commentText:
