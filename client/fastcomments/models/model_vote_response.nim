@@ -32,7 +32,6 @@ func `%`*(v: Status): JsonNode =
     of Status.Success: %"success"
     of Status.Failed: %"failed"
     of Status.PendingVerification: %"pending-verification"
-
 func `$`*(v: Status): string =
   result = case v:
     of Status.Success: $("success")
@@ -53,31 +52,3 @@ proc to*(node: JsonNode, T: typedesc[Status]): Status =
   else:
     raise newException(ValueError, "Invalid enum value for Status: " & strVal)
 
-
-# Custom JSON deserialization for VoteResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[VoteResponse]): VoteResponse =
-  result = VoteResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = to(node["status"], Status)
-    if node.hasKey("voteId") and node["voteId"].kind != JNull:
-      result.voteId = some(to(node["voteId"], typeof(result.voteId.get())))
-    if node.hasKey("isVerified") and node["isVerified"].kind != JNull:
-      result.isVerified = some(to(node["isVerified"], typeof(result.isVerified.get())))
-    if node.hasKey("user") and node["user"].kind != JNull:
-      result.user = some(to(node["user"], typeof(result.user.get())))
-    if node.hasKey("editKey") and node["editKey"].kind != JNull:
-      result.editKey = some(to(node["editKey"], typeof(result.editKey.get())))
-
-# Custom JSON serialization for VoteResponse with custom field names
-proc `%`*(obj: VoteResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status
-  if obj.voteId.isSome():
-    result["voteId"] = %obj.voteId.get()
-  if obj.isVerified.isSome():
-    result["isVerified"] = %obj.isVerified.get()
-  if obj.user.isSome():
-    result["user"] = %obj.user.get()
-  if obj.editKey.isSome():
-    result["editKey"] = %obj.editKey.get()

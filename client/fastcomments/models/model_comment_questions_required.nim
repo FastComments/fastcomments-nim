@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[CommentQuestionsRequired]): CommentQuestion
     return CommentQuestionsRequired.`1`
   else:
     raise newException(ValueError, "Invalid enum value for CommentQuestionsRequired: " & strVal)
+

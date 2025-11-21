@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[SSOSecurityLevel]): SSOSecurityLevel =
     return SSOSecurityLevel.`1`
   else:
     raise newException(ValueError, "Invalid enum value for SSOSecurityLevel: " & strVal)
+

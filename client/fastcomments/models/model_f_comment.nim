@@ -376,3 +376,4 @@ proc `%`*(obj: FComment): JsonNode =
     result["requiresVerification"] = %obj.requiresVerification.get()
   if obj.editKey.isSome():
     result["editKey"] = %obj.editKey.get()
+

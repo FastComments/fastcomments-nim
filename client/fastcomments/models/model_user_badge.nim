@@ -103,3 +103,4 @@ proc `%`*(obj: UserBadge): JsonNode =
   result["receivedAt"] = %obj.receivedAt
   if obj.order.isSome():
     result["order"] = %obj.order.get()
+

@@ -166,3 +166,4 @@ proc `%`*(obj: GetCommentsResponseWithPresencePublicComment): JsonNode =
     result["userIdWS"] = %obj.userIdWS.get()
   if obj.tenantIdWS.isSome():
     result["tenantIdWS"] = %obj.tenantIdWS.get()
+

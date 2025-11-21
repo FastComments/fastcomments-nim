@@ -26,7 +26,7 @@ proc to*(node: JsonNode, T: typedesc[APIGetCommentsResponse]): APIGetCommentsRes
   result = APIGetCommentsResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("comments"):
       # Array of types with custom JSON - manually iterate and deserialize
       let arrayNode = node["comments"]
@@ -40,3 +40,4 @@ proc `%`*(obj: APIGetCommentsResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["comments"] = %obj.comments
+

@@ -63,3 +63,4 @@ proc to*(node: JsonNode, T: typedesc[RepeatCommentCheckIgnoredReason]): RepeatCo
     return RepeatCommentCheckIgnoredReason.`6`
   else:
     raise newException(ValueError, "Invalid enum value for RepeatCommentCheckIgnoredReason: " & strVal)
+

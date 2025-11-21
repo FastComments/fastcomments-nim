@@ -19,3 +19,4 @@ type FeedPostLink* = object
   title*: Option[string]
   description*: Option[string]
   url*: Option[string]
+

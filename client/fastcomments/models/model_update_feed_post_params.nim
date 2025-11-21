@@ -23,3 +23,4 @@ type UpdateFeedPostParams* = object
   links*: Option[seq[FeedPostLink]]
   tags*: Option[seq[string]]
   meta*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
+

@@ -48,3 +48,4 @@ proc to*(node: JsonNode, T: typedesc[ImageContentProfanityLevel]): ImageContentP
     return ImageContentProfanityLevel.High
   else:
     raise newException(ValueError, "Invalid enum value for ImageContentProfanityLevel: " & strVal)
+

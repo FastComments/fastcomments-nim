@@ -34,7 +34,6 @@ func `%`*(v: Operator): JsonNode =
     of Operator.GreaterThan: %"greater_than"
     of Operator.LessThan: %"less_than"
     of Operator.Contains: %"contains"
-
 func `$`*(v: Operator): string =
   result = case v:
     of Operator.Eq: $("eq")
@@ -60,3 +59,4 @@ proc to*(node: JsonNode, T: typedesc[Operator]): Operator =
     return Operator.Contains
   else:
     raise newException(ValueError, "Invalid enum value for Operator: " & strVal)
+

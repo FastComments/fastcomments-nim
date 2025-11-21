@@ -134,7 +134,13 @@ proc to*(node: JsonNode, T: typedesc[PublicComment]): PublicComment =
     if node.hasKey("childCount") and node["childCount"].kind != JNull:
       result.childCount = some(to(node["childCount"], typeof(result.childCount.get())))
     if node.hasKey("children") and node["children"].kind != JNull:
-      result.children = some(to(node["children"], typeof(result.children.get())))
+      # Optional array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["children"]
+      if arrayNode.kind == JArray:
+        var arr: seq[PublicComment] = @[]
+        for item in arrayNode.items:
+          arr.add(to(item, PublicComment))
+        result.children = some(arr)
     if node.hasKey("isFlagged") and node["isFlagged"].kind != JNull:
       result.isFlagged = some(to(node["isFlagged"], typeof(result.isFlagged.get())))
     if node.hasKey("isBlocked") and node["isBlocked"].kind != JNull:
@@ -217,3 +223,4 @@ proc `%`*(obj: PublicComment): JsonNode =
     result["isFlagged"] = %obj.isFlagged.get()
   if obj.isBlocked.isSome():
     result["isBlocked"] = %obj.isBlocked.get()
+

@@ -20,26 +20,3 @@ type CommentUserHashTagInfo* = object
   url*: Option[string]
   retain*: Option[bool]
 
-
-# Custom JSON deserialization for CommentUserHashTagInfo with custom field names
-proc to*(node: JsonNode, T: typedesc[CommentUserHashTagInfo]): CommentUserHashTagInfo =
-  result = CommentUserHashTagInfo()
-  if node.kind == JObject:
-    if node.hasKey("id"):
-      result.id = to(node["id"], string)
-    if node.hasKey("tag"):
-      result.tag = to(node["tag"], string)
-    if node.hasKey("url") and node["url"].kind != JNull:
-      result.url = some(to(node["url"], typeof(result.url.get())))
-    if node.hasKey("retain") and node["retain"].kind != JNull:
-      result.retain = some(to(node["retain"], typeof(result.retain.get())))
-
-# Custom JSON serialization for CommentUserHashTagInfo with custom field names
-proc `%`*(obj: CommentUserHashTagInfo): JsonNode =
-  result = newJObject()
-  result["id"] = %obj.id
-  result["tag"] = %obj.tag
-  if obj.url.isSome():
-    result["url"] = %obj.url.get()
-  if obj.retain.isSome():
-    result["retain"] = %obj.retain.get()

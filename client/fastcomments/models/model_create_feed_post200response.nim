@@ -44,3 +44,4 @@ proc to*(node: JsonNode, T: typedesc[CreateFeedPost200response]): CreateFeedPost
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of CreateFeedPost200response. JSON: " & $node)
+

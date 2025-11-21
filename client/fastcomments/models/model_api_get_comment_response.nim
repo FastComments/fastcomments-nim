@@ -26,7 +26,7 @@ proc to*(node: JsonNode, T: typedesc[APIGetCommentResponse]): APIGetCommentRespo
   result = APIGetCommentResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("comment"):
       result.comment = to(node["comment"], APIComment)
 
@@ -35,3 +35,4 @@ proc `%`*(obj: APIGetCommentResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["comment"] = %obj.comment
+

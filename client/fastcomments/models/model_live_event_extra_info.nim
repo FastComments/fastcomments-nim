@@ -17,3 +17,4 @@ import model_record_string_before_string_or_null_after_string_or_null_value
 type LiveEventExtraInfo* = object
   ## 
   commentPositions*: Option[Table[string, RecordStringBeforeStringOrNullAfterStringOrNullValue]] ## Construct a type with a set of properties K of type T
+

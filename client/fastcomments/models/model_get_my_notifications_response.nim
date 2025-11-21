@@ -42,7 +42,7 @@ proc to*(node: JsonNode, T: typedesc[GetMyNotificationsResponse]): GetMyNotifica
         for item in arrayNode.items:
           result.notifications.add(to(item, RenderableUserNotification))
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
 
 # Custom JSON serialization for GetMyNotificationsResponse with custom field names
 proc `%`*(obj: GetMyNotificationsResponse): JsonNode =
@@ -53,3 +53,4 @@ proc `%`*(obj: GetMyNotificationsResponse): JsonNode =
   result["hasMore"] = %obj.hasMore
   result["notifications"] = %obj.notifications
   result["status"] = %obj.status
+

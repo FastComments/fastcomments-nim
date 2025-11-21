@@ -21,27 +21,3 @@ type AddPageAPIResponse* = object
   page*: Option[APIPage]
   status*: string
 
-
-# Custom JSON deserialization for AddPageAPIResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[AddPageAPIResponse]): AddPageAPIResponse =
-  result = AddPageAPIResponse()
-  if node.kind == JObject:
-    if node.hasKey("reason") and node["reason"].kind != JNull:
-      result.reason = some(to(node["reason"], typeof(result.reason.get())))
-    if node.hasKey("code") and node["code"].kind != JNull:
-      result.code = some(to(node["code"], typeof(result.code.get())))
-    if node.hasKey("page") and node["page"].kind != JNull:
-      result.page = some(to(node["page"], typeof(result.page.get())))
-    if node.hasKey("status"):
-      result.status = to(node["status"], string)
-
-# Custom JSON serialization for AddPageAPIResponse with custom field names
-proc `%`*(obj: AddPageAPIResponse): JsonNode =
-  result = newJObject()
-  if obj.reason.isSome():
-    result["reason"] = %obj.reason.get()
-  if obj.code.isSome():
-    result["code"] = %obj.code.get()
-  if obj.page.isSome():
-    result["page"] = %obj.page.get()
-  result["status"] = %obj.status

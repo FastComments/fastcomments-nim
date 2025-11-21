@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[VoteStyle]): VoteStyle =
     return VoteStyle.`1`
   else:
     raise newException(ValueError, "Invalid enum value for VoteStyle: " & strVal)
+

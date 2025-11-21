@@ -19,19 +19,3 @@ type VoteDeleteResponse* = object
   status*: APIStatus
   wasPendingVote*: Option[bool]
 
-
-# Custom JSON deserialization for VoteDeleteResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[VoteDeleteResponse]): VoteDeleteResponse =
-  result = VoteDeleteResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-    if node.hasKey("wasPendingVote") and node["wasPendingVote"].kind != JNull:
-      result.wasPendingVote = some(to(node["wasPendingVote"], typeof(result.wasPendingVote.get())))
-
-# Custom JSON serialization for VoteDeleteResponse with custom field names
-proc `%`*(obj: VoteDeleteResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status
-  if obj.wasPendingVote.isSome():
-    result["wasPendingVote"] = %obj.wasPendingVote.get()

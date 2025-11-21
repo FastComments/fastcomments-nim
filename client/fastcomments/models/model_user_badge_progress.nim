@@ -59,3 +59,4 @@ proc `%`*(obj: UserBadgeProgress): JsonNode =
   if obj.manualTrustFactor.isSome():
     result["manualTrustFactor"] = %obj.manualTrustFactor.get()
   result["progress"] = %obj.progress
+

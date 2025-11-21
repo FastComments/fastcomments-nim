@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[GetUserNotificationCount200response]): GetU
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of GetUserNotificationCount200response. JSON: " & $node)
+

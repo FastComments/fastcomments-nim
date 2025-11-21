@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[APIStatus]): APIStatus =
     return APIStatus.Failed
   else:
     raise newException(ValueError, "Invalid enum value for APIStatus: " & strVal)
+

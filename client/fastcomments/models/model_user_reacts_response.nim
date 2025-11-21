@@ -19,18 +19,3 @@ type UserReactsResponse* = object
   status*: APIStatus
   reacts*: Table[string, Table[string, bool]]
 
-
-# Custom JSON deserialization for UserReactsResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[UserReactsResponse]): UserReactsResponse =
-  result = UserReactsResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-    if node.hasKey("reacts"):
-      result.reacts = to(node["reacts"], Table[string, Table[string, bool]])
-
-# Custom JSON serialization for UserReactsResponse with custom field names
-proc `%`*(obj: UserReactsResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status
-  result["reacts"] = %obj.reacts

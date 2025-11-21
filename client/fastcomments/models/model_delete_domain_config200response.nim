@@ -18,16 +18,3 @@ type DeleteDomainConfig200response* = object
   ## 
   status*: Option[JsonNode]
 
-
-# Custom JSON deserialization for DeleteDomainConfig200response with custom field names
-proc to*(node: JsonNode, T: typedesc[DeleteDomainConfig200response]): DeleteDomainConfig200response =
-  result = DeleteDomainConfig200response()
-  if node.kind == JObject:
-    if node.hasKey("status") and node["status"].kind != JNull:
-      result.status = some(to(node["status"], typeof(result.status.get())))
-
-# Custom JSON serialization for DeleteDomainConfig200response with custom field names
-proc `%`*(obj: DeleteDomainConfig200response): JsonNode =
-  result = newJObject()
-  if obj.status.isSome():
-    result["status"] = %obj.status.get()

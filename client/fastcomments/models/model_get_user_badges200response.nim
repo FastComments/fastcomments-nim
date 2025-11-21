@@ -44,3 +44,4 @@ proc to*(node: JsonNode, T: typedesc[GetUserBadges200response]): GetUserBadges20
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of GetUserBadges200response. JSON: " & $node)
+

@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[ResetUserNotifications200response]): ResetU
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of ResetUserNotifications200response. JSON: " & $node)
+

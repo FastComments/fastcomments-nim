@@ -20,18 +20,3 @@ type FeedPostsStatsResponse* = object
   status*: APIStatus
   stats*: Table[string, FeedPostStats]
 
-
-# Custom JSON deserialization for FeedPostsStatsResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[FeedPostsStatsResponse]): FeedPostsStatsResponse =
-  result = FeedPostsStatsResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-    if node.hasKey("stats"):
-      result.stats = to(node["stats"], Table[string, FeedPostStats])
-
-# Custom JSON serialization for FeedPostsStatsResponse with custom field names
-proc `%`*(obj: FeedPostsStatsResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status
-  result["stats"] = %obj.stats

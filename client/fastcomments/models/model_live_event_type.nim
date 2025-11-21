@@ -113,3 +113,4 @@ proc to*(node: JsonNode, T: typedesc[LiveEventType]): LiveEventType =
     return LiveEventType.DeletedFeedPost
   else:
     raise newException(ValueError, "Invalid enum value for LiveEventType: " & strVal)
+

@@ -22,3 +22,4 @@ type BulkAggregateQuestionItem* = object
   urlId*: Option[string]
   timeBucket*: Option[AggregateTimeBucket]
   startDate*: Option[string]
+

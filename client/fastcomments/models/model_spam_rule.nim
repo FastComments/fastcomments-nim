@@ -28,7 +28,6 @@ func `%`*(v: Actions): JsonNode =
     of Actions.Spam: %"spam"
     of Actions.NotSpam: %"not-spam"
     of Actions.IgnoreRepeat: %"ignore-repeat"
-
 func `$`*(v: Actions): string =
   result = case v:
     of Actions.Spam: $("spam")
@@ -48,3 +47,4 @@ proc to*(node: JsonNode, T: typedesc[Actions]): Actions =
     return Actions.IgnoreRepeat
   else:
     raise newException(ValueError, "Invalid enum value for Actions: " & strVal)
+

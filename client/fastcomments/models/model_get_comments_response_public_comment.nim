@@ -151,3 +151,4 @@ proc `%`*(obj: GetCommentsResponsePublicComment): JsonNode =
     result["presencePollState"] = %obj.presencePollState.get()
   if obj.customConfig.isSome():
     result["customConfig"] = %obj.customConfig.get()
+

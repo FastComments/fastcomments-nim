@@ -27,7 +27,7 @@ proc to*(node: JsonNode, T: typedesc[APICreateUserBadgeResponse]): APICreateUser
   result = APICreateUserBadgeResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("userBadge"):
       result.userBadge = to(node["userBadge"], UserBadge)
     if node.hasKey("notes") and node["notes"].kind != JNull:
@@ -40,3 +40,4 @@ proc `%`*(obj: APICreateUserBadgeResponse): JsonNode =
   result["userBadge"] = %obj.userBadge
   if obj.notes.isSome():
     result["notes"] = %obj.notes.get()
+

@@ -48,3 +48,4 @@ proc to*(node: JsonNode, T: typedesc[CommentThreadDeletionMode]): CommentThreadD
     return CommentThreadDeletionMode.`3`
   else:
     raise newException(ValueError, "Invalid enum value for CommentThreadDeletionMode: " & strVal)
+

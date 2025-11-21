@@ -63,3 +63,4 @@ proc to*(node: JsonNode, T: typedesc[AggregationOpType]): AggregationOpType =
     return AggregationOpType.Count
   else:
     raise newException(ValueError, "Invalid enum value for AggregationOpType: " & strVal)
+

@@ -217,3 +217,4 @@ proc `%`*(obj: PubSubCommentBase): JsonNode =
     result["isBannedUser"] = %obj.isBannedUser.get()
   if obj.groupIds.isSome():
     result["groupIds"] = %obj.groupIds.get()
+

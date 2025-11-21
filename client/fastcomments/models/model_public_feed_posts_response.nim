@@ -32,9 +32,14 @@ proc to*(node: JsonNode, T: typedesc[PublicFeedPostsResponse]): PublicFeedPostsR
   result = PublicFeedPostsResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("feedPosts"):
-      result.feedPosts = to(node["feedPosts"], seq[FeedPost])
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["feedPosts"]
+      if arrayNode.kind == JArray:
+        result.feedPosts = @[]
+        for item in arrayNode.items:
+          result.feedPosts.add(to(item, FeedPost))
     if node.hasKey("user") and node["user"].kind != JNull:
       result.user = some(to(node["user"], typeof(result.user.get())))
     if node.hasKey("urlIdWS") and node["urlIdWS"].kind != JNull:
@@ -61,3 +66,4 @@ proc `%`*(obj: PublicFeedPostsResponse): JsonNode =
     result["tenantIdWS"] = %obj.tenantIdWS.get()
   if obj.myReacts.isSome():
     result["myReacts"] = %obj.myReacts.get()
+

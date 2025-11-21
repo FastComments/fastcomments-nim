@@ -30,7 +30,7 @@ proc to*(node: JsonNode, T: typedesc[HeaderState]): HeaderState =
   result = HeaderState()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("NotificationType"):
       result.notificationType = to(node["NotificationType"], JsonNode)
     if node.hasKey("userId"):
@@ -38,12 +38,7 @@ proc to*(node: JsonNode, T: typedesc[HeaderState]): HeaderState =
     if node.hasKey("userIdWS"):
       result.userIdWS = to(node["userIdWS"], string)
     if node.hasKey("notificationCounts"):
-      # Array of types with custom JSON - manually iterate and deserialize
-      let arrayNode = node["notificationCounts"]
-      if arrayNode.kind == JArray:
-        result.notificationCounts = @[]
-        for item in arrayNode.items:
-          result.notificationCounts.add(to(item, NotificationAndCount))
+      result.notificationCounts = to(node["notificationCounts"], seq[NotificationAndCount])
 
 # Custom JSON serialization for HeaderState with custom field names
 proc `%`*(obj: HeaderState): JsonNode =
@@ -53,3 +48,4 @@ proc `%`*(obj: HeaderState): JsonNode =
   result["userId"] = %obj.userId
   result["userIdWS"] = %obj.userIdWS
   result["notificationCounts"] = %obj.notificationCounts
+

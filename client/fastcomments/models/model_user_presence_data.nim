@@ -19,24 +19,3 @@ type UserPresenceData* = object
   userIdWS*: Option[string]
   tenantIdWS*: Option[string]
 
-
-# Custom JSON deserialization for UserPresenceData with custom field names
-proc to*(node: JsonNode, T: typedesc[UserPresenceData]): UserPresenceData =
-  result = UserPresenceData()
-  if node.kind == JObject:
-    if node.hasKey("urlIdWS") and node["urlIdWS"].kind != JNull:
-      result.urlIdWS = some(to(node["urlIdWS"], typeof(result.urlIdWS.get())))
-    if node.hasKey("userIdWS") and node["userIdWS"].kind != JNull:
-      result.userIdWS = some(to(node["userIdWS"], typeof(result.userIdWS.get())))
-    if node.hasKey("tenantIdWS") and node["tenantIdWS"].kind != JNull:
-      result.tenantIdWS = some(to(node["tenantIdWS"], typeof(result.tenantIdWS.get())))
-
-# Custom JSON serialization for UserPresenceData with custom field names
-proc `%`*(obj: UserPresenceData): JsonNode =
-  result = newJObject()
-  if obj.urlIdWS.isSome():
-    result["urlIdWS"] = %obj.urlIdWS.get()
-  if obj.userIdWS.isSome():
-    result["userIdWS"] = %obj.userIdWS.get()
-  if obj.tenantIdWS.isSome():
-    result["tenantIdWS"] = %obj.tenantIdWS.get()

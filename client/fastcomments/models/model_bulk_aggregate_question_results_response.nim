@@ -20,18 +20,3 @@ type BulkAggregateQuestionResultsResponse* = object
   status*: APIStatus
   data*: Table[string, QuestionResultAggregationOverall] ## Construct a type with a set of properties K of type T
 
-
-# Custom JSON deserialization for BulkAggregateQuestionResultsResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[BulkAggregateQuestionResultsResponse]): BulkAggregateQuestionResultsResponse =
-  result = BulkAggregateQuestionResultsResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-    if node.hasKey("data"):
-      result.data = to(node["data"], Table[string, QuestionResultAggregationOverall])
-
-# Custom JSON serialization for BulkAggregateQuestionResultsResponse with custom field names
-proc `%`*(obj: BulkAggregateQuestionResultsResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status
-  result["data"] = %obj.data

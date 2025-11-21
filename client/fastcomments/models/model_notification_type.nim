@@ -93,3 +93,4 @@ proc to*(node: JsonNode, T: typedesc[NotificationType]): NotificationType =
     return NotificationType.`10`
   else:
     raise newException(ValueError, "Invalid enum value for NotificationType: " & strVal)
+

@@ -20,3 +20,4 @@ type AggregationOperation* = object
   op*: AggregationOpType
   alias*: Option[string] ## Optional alias for the output; if not provided, a default alias is computed
   expandArray*: Option[bool]
+

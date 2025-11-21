@@ -36,3 +36,4 @@ proc `%`*(obj: FindCommentsByRangeItem): JsonNode =
   if obj.comment.isSome():
     result["comment"] = %obj.comment.get()
   result["result"] = %obj.result
+

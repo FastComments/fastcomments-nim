@@ -20,18 +20,3 @@ type ChangeCommentPinStatusResponse* = object
   commentPositions*: Table[string, RecordStringBeforeStringOrNullAfterStringOrNullValue] ## Construct a type with a set of properties K of type T
   status*: APIStatus
 
-
-# Custom JSON deserialization for ChangeCommentPinStatusResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[ChangeCommentPinStatusResponse]): ChangeCommentPinStatusResponse =
-  result = ChangeCommentPinStatusResponse()
-  if node.kind == JObject:
-    if node.hasKey("commentPositions"):
-      result.commentPositions = to(node["commentPositions"], Table[string, RecordStringBeforeStringOrNullAfterStringOrNullValue])
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-
-# Custom JSON serialization for ChangeCommentPinStatusResponse with custom field names
-proc `%`*(obj: ChangeCommentPinStatusResponse): JsonNode =
-  result = newJObject()
-  result["commentPositions"] = %obj.commentPositions
-  result["status"] = %obj.status

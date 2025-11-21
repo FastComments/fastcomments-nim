@@ -20,3 +20,4 @@ type UpdateAPIPageData* = object
   title*: Option[string]
   url*: Option[string]
   urlId*: Option[string]
+

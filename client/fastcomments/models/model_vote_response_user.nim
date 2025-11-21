@@ -17,16 +17,3 @@ type VoteResponseUser* = object
   ## 
   sessionId*: Option[string]
 
-
-# Custom JSON deserialization for VoteResponseUser with custom field names
-proc to*(node: JsonNode, T: typedesc[VoteResponseUser]): VoteResponseUser =
-  result = VoteResponseUser()
-  if node.kind == JObject:
-    if node.hasKey("sessionId") and node["sessionId"].kind != JNull:
-      result.sessionId = some(to(node["sessionId"], typeof(result.sessionId.get())))
-
-# Custom JSON serialization for VoteResponseUser with custom field names
-proc `%`*(obj: VoteResponseUser): JsonNode =
-  result = newJObject()
-  if obj.sessionId.isSome():
-    result["sessionId"] = %obj.sessionId.get()

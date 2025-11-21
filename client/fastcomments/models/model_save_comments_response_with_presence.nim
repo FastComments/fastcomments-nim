@@ -31,7 +31,7 @@ proc to*(node: JsonNode, T: typedesc[SaveCommentsResponseWithPresence]): SaveCom
   result = SaveCommentsResponseWithPresence()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("comment"):
       result.comment = to(node["comment"], PublicComment)
     if node.hasKey("user") and node["user"].kind != JNull:
@@ -52,3 +52,4 @@ proc `%`*(obj: SaveCommentsResponseWithPresence): JsonNode =
     result["moduleData"] = %obj.moduleData.get()
   if obj.userIdWS.isSome():
     result["userIdWS"] = %obj.userIdWS.get()
+

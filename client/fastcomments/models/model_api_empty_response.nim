@@ -18,15 +18,3 @@ type APIEmptyResponse* = object
   ## 
   status*: APIStatus
 
-
-# Custom JSON deserialization for APIEmptyResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[APIEmptyResponse]): APIEmptyResponse =
-  result = APIEmptyResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-
-# Custom JSON serialization for APIEmptyResponse with custom field names
-proc `%`*(obj: APIEmptyResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status

@@ -167,3 +167,4 @@ proc `%`*(obj: PublicCommentBase): JsonNode =
     result["editKey"] = %obj.editKey.get()
   if obj.approved.isSome():
     result["approved"] = %obj.approved.get()
+

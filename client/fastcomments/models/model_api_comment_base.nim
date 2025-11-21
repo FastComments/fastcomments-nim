@@ -285,3 +285,4 @@ proc `%`*(obj: APICommentBase): JsonNode =
     result["votesDown"] = %obj.votesDown.get()
   if obj.votesUp.isSome():
     result["votesUp"] = %obj.votesUp.get()
+

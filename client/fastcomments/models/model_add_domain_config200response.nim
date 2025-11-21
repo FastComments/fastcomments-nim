@@ -42,3 +42,4 @@ proc to*(node: JsonNode, T: typedesc[AddDomainConfig200response]): AddDomainConf
     when defined(debug):
       echo "Failed to deserialize as AddDomainConfig200responseAnyOf: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of AddDomainConfig200response. JSON: " & $node)
+

@@ -303,3 +303,4 @@ proc to*(node: JsonNode, T: typedesc[CommentLogType]): CommentLogType =
     return CommentLogType.`54`
   else:
     raise newException(ValueError, "Invalid enum value for CommentLogType: " & strVal)
+

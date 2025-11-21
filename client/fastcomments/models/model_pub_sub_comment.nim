@@ -231,3 +231,4 @@ proc `%`*(obj: PubSubComment): JsonNode =
   if obj.hidden.isSome():
     result["hidden"] = %obj.hidden.get()
   result["date"] = %obj.date
+
