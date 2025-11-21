@@ -9,15 +9,16 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_aggregate_time_bucket
 
 type BulkAggregateQuestionItem* = object
   ## 
   aggId*: string
-  questionId*: string
-  questionIds*: seq[string]
-  urlId*: string
-  timeBucket*: AggregateTimeBucket
-  startDate*: string
-
+  questionId*: Option[string]
+  questionIds*: Option[seq[string]]
+  urlId*: Option[string]
+  timeBucket*: Option[AggregateTimeBucket]
+  startDate*: Option[string]

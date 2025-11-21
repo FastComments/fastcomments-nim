@@ -9,12 +9,30 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_f_comment
 import model_question_result
 
 type FindCommentsByRangeItem* = object
   ## 
-  comment*: FComment
+  comment*: Option[FComment]
   result*: QuestionResult
 
+
+# Custom JSON deserialization for FindCommentsByRangeItem with custom field names
+proc to*(node: JsonNode, T: typedesc[FindCommentsByRangeItem]): FindCommentsByRangeItem =
+  result = FindCommentsByRangeItem()
+  if node.kind == JObject:
+    if node.hasKey("comment") and node["comment"].kind != JNull:
+      result.comment = some(to(node["comment"], typeof(result.comment.get())))
+    if node.hasKey("result"):
+      result.result = to(node["result"], QuestionResult)
+
+# Custom JSON serialization for FindCommentsByRangeItem with custom field names
+proc `%`*(obj: FindCommentsByRangeItem): JsonNode =
+  result = newJObject()
+  if obj.comment.isSome():
+    result["comment"] = %obj.comment.get()
+  result["result"] = %obj.result

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type AggregationOpType* {.pure.} = enum
@@ -40,3 +42,24 @@ func `$`*(v: AggregationOpType): string =
     of AggregationOpType.Max: $("max")
     of AggregationOpType.Count: $("count")
 
+proc to*(node: JsonNode, T: typedesc[AggregationOpType]): AggregationOpType =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum AggregationOpType, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("sum"):
+    return AggregationOpType.Sum
+  of $("countDistinct"):
+    return AggregationOpType.CountDistinct
+  of $("distinct"):
+    return AggregationOpType.Distinct
+  of $("avg"):
+    return AggregationOpType.Avg
+  of $("min"):
+    return AggregationOpType.Min
+  of $("max"):
+    return AggregationOpType.Max
+  of $("count"):
+    return AggregationOpType.Count
+  else:
+    raise newException(ValueError, "Invalid enum value for AggregationOpType: " & strVal)

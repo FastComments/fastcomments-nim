@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_feed_post
@@ -18,5 +20,24 @@ type GetPublicFeedPostsResponse* = object
   ## 
   status*: APIStatus
   feedPosts*: seq[FeedPost]
-  user*: UserSessionInfo
+  user*: Option[UserSessionInfo]
 
+
+# Custom JSON deserialization for GetPublicFeedPostsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetPublicFeedPostsResponse]): GetPublicFeedPostsResponse =
+  result = GetPublicFeedPostsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("feedPosts"):
+      result.feedPosts = to(node["feedPosts"], seq[FeedPost])
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+
+# Custom JSON serialization for GetPublicFeedPostsResponse with custom field names
+proc `%`*(obj: GetPublicFeedPostsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["feedPosts"] = %obj.feedPosts
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()

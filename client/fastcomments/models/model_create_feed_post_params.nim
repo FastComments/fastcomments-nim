@@ -9,18 +9,19 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_feed_post_link
 import model_feed_post_media_item
 
 type CreateFeedPostParams* = object
   ## 
-  title*: string
-  contentHTML*: string
-  media*: seq[FeedPostMediaItem]
-  links*: seq[FeedPostLink]
-  fromUserId*: string
-  fromUserDisplayName*: string
-  tags*: seq[string]
-  meta*: Table[string, string] ## Construct a type with a set of properties K of type T
-
+  title*: Option[string]
+  contentHTML*: Option[string]
+  media*: Option[seq[FeedPostMediaItem]]
+  links*: Option[seq[FeedPostLink]]
+  fromUserId*: Option[string]
+  fromUserDisplayName*: Option[string]
+  tags*: Option[seq[string]]
+  meta*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_any_type
 import model_api_status
@@ -19,6 +21,29 @@ type SaveCommentResponse* = object
   ## 
   status*: APIStatus
   comment*: FComment
-  user*: UserSessionInfo
-  moduleData*: Table[string, JsonNode] ## Construct a type with a set of properties K of type T
+  user*: Option[UserSessionInfo]
+  moduleData*: Option[Table[string, JsonNode]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for SaveCommentResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[SaveCommentResponse]): SaveCommentResponse =
+  result = SaveCommentResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], FComment)
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+    if node.hasKey("moduleData") and node["moduleData"].kind != JNull:
+      result.moduleData = some(to(node["moduleData"], typeof(result.moduleData.get())))
+
+# Custom JSON serialization for SaveCommentResponse with custom field names
+proc `%`*(obj: SaveCommentResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["comment"] = %obj.comment
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()
+  if obj.moduleData.isSome():
+    result["moduleData"] = %obj.moduleData.get()

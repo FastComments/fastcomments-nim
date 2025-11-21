@@ -9,10 +9,11 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_aggregation_value
 
 type AggregationItem* = object
   ## 
-  groups*: Table[string, string] ## Construct a type with a set of properties K of type T
-
+  groups*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T

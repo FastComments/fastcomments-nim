@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type FeedPostMediaItemAsset* = object
@@ -16,4 +18,3 @@ type FeedPostMediaItemAsset* = object
   w*: int
   h*: int
   src*: string
-

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_aggregate_question_results_response
 import model_api_error
@@ -16,15 +18,29 @@ import model_api_status
 import model_custom_config_parameters
 import model_question_result_aggregation_overall
 
+# AnyOf type
+type AggregateQuestionResults200responseKind* {.pure.} = enum
+  AggregateQuestionResultsResponseVariant
+  APIErrorVariant
+
 type AggregateQuestionResults200response* = object
   ## 
-  status*: APIStatus
-  data*: QuestionResultAggregationOverall
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: AggregateQuestionResults200responseKind
+  of AggregateQuestionResults200responseKind.AggregateQuestionResultsResponseVariant:
+    AggregateQuestionResultsResponseValue*: AggregateQuestionResultsResponse
+  of AggregateQuestionResults200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[AggregateQuestionResults200response]): AggregateQuestionResults200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return AggregateQuestionResults200response(kind: AggregateQuestionResults200responseKind.AggregateQuestionResultsResponseVariant, AggregateQuestionResultsResponseValue: to(node, AggregateQuestionResultsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as AggregateQuestionResultsResponse: ", e.msg
+  try:
+    return AggregateQuestionResults200response(kind: AggregateQuestionResults200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of AggregateQuestionResults200response. JSON: " & $node)

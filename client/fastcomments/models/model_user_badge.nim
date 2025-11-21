@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type UserBadge* = object
@@ -22,13 +24,82 @@ type UserBadge* = object
   threshold*: int64
   description*: string
   displayLabel*: string
-  displaySrc*: string
-  backgroundColor*: string
-  borderColor*: string
-  textColor*: string
-  cssClass*: string
+  displaySrc*: Option[string]
+  backgroundColor*: Option[string]
+  borderColor*: Option[string]
+  textColor*: Option[string]
+  cssClass*: Option[string]
   veteranUserThresholdMillis*: int64
   displayedOnComments*: bool
   receivedAt*: string
-  order*: int
+  order*: Option[int]
 
+
+# Custom JSON deserialization for UserBadge with custom field names
+proc to*(node: JsonNode, T: typedesc[UserBadge]): UserBadge =
+  result = UserBadge()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("badgeId"):
+      result.badgeId = to(node["badgeId"], string)
+    if node.hasKey("fromTenantId"):
+      result.fromTenantId = to(node["fromTenantId"], string)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], int)
+    if node.hasKey("threshold"):
+      result.threshold = to(node["threshold"], int64)
+    if node.hasKey("description"):
+      result.description = to(node["description"], string)
+    if node.hasKey("displayLabel"):
+      result.displayLabel = to(node["displayLabel"], string)
+    if node.hasKey("displaySrc") and node["displaySrc"].kind != JNull:
+      result.displaySrc = some(to(node["displaySrc"], typeof(result.displaySrc.get())))
+    if node.hasKey("backgroundColor") and node["backgroundColor"].kind != JNull:
+      result.backgroundColor = some(to(node["backgroundColor"], typeof(result.backgroundColor.get())))
+    if node.hasKey("borderColor") and node["borderColor"].kind != JNull:
+      result.borderColor = some(to(node["borderColor"], typeof(result.borderColor.get())))
+    if node.hasKey("textColor") and node["textColor"].kind != JNull:
+      result.textColor = some(to(node["textColor"], typeof(result.textColor.get())))
+    if node.hasKey("cssClass") and node["cssClass"].kind != JNull:
+      result.cssClass = some(to(node["cssClass"], typeof(result.cssClass.get())))
+    if node.hasKey("veteranUserThresholdMillis"):
+      result.veteranUserThresholdMillis = to(node["veteranUserThresholdMillis"], int64)
+    if node.hasKey("displayedOnComments"):
+      result.displayedOnComments = to(node["displayedOnComments"], bool)
+    if node.hasKey("receivedAt"):
+      result.receivedAt = to(node["receivedAt"], string)
+    if node.hasKey("order") and node["order"].kind != JNull:
+      result.order = some(to(node["order"], typeof(result.order.get())))
+
+# Custom JSON serialization for UserBadge with custom field names
+proc `%`*(obj: UserBadge): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["userId"] = %obj.userId
+  result["badgeId"] = %obj.badgeId
+  result["fromTenantId"] = %obj.fromTenantId
+  result["createdAt"] = %obj.createdAt
+  result["type"] = %obj.`type`
+  result["threshold"] = %obj.threshold
+  result["description"] = %obj.description
+  result["displayLabel"] = %obj.displayLabel
+  if obj.displaySrc.isSome():
+    result["displaySrc"] = %obj.displaySrc.get()
+  if obj.backgroundColor.isSome():
+    result["backgroundColor"] = %obj.backgroundColor.get()
+  if obj.borderColor.isSome():
+    result["borderColor"] = %obj.borderColor.get()
+  if obj.textColor.isSome():
+    result["textColor"] = %obj.textColor.get()
+  if obj.cssClass.isSome():
+    result["cssClass"] = %obj.cssClass.get()
+  result["veteranUserThresholdMillis"] = %obj.veteranUserThresholdMillis
+  result["displayedOnComments"] = %obj.displayedOnComments
+  result["receivedAt"] = %obj.receivedAt
+  if obj.order.isSome():
+    result["order"] = %obj.order.get()

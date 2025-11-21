@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,16 +18,29 @@ import model_custom_config_parameters
 import model_deleted_comment_result_comment
 import model_public_api_delete_comment_response
 
+# AnyOf type
+type DeleteCommentPublic200responseKind* {.pure.} = enum
+  PublicAPIDeleteCommentResponseVariant
+  APIErrorVariant
+
 type DeleteCommentPublic200response* = object
   ## 
-  comment*: DeletedCommentResultComment
-  hardRemoved*: bool
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: DeleteCommentPublic200responseKind
+  of DeleteCommentPublic200responseKind.PublicAPIDeleteCommentResponseVariant:
+    PublicAPIDeleteCommentResponseValue*: PublicAPIDeleteCommentResponse
+  of DeleteCommentPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[DeleteCommentPublic200response]): DeleteCommentPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return DeleteCommentPublic200response(kind: DeleteCommentPublic200responseKind.PublicAPIDeleteCommentResponseVariant, PublicAPIDeleteCommentResponseValue: to(node, PublicAPIDeleteCommentResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as PublicAPIDeleteCommentResponse: ", e.msg
+  try:
+    return DeleteCommentPublic200response(kind: DeleteCommentPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of DeleteCommentPublic200response. JSON: " & $node)

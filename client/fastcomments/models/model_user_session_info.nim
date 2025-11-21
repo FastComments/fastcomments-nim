@@ -9,22 +9,85 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_badge_info
 
 type UserSessionInfo* = object
   ## 
-  id*: string
-  authorized*: bool
-  avatarSrc*: string
-  badges*: seq[CommentUserBadgeInfo]
-  displayLabel*: string
-  displayName*: string
-  email*: string
-  groupIds*: seq[string]
-  hasBlockedUsers*: bool
-  isAnonSession*: bool
-  sessionId*: string
-  username*: string
-  websiteUrl*: string
+  id*: Option[string]
+  authorized*: Option[bool]
+  avatarSrc*: Option[string]
+  badges*: Option[seq[CommentUserBadgeInfo]]
+  displayLabel*: Option[string]
+  displayName*: Option[string]
+  email*: Option[string]
+  groupIds*: Option[seq[string]]
+  hasBlockedUsers*: Option[bool]
+  isAnonSession*: Option[bool]
+  sessionId*: Option[string]
+  username*: Option[string]
+  websiteUrl*: Option[string]
 
+
+# Custom JSON deserialization for UserSessionInfo with custom field names
+proc to*(node: JsonNode, T: typedesc[UserSessionInfo]): UserSessionInfo =
+  result = UserSessionInfo()
+  if node.kind == JObject:
+    if node.hasKey("id") and node["id"].kind != JNull:
+      result.id = some(to(node["id"], typeof(result.id.get())))
+    if node.hasKey("authorized") and node["authorized"].kind != JNull:
+      result.authorized = some(to(node["authorized"], typeof(result.authorized.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+    if node.hasKey("displayName") and node["displayName"].kind != JNull:
+      result.displayName = some(to(node["displayName"], typeof(result.displayName.get())))
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("groupIds") and node["groupIds"].kind != JNull:
+      result.groupIds = some(to(node["groupIds"], typeof(result.groupIds.get())))
+    if node.hasKey("hasBlockedUsers") and node["hasBlockedUsers"].kind != JNull:
+      result.hasBlockedUsers = some(to(node["hasBlockedUsers"], typeof(result.hasBlockedUsers.get())))
+    if node.hasKey("isAnonSession") and node["isAnonSession"].kind != JNull:
+      result.isAnonSession = some(to(node["isAnonSession"], typeof(result.isAnonSession.get())))
+    if node.hasKey("sessionId") and node["sessionId"].kind != JNull:
+      result.sessionId = some(to(node["sessionId"], typeof(result.sessionId.get())))
+    if node.hasKey("username") and node["username"].kind != JNull:
+      result.username = some(to(node["username"], typeof(result.username.get())))
+    if node.hasKey("websiteUrl") and node["websiteUrl"].kind != JNull:
+      result.websiteUrl = some(to(node["websiteUrl"], typeof(result.websiteUrl.get())))
+
+# Custom JSON serialization for UserSessionInfo with custom field names
+proc `%`*(obj: UserSessionInfo): JsonNode =
+  result = newJObject()
+  if obj.id.isSome():
+    result["id"] = %obj.id.get()
+  if obj.authorized.isSome():
+    result["authorized"] = %obj.authorized.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+  if obj.displayName.isSome():
+    result["displayName"] = %obj.displayName.get()
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  if obj.groupIds.isSome():
+    result["groupIds"] = %obj.groupIds.get()
+  if obj.hasBlockedUsers.isSome():
+    result["hasBlockedUsers"] = %obj.hasBlockedUsers.get()
+  if obj.isAnonSession.isSome():
+    result["isAnonSession"] = %obj.isAnonSession.get()
+  if obj.sessionId.isSome():
+    result["sessionId"] = %obj.sessionId.get()
+  if obj.username.isSome():
+    result["username"] = %obj.username.get()
+  if obj.websiteUrl.isSome():
+    result["websiteUrl"] = %obj.websiteUrl.get()

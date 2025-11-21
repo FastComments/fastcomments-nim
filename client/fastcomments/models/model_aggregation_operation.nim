@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_aggregation_op_type
 
@@ -16,6 +18,5 @@ type AggregationOperation* = object
   ## An operation that will be applied on a field
   field*: string ## The field to operate on
   op*: AggregationOpType
-  alias*: string ## Optional alias for the output; if not provided, a default alias is computed
-  expandArray*: bool
-
+  alias*: Option[string] ## Optional alias for the output; if not provided, a default alias is computed
+  expandArray*: Option[bool]

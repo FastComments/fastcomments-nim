@@ -9,21 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_vote_delete_response
 
+# AnyOf type
+type DeleteCommentVote200responseKind* {.pure.} = enum
+  VoteDeleteResponseVariant
+  APIErrorVariant
+
 type DeleteCommentVote200response* = object
   ## 
-  status*: APIStatus
-  wasPendingVote*: bool
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: DeleteCommentVote200responseKind
+  of DeleteCommentVote200responseKind.VoteDeleteResponseVariant:
+    VoteDeleteResponseValue*: VoteDeleteResponse
+  of DeleteCommentVote200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[DeleteCommentVote200response]): DeleteCommentVote200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return DeleteCommentVote200response(kind: DeleteCommentVote200responseKind.VoteDeleteResponseVariant, VoteDeleteResponseValue: to(node, VoteDeleteResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as VoteDeleteResponse: ", e.msg
+  try:
+    return DeleteCommentVote200response(kind: DeleteCommentVote200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of DeleteCommentVote200response. JSON: " & $node)

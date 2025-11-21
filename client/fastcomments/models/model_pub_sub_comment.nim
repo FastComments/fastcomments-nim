@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_badge_info
 
@@ -16,45 +18,216 @@ type PubSubComment* = object
   ## 
   id*: string
   tenantId*: string
-  userId*: string
+  userId*: Option[string]
   urlId*: string
   commenterName*: string
-  commenterLink*: string
+  commenterLink*: Option[string]
   commentHTML*: string
   comment*: string
-  parentId*: string
-  votes*: int
-  votesUp*: int
-  votesDown*: int
+  parentId*: Option[string]
+  votes*: Option[int]
+  votesUp*: Option[int]
+  votesDown*: Option[int]
   verified*: bool
-  avatarSrc*: string
-  hasImages*: bool
-  hasLinks*: bool
-  isByAdmin*: bool
-  isByModerator*: bool
-  isPinned*: bool
-  isLocked*: bool
-  displayLabel*: string
-  rating*: float64
-  badges*: seq[CommentUserBadgeInfo]
-  viewCount*: int64
-  isDeleted*: bool
-  isDeletedUser*: bool
-  isSpam*: bool
-  anonUserId*: string
-  feedbackIds*: seq[string]
-  flagCount*: int
-  domain*: string
+  avatarSrc*: Option[string]
+  hasImages*: Option[bool]
+  hasLinks*: Option[bool]
+  isByAdmin*: Option[bool]
+  isByModerator*: Option[bool]
+  isPinned*: Option[bool]
+  isLocked*: Option[bool]
+  displayLabel*: Option[string]
+  rating*: Option[float64]
+  badges*: Option[seq[CommentUserBadgeInfo]]
+  viewCount*: Option[int64]
+  isDeleted*: Option[bool]
+  isDeletedUser*: Option[bool]
+  isSpam*: Option[bool]
+  anonUserId*: Option[string]
+  feedbackIds*: Option[seq[string]]
+  flagCount*: Option[int]
+  domain*: Option[string]
   url*: string
-  pageTitle*: string
-  expireAt*: string
-  reviewed*: bool
-  hasCode*: bool
+  pageTitle*: Option[string]
+  expireAt*: Option[string]
+  reviewed*: Option[bool]
+  hasCode*: Option[bool]
   approved*: bool
-  locale*: string
-  isBannedUser*: bool
-  groupIds*: seq[string]
-  isLive*: bool
-  hidden*: bool
+  locale*: Option[string]
+  isBannedUser*: Option[bool]
+  groupIds*: Option[seq[string]]
+  isLive*: Option[bool]
+  hidden*: Option[bool]
   date*: string
 
+
+# Custom JSON deserialization for PubSubComment with custom field names
+proc to*(node: JsonNode, T: typedesc[PubSubComment]): PubSubComment =
+  result = PubSubComment()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("commenterName"):
+      result.commenterName = to(node["commenterName"], string)
+    if node.hasKey("commenterLink") and node["commenterLink"].kind != JNull:
+      result.commenterLink = some(to(node["commenterLink"], typeof(result.commenterLink.get())))
+    if node.hasKey("commentHTML"):
+      result.commentHTML = to(node["commentHTML"], string)
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], string)
+    if node.hasKey("parentId") and node["parentId"].kind != JNull:
+      result.parentId = some(to(node["parentId"], typeof(result.parentId.get())))
+    if node.hasKey("votes") and node["votes"].kind != JNull:
+      result.votes = some(to(node["votes"], typeof(result.votes.get())))
+    if node.hasKey("votesUp") and node["votesUp"].kind != JNull:
+      result.votesUp = some(to(node["votesUp"], typeof(result.votesUp.get())))
+    if node.hasKey("votesDown") and node["votesDown"].kind != JNull:
+      result.votesDown = some(to(node["votesDown"], typeof(result.votesDown.get())))
+    if node.hasKey("verified"):
+      result.verified = to(node["verified"], bool)
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("hasImages") and node["hasImages"].kind != JNull:
+      result.hasImages = some(to(node["hasImages"], typeof(result.hasImages.get())))
+    if node.hasKey("hasLinks") and node["hasLinks"].kind != JNull:
+      result.hasLinks = some(to(node["hasLinks"], typeof(result.hasLinks.get())))
+    if node.hasKey("isByAdmin") and node["isByAdmin"].kind != JNull:
+      result.isByAdmin = some(to(node["isByAdmin"], typeof(result.isByAdmin.get())))
+    if node.hasKey("isByModerator") and node["isByModerator"].kind != JNull:
+      result.isByModerator = some(to(node["isByModerator"], typeof(result.isByModerator.get())))
+    if node.hasKey("isPinned") and node["isPinned"].kind != JNull:
+      result.isPinned = some(to(node["isPinned"], typeof(result.isPinned.get())))
+    if node.hasKey("isLocked") and node["isLocked"].kind != JNull:
+      result.isLocked = some(to(node["isLocked"], typeof(result.isLocked.get())))
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+    if node.hasKey("rating") and node["rating"].kind != JNull:
+      result.rating = some(to(node["rating"], typeof(result.rating.get())))
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("viewCount") and node["viewCount"].kind != JNull:
+      result.viewCount = some(to(node["viewCount"], typeof(result.viewCount.get())))
+    if node.hasKey("isDeleted") and node["isDeleted"].kind != JNull:
+      result.isDeleted = some(to(node["isDeleted"], typeof(result.isDeleted.get())))
+    if node.hasKey("isDeletedUser") and node["isDeletedUser"].kind != JNull:
+      result.isDeletedUser = some(to(node["isDeletedUser"], typeof(result.isDeletedUser.get())))
+    if node.hasKey("isSpam") and node["isSpam"].kind != JNull:
+      result.isSpam = some(to(node["isSpam"], typeof(result.isSpam.get())))
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("feedbackIds") and node["feedbackIds"].kind != JNull:
+      result.feedbackIds = some(to(node["feedbackIds"], typeof(result.feedbackIds.get())))
+    if node.hasKey("flagCount") and node["flagCount"].kind != JNull:
+      result.flagCount = some(to(node["flagCount"], typeof(result.flagCount.get())))
+    if node.hasKey("domain") and node["domain"].kind != JNull:
+      result.domain = some(to(node["domain"], typeof(result.domain.get())))
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
+      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
+    if node.hasKey("expireAt") and node["expireAt"].kind != JNull:
+      result.expireAt = some(to(node["expireAt"], typeof(result.expireAt.get())))
+    if node.hasKey("reviewed") and node["reviewed"].kind != JNull:
+      result.reviewed = some(to(node["reviewed"], typeof(result.reviewed.get())))
+    if node.hasKey("hasCode") and node["hasCode"].kind != JNull:
+      result.hasCode = some(to(node["hasCode"], typeof(result.hasCode.get())))
+    if node.hasKey("approved"):
+      result.approved = to(node["approved"], bool)
+    if node.hasKey("locale") and node["locale"].kind != JNull:
+      result.locale = some(to(node["locale"], typeof(result.locale.get())))
+    if node.hasKey("isBannedUser") and node["isBannedUser"].kind != JNull:
+      result.isBannedUser = some(to(node["isBannedUser"], typeof(result.isBannedUser.get())))
+    if node.hasKey("groupIds") and node["groupIds"].kind != JNull:
+      result.groupIds = some(to(node["groupIds"], typeof(result.groupIds.get())))
+    if node.hasKey("isLive") and node["isLive"].kind != JNull:
+      result.isLive = some(to(node["isLive"], typeof(result.isLive.get())))
+    if node.hasKey("hidden") and node["hidden"].kind != JNull:
+      result.hidden = some(to(node["hidden"], typeof(result.hidden.get())))
+    if node.hasKey("date"):
+      result.date = to(node["date"], string)
+
+# Custom JSON serialization for PubSubComment with custom field names
+proc `%`*(obj: PubSubComment): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  result["urlId"] = %obj.urlId
+  result["commenterName"] = %obj.commenterName
+  if obj.commenterLink.isSome():
+    result["commenterLink"] = %obj.commenterLink.get()
+  result["commentHTML"] = %obj.commentHTML
+  result["comment"] = %obj.comment
+  if obj.parentId.isSome():
+    result["parentId"] = %obj.parentId.get()
+  if obj.votes.isSome():
+    result["votes"] = %obj.votes.get()
+  if obj.votesUp.isSome():
+    result["votesUp"] = %obj.votesUp.get()
+  if obj.votesDown.isSome():
+    result["votesDown"] = %obj.votesDown.get()
+  result["verified"] = %obj.verified
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.hasImages.isSome():
+    result["hasImages"] = %obj.hasImages.get()
+  if obj.hasLinks.isSome():
+    result["hasLinks"] = %obj.hasLinks.get()
+  if obj.isByAdmin.isSome():
+    result["isByAdmin"] = %obj.isByAdmin.get()
+  if obj.isByModerator.isSome():
+    result["isByModerator"] = %obj.isByModerator.get()
+  if obj.isPinned.isSome():
+    result["isPinned"] = %obj.isPinned.get()
+  if obj.isLocked.isSome():
+    result["isLocked"] = %obj.isLocked.get()
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+  if obj.rating.isSome():
+    result["rating"] = %obj.rating.get()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  if obj.viewCount.isSome():
+    result["viewCount"] = %obj.viewCount.get()
+  if obj.isDeleted.isSome():
+    result["isDeleted"] = %obj.isDeleted.get()
+  if obj.isDeletedUser.isSome():
+    result["isDeletedUser"] = %obj.isDeletedUser.get()
+  if obj.isSpam.isSome():
+    result["isSpam"] = %obj.isSpam.get()
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  if obj.feedbackIds.isSome():
+    result["feedbackIds"] = %obj.feedbackIds.get()
+  if obj.flagCount.isSome():
+    result["flagCount"] = %obj.flagCount.get()
+  if obj.domain.isSome():
+    result["domain"] = %obj.domain.get()
+  result["url"] = %obj.url
+  if obj.pageTitle.isSome():
+    result["pageTitle"] = %obj.pageTitle.get()
+  if obj.expireAt.isSome():
+    result["expireAt"] = %obj.expireAt.get()
+  if obj.reviewed.isSome():
+    result["reviewed"] = %obj.reviewed.get()
+  if obj.hasCode.isSome():
+    result["hasCode"] = %obj.hasCode.get()
+  result["approved"] = %obj.approved
+  if obj.locale.isSome():
+    result["locale"] = %obj.locale.get()
+  if obj.isBannedUser.isSome():
+    result["isBannedUser"] = %obj.isBannedUser.get()
+  if obj.groupIds.isSome():
+    result["groupIds"] = %obj.groupIds.get()
+  if obj.isLive.isSome():
+    result["isLive"] = %obj.isLive.get()
+  if obj.hidden.isSome():
+    result["hidden"] = %obj.hidden.get()
+  result["date"] = %obj.date

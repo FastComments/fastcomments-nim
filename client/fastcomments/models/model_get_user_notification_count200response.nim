@@ -9,21 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_get_user_notification_count_response
 
+# AnyOf type
+type GetUserNotificationCount200responseKind* {.pure.} = enum
+  GetUserNotificationCountResponseVariant
+  APIErrorVariant
+
 type GetUserNotificationCount200response* = object
   ## 
-  status*: APIStatus
-  count*: int64
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetUserNotificationCount200responseKind
+  of GetUserNotificationCount200responseKind.GetUserNotificationCountResponseVariant:
+    GetUserNotificationCountResponseValue*: GetUserNotificationCountResponse
+  of GetUserNotificationCount200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetUserNotificationCount200response]): GetUserNotificationCount200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetUserNotificationCount200response(kind: GetUserNotificationCount200responseKind.GetUserNotificationCountResponseVariant, GetUserNotificationCountResponseValue: to(node, GetUserNotificationCountResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetUserNotificationCountResponse: ", e.msg
+  try:
+    return GetUserNotificationCount200response(kind: GetUserNotificationCount200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetUserNotificationCount200response. JSON: " & $node)

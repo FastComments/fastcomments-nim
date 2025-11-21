@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -18,37 +20,29 @@ import model_object
 import model_public_comment
 import model_user_session_info
 
+# AnyOf type
+type GetCommentsPublic200responseKind* {.pure.} = enum
+  GetCommentsResponseWithPresencePublicCommentVariant
+  APIErrorVariant
+
 type GetCommentsPublic200response* = object
   ## 
-  statusCode*: int
-  status*: APIStatus
-  code*: string
-  reason*: string
-  translatedWarning*: string
-  comments*: seq[PublicComment]
-  user*: UserSessionInfo
-  urlIdClean*: string
-  lastGenDate*: int64
-  includesPastPages*: bool
-  isDemo*: bool
-  commentCount*: int
-  isSiteAdmin*: bool
-  hasBillingIssue*: bool
-  moduleData*: Table[string, JsonNode] ## Construct a type with a set of properties K of type T
-  pageNumber*: int
-  isWhiteLabeled*: bool
-  isProd*: bool
-  isCrawler*: bool
-  notificationCount*: int
-  hasMore*: bool
-  isClosed*: bool
-  presencePollState*: int
-  customConfig*: CustomConfigParameters
-  urlIdWS*: string
-  userIdWS*: string
-  tenantIdWS*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
+  case kind*: GetCommentsPublic200responseKind
+  of GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
+    GetCommentsResponseWithPresence_PublicComment_Value*: GetCommentsResponseWithPresencePublicComment
+  of GetCommentsPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetCommentsPublic200response]): GetCommentsPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetCommentsPublic200response(kind: GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant, GetCommentsResponseWithPresence_PublicComment_Value: to(node, GetCommentsResponseWithPresencePublicComment))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetCommentsResponseWithPresencePublicComment: ", e.msg
+  try:
+    return GetCommentsPublic200response(kind: GetCommentsPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetCommentsPublic200response. JSON: " & $node)

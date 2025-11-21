@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_create_user_badge_response
 import model_api_error
@@ -16,15 +18,29 @@ import model_api_status
 import model_custom_config_parameters
 import model_user_badge
 
+# AnyOf type
+type CreateUserBadge200responseKind* {.pure.} = enum
+  APICreateUserBadgeResponseVariant
+  APIErrorVariant
+
 type CreateUserBadge200response* = object
   ## 
-  status*: APIStatus
-  userBadge*: UserBadge
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: CreateUserBadge200responseKind
+  of CreateUserBadge200responseKind.APICreateUserBadgeResponseVariant:
+    APICreateUserBadgeResponseValue*: APICreateUserBadgeResponse
+  of CreateUserBadge200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[CreateUserBadge200response]): CreateUserBadge200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return CreateUserBadge200response(kind: CreateUserBadge200responseKind.APICreateUserBadgeResponseVariant, APICreateUserBadgeResponseValue: to(node, APICreateUserBadgeResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APICreateUserBadgeResponse: ", e.msg
+  try:
+    return CreateUserBadge200response(kind: CreateUserBadge200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of CreateUserBadge200response. JSON: " & $node)

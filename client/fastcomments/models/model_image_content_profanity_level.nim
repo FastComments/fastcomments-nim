@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type ImageContentProfanityLevel* {.pure.} = enum
@@ -31,3 +33,18 @@ func `$`*(v: ImageContentProfanityLevel): string =
     of ImageContentProfanityLevel.Medium: $("medium")
     of ImageContentProfanityLevel.High: $("high")
 
+proc to*(node: JsonNode, T: typedesc[ImageContentProfanityLevel]): ImageContentProfanityLevel =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum ImageContentProfanityLevel, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("off"):
+    return ImageContentProfanityLevel.Off
+  of $("low"):
+    return ImageContentProfanityLevel.Low
+  of $("medium"):
+    return ImageContentProfanityLevel.Medium
+  of $("high"):
+    return ImageContentProfanityLevel.High
+  else:
+    raise newException(ValueError, "Invalid enum value for ImageContentProfanityLevel: " & strVal)

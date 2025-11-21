@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_notification_object_type
 import model_notification_type
@@ -17,11 +19,11 @@ type UserNotification* = object
   ## 
   id*: string
   tenantId*: string
-  userId*: string
-  anonUserId*: string
+  userId*: Option[string]
+  anonUserId*: Option[string]
   urlId*: string
   url*: string
-  pageTitle*: string
+  pageTitle*: Option[string]
   relatedObjectType*: NotificationObjectType
   relatedObjectId*: string
   viewed*: bool
@@ -29,14 +31,107 @@ type UserNotification* = object
   sent*: bool
   createdAt*: string
   `type`*: NotificationType
-  fromCommentId*: string
-  fromVoteId*: string
-  fromUserName*: string
-  fromUserId*: string
-  fromUserAvatarSrc*: string
+  fromCommentId*: Option[string]
+  fromVoteId*: Option[string]
+  fromUserName*: Option[string]
+  fromUserId*: Option[string]
+  fromUserAvatarSrc*: Option[string]
   optedOut*: bool
-  count*: int64
-  relatedIds*: seq[string]
-  fromUserIds*: seq[string]
-  fromUserNames*: seq[string]
+  count*: Option[int64]
+  relatedIds*: Option[seq[string]]
+  fromUserIds*: Option[seq[string]]
+  fromUserNames*: Option[seq[string]]
 
+
+# Custom JSON deserialization for UserNotification with custom field names
+proc to*(node: JsonNode, T: typedesc[UserNotification]): UserNotification =
+  result = UserNotification()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
+      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
+    if node.hasKey("relatedObjectType"):
+      result.relatedObjectType = to(node["relatedObjectType"], NotificationObjectType)
+    if node.hasKey("relatedObjectId"):
+      result.relatedObjectId = to(node["relatedObjectId"], string)
+    if node.hasKey("viewed"):
+      result.viewed = to(node["viewed"], bool)
+    if node.hasKey("isUnreadMessage"):
+      result.isUnreadMessage = to(node["isUnreadMessage"], bool)
+    if node.hasKey("sent"):
+      result.sent = to(node["sent"], bool)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], NotificationType)
+    if node.hasKey("fromCommentId") and node["fromCommentId"].kind != JNull:
+      result.fromCommentId = some(to(node["fromCommentId"], typeof(result.fromCommentId.get())))
+    if node.hasKey("fromVoteId") and node["fromVoteId"].kind != JNull:
+      result.fromVoteId = some(to(node["fromVoteId"], typeof(result.fromVoteId.get())))
+    if node.hasKey("fromUserName") and node["fromUserName"].kind != JNull:
+      result.fromUserName = some(to(node["fromUserName"], typeof(result.fromUserName.get())))
+    if node.hasKey("fromUserId") and node["fromUserId"].kind != JNull:
+      result.fromUserId = some(to(node["fromUserId"], typeof(result.fromUserId.get())))
+    if node.hasKey("fromUserAvatarSrc") and node["fromUserAvatarSrc"].kind != JNull:
+      result.fromUserAvatarSrc = some(to(node["fromUserAvatarSrc"], typeof(result.fromUserAvatarSrc.get())))
+    if node.hasKey("optedOut"):
+      result.optedOut = to(node["optedOut"], bool)
+    if node.hasKey("count") and node["count"].kind != JNull:
+      result.count = some(to(node["count"], typeof(result.count.get())))
+    if node.hasKey("relatedIds") and node["relatedIds"].kind != JNull:
+      result.relatedIds = some(to(node["relatedIds"], typeof(result.relatedIds.get())))
+    if node.hasKey("fromUserIds") and node["fromUserIds"].kind != JNull:
+      result.fromUserIds = some(to(node["fromUserIds"], typeof(result.fromUserIds.get())))
+    if node.hasKey("fromUserNames") and node["fromUserNames"].kind != JNull:
+      result.fromUserNames = some(to(node["fromUserNames"], typeof(result.fromUserNames.get())))
+
+# Custom JSON serialization for UserNotification with custom field names
+proc `%`*(obj: UserNotification): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  result["urlId"] = %obj.urlId
+  result["url"] = %obj.url
+  if obj.pageTitle.isSome():
+    result["pageTitle"] = %obj.pageTitle.get()
+  result["relatedObjectType"] = %obj.relatedObjectType
+  result["relatedObjectId"] = %obj.relatedObjectId
+  result["viewed"] = %obj.viewed
+  result["isUnreadMessage"] = %obj.isUnreadMessage
+  result["sent"] = %obj.sent
+  result["createdAt"] = %obj.createdAt
+  result["type"] = %obj.`type`
+  if obj.fromCommentId.isSome():
+    result["fromCommentId"] = %obj.fromCommentId.get()
+  if obj.fromVoteId.isSome():
+    result["fromVoteId"] = %obj.fromVoteId.get()
+  if obj.fromUserName.isSome():
+    result["fromUserName"] = %obj.fromUserName.get()
+  if obj.fromUserId.isSome():
+    result["fromUserId"] = %obj.fromUserId.get()
+  if obj.fromUserAvatarSrc.isSome():
+    result["fromUserAvatarSrc"] = %obj.fromUserAvatarSrc.get()
+  result["optedOut"] = %obj.optedOut
+  if obj.count.isSome():
+    result["count"] = %obj.count.get()
+  if obj.relatedIds.isSome():
+    result["relatedIds"] = %obj.relatedIds.get()
+  if obj.fromUserIds.isSome():
+    result["fromUserIds"] = %obj.fromUserIds.get()
+  if obj.fromUserNames.isSome():
+    result["fromUserNames"] = %obj.fromUserNames.get()

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_notification_and_count
@@ -22,3 +24,32 @@ type HeaderState* = object
   userIdWS*: string
   notificationCounts*: seq[NotificationAndCount]
 
+
+# Custom JSON deserialization for HeaderState with custom field names
+proc to*(node: JsonNode, T: typedesc[HeaderState]): HeaderState =
+  result = HeaderState()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("NotificationType"):
+      result.notificationType = to(node["NotificationType"], JsonNode)
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("userIdWS"):
+      result.userIdWS = to(node["userIdWS"], string)
+    if node.hasKey("notificationCounts"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["notificationCounts"]
+      if arrayNode.kind == JArray:
+        result.notificationCounts = @[]
+        for item in arrayNode.items:
+          result.notificationCounts.add(to(item, NotificationAndCount))
+
+# Custom JSON serialization for HeaderState with custom field names
+proc `%`*(obj: HeaderState): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["NotificationType"] = %obj.notificationType
+  result["userId"] = %obj.userId
+  result["userIdWS"] = %obj.userIdWS
+  result["notificationCounts"] = %obj.notificationCounts

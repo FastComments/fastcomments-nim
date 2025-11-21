@@ -9,9 +9,24 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type BlockFromCommentParams* = object
   ## 
-  commentIdsToCheck*: seq[string]
+  commentIdsToCheck*: Option[seq[string]]
 
+
+# Custom JSON deserialization for BlockFromCommentParams with custom field names
+proc to*(node: JsonNode, T: typedesc[BlockFromCommentParams]): BlockFromCommentParams =
+  result = BlockFromCommentParams()
+  if node.kind == JObject:
+    if node.hasKey("commentIdsToCheck") and node["commentIdsToCheck"].kind != JNull:
+      result.commentIdsToCheck = some(to(node["commentIdsToCheck"], typeof(result.commentIdsToCheck.get())))
+
+# Custom JSON serialization for BlockFromCommentParams with custom field names
+proc `%`*(obj: BlockFromCommentParams): JsonNode =
+  result = newJObject()
+  if obj.commentIdsToCheck.isSome():
+    result["commentIdsToCheck"] = %obj.commentIdsToCheck.get()

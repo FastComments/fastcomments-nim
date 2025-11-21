@@ -9,15 +9,16 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type UpdateDomainConfigParams* = object
   ## 
   domain*: string
-  emailFromName*: string
-  emailFromEmail*: string
-  logoSrc*: string
-  logoSrc100px*: string
-  footerUnsubscribeURL*: string
-  emailHeaders*: Table[string, string] ## Construct a type with a set of properties K of type T
-
+  emailFromName*: Option[string]
+  emailFromEmail*: Option[string]
+  logoSrc*: Option[string]
+  logoSrc100px*: Option[string]
+  footerUnsubscribeURL*: Option[string]
+  emailHeaders*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T

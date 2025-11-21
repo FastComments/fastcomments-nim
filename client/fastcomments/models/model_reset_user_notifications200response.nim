@@ -9,20 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_reset_user_notifications_response
 
+# AnyOf type
+type ResetUserNotifications200responseKind* {.pure.} = enum
+  ResetUserNotificationsResponseVariant
+  APIErrorVariant
+
 type ResetUserNotifications200response* = object
   ## 
-  status*: APIStatus
-  code*: string
-  reason*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: ResetUserNotifications200responseKind
+  of ResetUserNotifications200responseKind.ResetUserNotificationsResponseVariant:
+    ResetUserNotificationsResponseValue*: ResetUserNotificationsResponse
+  of ResetUserNotifications200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[ResetUserNotifications200response]): ResetUserNotifications200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return ResetUserNotifications200response(kind: ResetUserNotifications200responseKind.ResetUserNotificationsResponseVariant, ResetUserNotificationsResponseValue: to(node, ResetUserNotificationsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as ResetUserNotificationsResponse: ", e.msg
+  try:
+    return ResetUserNotifications200response(kind: ResetUserNotifications200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of ResetUserNotifications200response. JSON: " & $node)

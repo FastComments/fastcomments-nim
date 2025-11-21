@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_comment
 import model_api_error
@@ -16,15 +18,29 @@ import model_api_get_comments_response
 import model_api_status
 import model_custom_config_parameters
 
+# AnyOf type
+type GetComments200responseKind* {.pure.} = enum
+  APIGetCommentsResponseVariant
+  APIErrorVariant
+
 type GetComments200response* = object
   ## 
-  status*: APIStatus
-  comments*: seq[APIComment]
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetComments200responseKind
+  of GetComments200responseKind.APIGetCommentsResponseVariant:
+    APIGetCommentsResponseValue*: APIGetCommentsResponse
+  of GetComments200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetComments200response]): GetComments200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetComments200response(kind: GetComments200responseKind.APIGetCommentsResponseVariant, APIGetCommentsResponseValue: to(node, APIGetCommentsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIGetCommentsResponse: ", e.msg
+  try:
+    return GetComments200response(kind: GetComments200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetComments200response. JSON: " & $node)

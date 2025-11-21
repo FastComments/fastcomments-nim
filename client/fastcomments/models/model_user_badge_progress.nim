@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type UserBadgeProgress* = object
@@ -18,7 +20,42 @@ type UserBadgeProgress* = object
   userId*: string
   firstCommentId*: string
   firstCommentDate*: string
-  autoTrustFactor*: float64
-  manualTrustFactor*: float64
+  autoTrustFactor*: Option[float64]
+  manualTrustFactor*: Option[float64]
   progress*: Table[string, float64] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for UserBadgeProgress with custom field names
+proc to*(node: JsonNode, T: typedesc[UserBadgeProgress]): UserBadgeProgress =
+  result = UserBadgeProgress()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("firstCommentId"):
+      result.firstCommentId = to(node["firstCommentId"], string)
+    if node.hasKey("firstCommentDate"):
+      result.firstCommentDate = to(node["firstCommentDate"], string)
+    if node.hasKey("autoTrustFactor") and node["autoTrustFactor"].kind != JNull:
+      result.autoTrustFactor = some(to(node["autoTrustFactor"], typeof(result.autoTrustFactor.get())))
+    if node.hasKey("manualTrustFactor") and node["manualTrustFactor"].kind != JNull:
+      result.manualTrustFactor = some(to(node["manualTrustFactor"], typeof(result.manualTrustFactor.get())))
+    if node.hasKey("progress"):
+      result.progress = to(node["progress"], Table[string, float64])
+
+# Custom JSON serialization for UserBadgeProgress with custom field names
+proc `%`*(obj: UserBadgeProgress): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  result["userId"] = %obj.userId
+  result["firstCommentId"] = %obj.firstCommentId
+  result["firstCommentDate"] = %obj.firstCommentDate
+  if obj.autoTrustFactor.isSome():
+    result["autoTrustFactor"] = %obj.autoTrustFactor.get()
+  if obj.manualTrustFactor.isSome():
+    result["manualTrustFactor"] = %obj.manualTrustFactor.get()
+  result["progress"] = %obj.progress

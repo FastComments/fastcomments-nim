@@ -85,10 +85,7 @@ const basepath = "https://fastcomments.com"
 template constructResult[T](response: Response): untyped =
   if response.code in {Http200, Http201, Http202, Http204, Http206}:
     try:
-      when name(stripGenericParams(T.typedesc).typedesc) == name(Table):
-        (some(json.to(parseJson(response.body), T.typedesc)), response)
-      else:
-        (some(marshal.to[T](response.body)), response)
+      (some(to(parseJson(response.body), T)), response)
     except JsonParsingError:
       # The server returned a malformed response though the response code is 2XX
       # TODO: need better error handling
@@ -101,9 +98,9 @@ template constructResult[T](response: Response): untyped =
 proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigParams: AddDomainConfigParams): (Option[AddDomainConfig_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/domain-configs" & "?" & url_encoded_query_params, $(%addDomainConfigParams))
   constructResult[AddDomainConfig_200_response](response)
@@ -112,9 +109,9 @@ proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigP
 proc addPage*(httpClient: HttpClient, tenantId: string, createAPIPageData: CreateAPIPageData): (Option[AddPageAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/pages" & "?" & url_encoded_query_params, $(%createAPIPageData))
   constructResult[AddPageAPIResponse](response)
@@ -123,9 +120,9 @@ proc addPage*(httpClient: HttpClient, tenantId: string, createAPIPageData: Creat
 proc addSSOUser*(httpClient: HttpClient, tenantId: string, createAPISSOUserData: CreateAPISSOUserData): (Option[AddSSOUserAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/sso-users" & "?" & url_encoded_query_params, $(%createAPISSOUserData))
   constructResult[AddSSOUserAPIResponse](response)
@@ -134,11 +131,13 @@ proc addSSOUser*(httpClient: HttpClient, tenantId: string, createAPISSOUserData:
 proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: AggregationRequest, parentTenantId: string, includeStats: bool): (Option[AggregationResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("parentTenantId", $parentTenantId), # 
-    ("includeStats", $includeStats), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $parentTenantId != "":
+    query_params_list.add(("parentTenantId", $parentTenantId))
+  if $includeStats != "":
+    query_params_list.add(("includeStats", $includeStats))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/aggregate" & "?" & url_encoded_query_params, $(%aggregationRequest))
   constructResult[AggregationResponse](response)
@@ -146,15 +145,21 @@ proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: Ag
 
 proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, timeBucket: AggregateTimeBucket, startDate: string, forceRecalculate: bool): (Option[AggregateQuestionResults_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("questionId", $questionId), # 
-    ("questionIds", $questionIds.join(",")), # 
-    ("urlId", $urlId), # 
-    ("timeBucket", $timeBucket), # 
-    ("startDate", $startDate), # 
-    ("forceRecalculate", $forceRecalculate), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $questionId != "":
+    query_params_list.add(("questionId", $questionId))
+  if questionIds.len > 0:
+    query_params_list.add(("questionIds", $questionIds.join(",")))
+  if $urlId != "":
+    query_params_list.add(("urlId", $urlId))
+  if $timeBucket != "":
+    query_params_list.add(("timeBucket", $timeBucket))
+  if $startDate != "":
+    query_params_list.add(("startDate", $startDate))
+  if $forceRecalculate != "":
+    query_params_list.add(("forceRecalculate", $forceRecalculate))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/question-results-aggregation" & "?" & url_encoded_query_params)
   constructResult[AggregateQuestionResults_200_response](response)
@@ -163,11 +168,13 @@ proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questio
 proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, blockFromCommentParams: BlockFromCommentParams, userId: string, anonUserId: string): (Option[BlockFromCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-    ("anonUserId", $anonUserId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $anonUserId != "":
+    query_params_list.add(("anonUserId", $anonUserId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/block" & "?" & url_encoded_query_params, $(%blockFromCommentParams))
   constructResult[BlockFromCommentPublic_200_response](response)
@@ -176,10 +183,11 @@ proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string,
 proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bulkAggregateQuestionResultsRequest: BulkAggregateQuestionResultsRequest, forceRecalculate: bool): (Option[BulkAggregateQuestionResults_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("forceRecalculate", $forceRecalculate), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $forceRecalculate != "":
+    query_params_list.add(("forceRecalculate", $forceRecalculate))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/question-results-aggregation/bulk" & "?" & url_encoded_query_params, $(%bulkAggregateQuestionResultsRequest))
   constructResult[BulkAggregateQuestionResults_200_response](response)
@@ -187,17 +195,25 @@ proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bul
 
 proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, startDate: string, forceRecalculate: bool, minValue: float64, maxValue: float64, limit: float64): (Option[CombineCommentsWithQuestionResults_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("questionId", $questionId), # 
-    ("questionIds", $questionIds.join(",")), # 
-    ("urlId", $urlId), # 
-    ("startDate", $startDate), # 
-    ("forceRecalculate", $forceRecalculate), # 
-    ("minValue", $minValue), # 
-    ("maxValue", $maxValue), # 
-    ("limit", $limit), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $questionId != "":
+    query_params_list.add(("questionId", $questionId))
+  if questionIds.len > 0:
+    query_params_list.add(("questionIds", $questionIds.join(",")))
+  if $urlId != "":
+    query_params_list.add(("urlId", $urlId))
+  if $startDate != "":
+    query_params_list.add(("startDate", $startDate))
+  if $forceRecalculate != "":
+    query_params_list.add(("forceRecalculate", $forceRecalculate))
+  if $minValue != "":
+    query_params_list.add(("minValue", $minValue))
+  if $maxValue != "":
+    query_params_list.add(("maxValue", $maxValue))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/question-results-aggregation/combine/comments" & "?" & url_encoded_query_params)
   constructResult[CombineCommentsWithQuestionResults_200_response](response)
@@ -206,13 +222,17 @@ proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: strin
 proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, broadcastId: string, isLive: bool, doSpamCheck: bool, skipDupCheck: bool): (Option[CreateFeedPost_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("broadcastId", $broadcastId), # 
-    ("isLive", $isLive), # 
-    ("doSpamCheck", $doSpamCheck), # 
-    ("skipDupCheck", $skipDupCheck), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
+  if $isLive != "":
+    query_params_list.add(("isLive", $isLive))
+  if $doSpamCheck != "":
+    query_params_list.add(("doSpamCheck", $doSpamCheck))
+  if $skipDupCheck != "":
+    query_params_list.add(("skipDupCheck", $skipDupCheck))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/feed-posts" & "?" & url_encoded_query_params, $(%createFeedPostParams))
   constructResult[CreateFeedPost_200_response](response)
@@ -221,9 +241,9 @@ proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostPar
 proc createSubscription*(httpClient: HttpClient, tenantId: string, createAPIUserSubscriptionData: CreateAPIUserSubscriptionData): (Option[CreateSubscriptionAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/subscriptions" & "?" & url_encoded_query_params, $(%createAPIUserSubscriptionData))
   constructResult[CreateSubscriptionAPIResponse](response)
@@ -232,9 +252,9 @@ proc createSubscription*(httpClient: HttpClient, tenantId: string, createAPIUser
 proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeParams: CreateUserBadgeParams): (Option[CreateUserBadge_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/user-badges" & "?" & url_encoded_query_params, $(%createUserBadgeParams))
   constructResult[CreateUserBadge_200_response](response)
@@ -242,11 +262,13 @@ proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeP
 
 proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contextUserId: string, isLive: bool): (Option[DeleteComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("contextUserId", $contextUserId), # 
-    ("isLive", $isLive), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $contextUserId != "":
+    query_params_list.add(("contextUserId", $contextUserId))
+  if $isLive != "":
+    query_params_list.add(("isLive", $isLive))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/comments/{id}" & "?" & url_encoded_query_params)
   constructResult[DeleteComment_200_response](response)
@@ -254,9 +276,9 @@ proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contex
 
 proc deleteDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[DeleteDomainConfig_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/domain-configs/{domain}" & "?" & url_encoded_query_params)
   constructResult[DeleteDomainConfig_200_response](response)
@@ -264,9 +286,9 @@ proc deleteDomainConfig*(httpClient: HttpClient, tenantId: string, domain: strin
 
 proc deletePage*(httpClient: HttpClient, tenantId: string, id: string): (Option[DeletePageAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/pages/{id}" & "?" & url_encoded_query_params)
   constructResult[DeletePageAPIResponse](response)
@@ -274,11 +296,13 @@ proc deletePage*(httpClient: HttpClient, tenantId: string, id: string): (Option[
 
 proc deleteSSOUser*(httpClient: HttpClient, tenantId: string, id: string, deleteComments: bool, commentDeleteMode: string): (Option[DeleteSSOUserAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("deleteComments", $deleteComments), # 
-    ("commentDeleteMode", $commentDeleteMode), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $deleteComments != "":
+    query_params_list.add(("deleteComments", $deleteComments))
+  if $commentDeleteMode != "":
+    query_params_list.add(("commentDeleteMode", $commentDeleteMode))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/sso-users/{id}" & "?" & url_encoded_query_params)
   constructResult[DeleteSSOUserAPIResponse](response)
@@ -286,10 +310,11 @@ proc deleteSSOUser*(httpClient: HttpClient, tenantId: string, id: string, delete
 
 proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, userId: string): (Option[DeleteSubscriptionAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/subscriptions/{id}" & "?" & url_encoded_query_params)
   constructResult[DeleteSubscriptionAPIResponse](response)
@@ -297,9 +322,9 @@ proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, u
 
 proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[UpdateUserBadge_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/user-badges/{id}" & "?" & url_encoded_query_params)
   constructResult[UpdateUserBadge_200_response](response)
@@ -307,11 +332,13 @@ proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Op
 
 proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-    ("anonUserId", $anonUserId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $anonUserId != "":
+    query_params_list.add(("anonUserId", $anonUserId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/flag" & "?" & url_encoded_query_params)
   constructResult[FlagComment_200_response](response)
@@ -319,14 +346,19 @@ proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: 
 
 proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, skip: float64, order: SORTDIR, after: float64, before: float64): (Option[GetAuditLogs_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("limit", $limit), # 
-    ("skip", $skip), # 
-    ("order", $order), # 
-    ("after", $after), # 
-    ("before", $before), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  if $order != "":
+    query_params_list.add(("order", $order))
+  if $after != "":
+    query_params_list.add(("after", $after))
+  if $before != "":
+    query_params_list.add(("before", $before))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/audit-logs" & "?" & url_encoded_query_params)
   constructResult[GetAuditLogs_200_response](response)
@@ -334,9 +366,9 @@ proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, ski
 
 proc getComment*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/comments/{id}" & "?" & url_encoded_query_params)
   constructResult[GetComment_200_response](response)
@@ -344,23 +376,37 @@ proc getComment*(httpClient: HttpClient, tenantId: string, id: string): (Option[
 
 proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: int, skip: int, asTree: bool, skipChildren: int, limitChildren: int, maxTreeDepth: int, urlId: string, userId: string, anonUserId: string, contextUserId: string, hashTag: string, parentId: string, direction: SortDirections): (Option[GetComments_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("page", $page), # 
-    ("limit", $limit), # 
-    ("skip", $skip), # 
-    ("asTree", $asTree), # 
-    ("skipChildren", $skipChildren), # 
-    ("limitChildren", $limitChildren), # 
-    ("maxTreeDepth", $maxTreeDepth), # 
-    ("urlId", $urlId), # 
-    ("userId", $userId), # 
-    ("anonUserId", $anonUserId), # 
-    ("contextUserId", $contextUserId), # 
-    ("hashTag", $hashTag), # 
-    ("parentId", $parentId), # 
-    ("direction", $direction), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $page != "":
+    query_params_list.add(("page", $page))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  if $asTree != "":
+    query_params_list.add(("asTree", $asTree))
+  if $skipChildren != "":
+    query_params_list.add(("skipChildren", $skipChildren))
+  if $limitChildren != "":
+    query_params_list.add(("limitChildren", $limitChildren))
+  if $maxTreeDepth != "":
+    query_params_list.add(("maxTreeDepth", $maxTreeDepth))
+  if $urlId != "":
+    query_params_list.add(("urlId", $urlId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $anonUserId != "":
+    query_params_list.add(("anonUserId", $anonUserId))
+  if $contextUserId != "":
+    query_params_list.add(("contextUserId", $contextUserId))
+  if $hashTag != "":
+    query_params_list.add(("hashTag", $hashTag))
+  if $parentId != "":
+    query_params_list.add(("parentId", $parentId))
+  if $direction != "":
+    query_params_list.add(("direction", $direction))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/comments" & "?" & url_encoded_query_params)
   constructResult[GetComments_200_response](response)
@@ -368,9 +414,9 @@ proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: in
 
 proc getDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[GetDomainConfig_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/domain-configs/{domain}" & "?" & url_encoded_query_params)
   constructResult[GetDomainConfig_200_response](response)
@@ -378,9 +424,9 @@ proc getDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string):
 
 proc getDomainConfigs*(httpClient: HttpClient, tenantId: string): (Option[GetDomainConfigs_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/domain-configs" & "?" & url_encoded_query_params)
   constructResult[GetDomainConfigs_200_response](response)
@@ -388,12 +434,15 @@ proc getDomainConfigs*(httpClient: HttpClient, tenantId: string): (Option[GetDom
 
 proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, limit: int, tags: seq[string]): (Option[GetFeedPosts_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("afterId", $afterId), # 
-    ("limit", $limit), # 
-    ("tags", $tags.join(",")), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $afterId != "":
+    query_params_list.add(("afterId", $afterId))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if tags.len > 0:
+    query_params_list.add(("tags", $tags.join(",")))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/feed-posts" & "?" & url_encoded_query_params)
   constructResult[GetFeedPosts_200_response](response)
@@ -401,10 +450,10 @@ proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, li
 
 proc getPageByURLId*(httpClient: HttpClient, tenantId: string, urlId: string): (Option[GetPageByURLIdAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("urlId", $urlId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("urlId", $urlId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/pages/by-url-id" & "?" & url_encoded_query_params)
   constructResult[GetPageByURLIdAPIResponse](response)
@@ -412,9 +461,9 @@ proc getPageByURLId*(httpClient: HttpClient, tenantId: string, urlId: string): (
 
 proc getPages*(httpClient: HttpClient, tenantId: string): (Option[GetPagesAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/pages" & "?" & url_encoded_query_params)
   constructResult[GetPagesAPIResponse](response)
@@ -422,9 +471,9 @@ proc getPages*(httpClient: HttpClient, tenantId: string): (Option[GetPagesAPIRes
 
 proc getSSOUserByEmail*(httpClient: HttpClient, tenantId: string, email: string): (Option[GetSSOUserByEmailAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/sso-users/by-email/{email}" & "?" & url_encoded_query_params)
   constructResult[GetSSOUserByEmailAPIResponse](response)
@@ -432,9 +481,9 @@ proc getSSOUserByEmail*(httpClient: HttpClient, tenantId: string, email: string)
 
 proc getSSOUserById*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetSSOUserByIdAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/sso-users/by-id/{id}" & "?" & url_encoded_query_params)
   constructResult[GetSSOUserByIdAPIResponse](response)
@@ -442,10 +491,11 @@ proc getSSOUserById*(httpClient: HttpClient, tenantId: string, id: string): (Opt
 
 proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[GetSSOUsers_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("skip", $skip), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/sso-users" & "?" & url_encoded_query_params)
   constructResult[GetSSOUsers_200_response](response)
@@ -453,10 +503,11 @@ proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[
 
 proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string): (Option[GetSubscriptionsAPIResponse], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/subscriptions" & "?" & url_encoded_query_params)
   constructResult[GetSubscriptionsAPIResponse](response)
@@ -464,9 +515,9 @@ proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string)
 
 proc getUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUserBadge_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/user-badges/{id}" & "?" & url_encoded_query_params)
   constructResult[GetUserBadge_200_response](response)
@@ -474,9 +525,9 @@ proc getUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Optio
 
 proc getUserBadgeProgressById*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUserBadgeProgressById_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/user-badge-progress/{id}" & "?" & url_encoded_query_params)
   constructResult[GetUserBadgeProgressById_200_response](response)
@@ -484,9 +535,9 @@ proc getUserBadgeProgressById*(httpClient: HttpClient, tenantId: string, id: str
 
 proc getUserBadgeProgressByUserId*(httpClient: HttpClient, tenantId: string, userId: string): (Option[GetUserBadgeProgressById_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/user-badge-progress/user/{userId}" & "?" & url_encoded_query_params)
   constructResult[GetUserBadgeProgressById_200_response](response)
@@ -494,12 +545,15 @@ proc getUserBadgeProgressByUserId*(httpClient: HttpClient, tenantId: string, use
 
 proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId: string, limit: float64, skip: float64): (Option[GetUserBadgeProgressList_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-    ("limit", $limit), # 
-    ("skip", $skip), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/user-badge-progress" & "?" & url_encoded_query_params)
   constructResult[GetUserBadgeProgressList_200_response](response)
@@ -507,15 +561,21 @@ proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId:
 
 proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, badgeId: string, `type`: float64, displayedOnComments: bool, limit: float64, skip: float64): (Option[GetUserBadges_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-    ("badgeId", $badgeId), # 
-    ("type", $`type`), # 
-    ("displayedOnComments", $displayedOnComments), # 
-    ("limit", $limit), # 
-    ("skip", $skip), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $badgeId != "":
+    query_params_list.add(("badgeId", $badgeId))
+  if $`type` != "":
+    query_params_list.add(("type", $`type`))
+  if $displayedOnComments != "":
+    query_params_list.add(("displayedOnComments", $displayedOnComments))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/user-badges" & "?" & url_encoded_query_params)
   constructResult[GetUserBadges_200_response](response)
@@ -524,9 +584,9 @@ proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, ba
 proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, patchDomainConfigParams: PatchDomainConfigParams): (Option[GetDomainConfig_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/domain-configs/{domainToUpdate}" & "?" & url_encoded_query_params, $(%patchDomainConfigParams))
   constructResult[GetDomainConfig_200_response](response)
@@ -535,9 +595,9 @@ proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate
 proc patchPage*(httpClient: HttpClient, tenantId: string, id: string, updateAPIPageData: UpdateAPIPageData): (Option[PatchPageAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/pages/{id}" & "?" & url_encoded_query_params, $(%updateAPIPageData))
   constructResult[PatchPageAPIResponse](response)
@@ -546,10 +606,11 @@ proc patchPage*(httpClient: HttpClient, tenantId: string, id: string, updateAPIP
 proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PatchSSOUserAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("updateComments", $updateComments), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $updateComments != "":
+    query_params_list.add(("updateComments", $updateComments))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/sso-users/{id}" & "?" & url_encoded_query_params, $(%updateAPISSOUserData))
   constructResult[PatchSSOUserAPIResponse](response)
@@ -558,9 +619,9 @@ proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateA
 proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, updateDomainConfigParams: UpdateDomainConfigParams): (Option[GetDomainConfig_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/domain-configs/{domainToUpdate}" & "?" & url_encoded_query_params, $(%updateDomainConfigParams))
   constructResult[GetDomainConfig_200_response](response)
@@ -569,10 +630,11 @@ proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: 
 proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PutSSOUserAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("updateComments", $updateComments), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $updateComments != "":
+    query_params_list.add(("updateComments", $updateComments))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/sso-users/{id}" & "?" & url_encoded_query_params, $(%updateAPISSOUserData))
   constructResult[PutSSOUserAPIResponse](response)
@@ -581,13 +643,17 @@ proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPI
 proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams: CreateCommentParams, isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[SaveComment_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("isLive", $isLive), # 
-    ("doSpamCheck", $doSpamCheck), # 
-    ("sendEmails", $sendEmails), # 
-    ("populateNotifications", $populateNotifications), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $isLive != "":
+    query_params_list.add(("isLive", $isLive))
+  if $doSpamCheck != "":
+    query_params_list.add(("doSpamCheck", $doSpamCheck))
+  if $sendEmails != "":
+    query_params_list.add(("sendEmails", $sendEmails))
+  if $populateNotifications != "":
+    query_params_list.add(("populateNotifications", $populateNotifications))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/comments" & "?" & url_encoded_query_params, $(%createCommentParams))
   constructResult[SaveComment_200_response](response)
@@ -596,13 +662,17 @@ proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams:
 proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentParams: seq[CreateCommentParams], isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[seq[SaveComment_200_response]], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("isLive", $isLive), # 
-    ("doSpamCheck", $doSpamCheck), # 
-    ("sendEmails", $sendEmails), # 
-    ("populateNotifications", $populateNotifications), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $isLive != "":
+    query_params_list.add(("isLive", $isLive))
+  if $doSpamCheck != "":
+    query_params_list.add(("doSpamCheck", $doSpamCheck))
+  if $sendEmails != "":
+    query_params_list.add(("sendEmails", $sendEmails))
+  if $populateNotifications != "":
+    query_params_list.add(("populateNotifications", $populateNotifications))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/comments/bulk" & "?" & url_encoded_query_params, $(%createCommentParams))
   constructResult[seq[SaveComment_200_response]](response)
@@ -611,11 +681,13 @@ proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentPa
 proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, unBlockFromCommentParams: UnBlockFromCommentParams, userId: string, anonUserId: string): (Option[UnBlockCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-    ("anonUserId", $anonUserId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $anonUserId != "":
+    query_params_list.add(("anonUserId", $anonUserId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/un-block" & "?" & url_encoded_query_params, $(%unBlockFromCommentParams))
   constructResult[UnBlockCommentPublic_200_response](response)
@@ -623,11 +695,13 @@ proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: strin
 
 proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("userId", $userId), # 
-    ("anonUserId", $anonUserId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $anonUserId != "":
+    query_params_list.add(("anonUserId", $anonUserId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/un-flag" & "?" & url_encoded_query_params)
   constructResult[FlagComment_200_response](response)
@@ -636,12 +710,15 @@ proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId
 proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updatableCommentParams: UpdatableCommentParams, contextUserId: string, doSpamCheck: bool, isLive: bool): (Option[FlagCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("contextUserId", $contextUserId), # 
-    ("doSpamCheck", $doSpamCheck), # 
-    ("isLive", $isLive), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $contextUserId != "":
+    query_params_list.add(("contextUserId", $contextUserId))
+  if $doSpamCheck != "":
+    query_params_list.add(("doSpamCheck", $doSpamCheck))
+  if $isLive != "":
+    query_params_list.add(("isLive", $isLive))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/comments/{id}" & "?" & url_encoded_query_params, $(%updatableCommentParams))
   constructResult[FlagCommentPublic_200_response](response)
@@ -650,9 +727,9 @@ proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updata
 proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedPost: FeedPost): (Option[FlagCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/feed-posts/{id}" & "?" & url_encoded_query_params, $(%feedPost))
   constructResult[FlagCommentPublic_200_response](response)
@@ -661,9 +738,9 @@ proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedP
 proc updateUserBadge*(httpClient: HttpClient, tenantId: string, id: string, updateUserBadgeParams: UpdateUserBadgeParams): (Option[UpdateUserBadge_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/user-badges/{id}" & "?" & url_encoded_query_params, $(%updateUserBadgeParams))
   constructResult[UpdateUserBadge_200_response](response)

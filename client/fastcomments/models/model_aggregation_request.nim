@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_aggregation_operation
 import model_aggregation_request_sort
@@ -16,9 +18,8 @@ import model_query_predicate
 
 type AggregationRequest* = object
   ## The aggregation request accepts a resource, optional grouping keys, an array of operations, and an optional sort
-  query*: seq[QueryPredicate]
+  query*: Option[seq[QueryPredicate]]
   resourceName*: string
-  groupBy*: seq[string]
+  groupBy*: Option[seq[string]]
   operations*: seq[AggregationOperation]
-  sort*: AggregationRequest_sort
-
+  sort*: Option[AggregationRequest_sort]

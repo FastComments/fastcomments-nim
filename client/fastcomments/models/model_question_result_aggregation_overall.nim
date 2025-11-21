@@ -9,15 +9,16 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_question_datum
 
 type QuestionResultAggregationOverall* = object
   ## 
-  dataByDateBucket*: Table[string, QuestionDatum] ## Construct a type with a set of properties K of type T
-  dataByUrlId*: Table[string, QuestionDatum] ## Construct a type with a set of properties K of type T
-  countsByValue*: Table[string, int]
+  dataByDateBucket*: Option[Table[string, QuestionDatum]] ## Construct a type with a set of properties K of type T
+  dataByUrlId*: Option[Table[string, QuestionDatum]] ## Construct a type with a set of properties K of type T
+  countsByValue*: Option[Table[string, int]]
   total*: int64
-  average*: float64
+  average*: Option[float64]
   createdAt*: string
-

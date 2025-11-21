@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_delete_comment_action
@@ -18,3 +20,18 @@ type DeleteCommentResult* = object
   action*: DeleteCommentAction
   status*: APIStatus
 
+
+# Custom JSON deserialization for DeleteCommentResult with custom field names
+proc to*(node: JsonNode, T: typedesc[DeleteCommentResult]): DeleteCommentResult =
+  result = DeleteCommentResult()
+  if node.kind == JObject:
+    if node.hasKey("action"):
+      result.action = to(node["action"], DeleteCommentAction)
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+
+# Custom JSON serialization for DeleteCommentResult with custom field names
+proc `%`*(obj: DeleteCommentResult): JsonNode =
+  result = newJObject()
+  result["action"] = %obj.action
+  result["status"] = %obj.status

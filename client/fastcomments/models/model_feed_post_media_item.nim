@@ -9,12 +9,13 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_feed_post_media_item_asset
 
 type FeedPostMediaItem* = object
   ## 
-  title*: string
-  linkUrl*: string
+  title*: Option[string]
+  linkUrl*: Option[string]
   sizes*: seq[FeedPostMediaItemAsset]
-

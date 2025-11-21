@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type `Type`* {.pure.} = enum
@@ -19,9 +21,9 @@ type CommentUserMentionInfo* = object
   ## 
   id*: string
   tag*: string
-  rawTag*: string
-  `type`*: `Type`
-  sent*: bool
+  rawTag*: Option[string]
+  `type`*: Option[`Type`]
+  sent*: Option[bool]
 
 func `%`*(v: `Type`): JsonNode =
   result = case v:
@@ -33,3 +35,42 @@ func `$`*(v: `Type`): string =
     of `Type`.User: $("user")
     of `Type`.Sso: $("sso")
 
+proc to*(node: JsonNode, T: typedesc[`Type`]): `Type` =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum `Type`, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("user"):
+    return `Type`.User
+  of $("sso"):
+    return `Type`.Sso
+  else:
+    raise newException(ValueError, "Invalid enum value for `Type`: " & strVal)
+
+
+# Custom JSON deserialization for CommentUserMentionInfo with custom field names
+proc to*(node: JsonNode, T: typedesc[CommentUserMentionInfo]): CommentUserMentionInfo =
+  result = CommentUserMentionInfo()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("tag"):
+      result.tag = to(node["tag"], string)
+    if node.hasKey("rawTag") and node["rawTag"].kind != JNull:
+      result.rawTag = some(to(node["rawTag"], typeof(result.rawTag.get())))
+    if node.hasKey("type") and node["type"].kind != JNull:
+      result.`type` = some(to(node["type"], `Type`))
+    if node.hasKey("sent") and node["sent"].kind != JNull:
+      result.sent = some(to(node["sent"], typeof(result.sent.get())))
+
+# Custom JSON serialization for CommentUserMentionInfo with custom field names
+proc `%`*(obj: CommentUserMentionInfo): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["tag"] = %obj.tag
+  if obj.rawTag.isSome():
+    result["rawTag"] = %obj.rawTag.get()
+  if obj.`type`.isSome():
+    result["type"] = %obj.`type`.get()
+  if obj.sent.isSome():
+    result["sent"] = %obj.sent.get()

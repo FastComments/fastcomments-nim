@@ -9,10 +9,11 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type FeedPostStats* = object
   ## 
-  reacts*: Table[string, int]
-  commentCount*: int
-
+  reacts*: Option[Table[string, int]]
+  commentCount*: Option[int]

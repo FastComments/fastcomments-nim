@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type `Type`* {.pure.} = enum
@@ -19,8 +21,8 @@ type UserSearchResult* = object
   ## 
   id*: string
   name*: string
-  displayName*: string
-  avatarSrc*: string
+  displayName*: Option[string]
+  avatarSrc*: Option[string]
   `type`*: `Type`
 
 func `%`*(v: `Type`): JsonNode =
@@ -33,3 +35,41 @@ func `$`*(v: `Type`): string =
     of `Type`.User: $("user")
     of `Type`.Sso: $("sso")
 
+proc to*(node: JsonNode, T: typedesc[`Type`]): `Type` =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum `Type`, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("user"):
+    return `Type`.User
+  of $("sso"):
+    return `Type`.Sso
+  else:
+    raise newException(ValueError, "Invalid enum value for `Type`: " & strVal)
+
+
+# Custom JSON deserialization for UserSearchResult with custom field names
+proc to*(node: JsonNode, T: typedesc[UserSearchResult]): UserSearchResult =
+  result = UserSearchResult()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("displayName") and node["displayName"].kind != JNull:
+      result.displayName = some(to(node["displayName"], typeof(result.displayName.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], `Type`)
+
+# Custom JSON serialization for UserSearchResult with custom field names
+proc `%`*(obj: UserSearchResult): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["name"] = %obj.name
+  if obj.displayName.isSome():
+    result["displayName"] = %obj.displayName.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  result["type"] = %obj.`type`

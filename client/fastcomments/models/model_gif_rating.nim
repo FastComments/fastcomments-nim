@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type GifRating* {.pure.} = enum
@@ -31,3 +33,18 @@ func `$`*(v: GifRating): string =
     of GifRating.Pg13: $("pg-13")
     of GifRating.R: $("r")
 
+proc to*(node: JsonNode, T: typedesc[GifRating]): GifRating =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum GifRating, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("g"):
+    return GifRating.G
+  of $("pg"):
+    return GifRating.Pg
+  of $("pg-13"):
+    return GifRating.Pg13
+  of $("r"):
+    return GifRating.R
+  else:
+    raise newException(ValueError, "Invalid enum value for GifRating: " & strVal)

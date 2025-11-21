@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CommentQuestionResultsRenderingType* {.pure.} = enum
@@ -28,3 +30,16 @@ func `$`*(v: CommentQuestionResultsRenderingType): string =
     of CommentQuestionResultsRenderingType.`1`: $(1)
     of CommentQuestionResultsRenderingType.`2`: $(2)
 
+proc to*(node: JsonNode, T: typedesc[CommentQuestionResultsRenderingType]): CommentQuestionResultsRenderingType =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum CommentQuestionResultsRenderingType, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return CommentQuestionResultsRenderingType.`0`
+  of $(1):
+    return CommentQuestionResultsRenderingType.`1`
+  of $(2):
+    return CommentQuestionResultsRenderingType.`2`
+  else:
+    raise newException(ValueError, "Invalid enum value for CommentQuestionResultsRenderingType: " & strVal)

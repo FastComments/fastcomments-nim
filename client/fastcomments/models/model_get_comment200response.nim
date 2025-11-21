@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_comment
 import model_api_error
@@ -16,15 +18,29 @@ import model_api_get_comment_response
 import model_api_status
 import model_custom_config_parameters
 
+# AnyOf type
+type GetComment200responseKind* {.pure.} = enum
+  APIGetCommentResponseVariant
+  APIErrorVariant
+
 type GetComment200response* = object
   ## 
-  status*: APIStatus
-  comment*: APIComment
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetComment200responseKind
+  of GetComment200responseKind.APIGetCommentResponseVariant:
+    APIGetCommentResponseValue*: APIGetCommentResponse
+  of GetComment200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetComment200response]): GetComment200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetComment200response(kind: GetComment200responseKind.APIGetCommentResponseVariant, APIGetCommentResponseValue: to(node, APIGetCommentResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIGetCommentResponse: ", e.msg
+  try:
+    return GetComment200response(kind: GetComment200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetComment200response. JSON: " & $node)

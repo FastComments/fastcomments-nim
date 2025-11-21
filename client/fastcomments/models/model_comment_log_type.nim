@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CommentLogType* {.pure.} = enum
@@ -184,3 +186,120 @@ func `$`*(v: CommentLogType): string =
     of CommentLogType.`53`: $(53)
     of CommentLogType.`54`: $(54)
 
+proc to*(node: JsonNode, T: typedesc[CommentLogType]): CommentLogType =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum CommentLogType, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return CommentLogType.`0`
+  of $(1):
+    return CommentLogType.`1`
+  of $(2):
+    return CommentLogType.`2`
+  of $(3):
+    return CommentLogType.`3`
+  of $(4):
+    return CommentLogType.`4`
+  of $(5):
+    return CommentLogType.`5`
+  of $(6):
+    return CommentLogType.`6`
+  of $(7):
+    return CommentLogType.`7`
+  of $(8):
+    return CommentLogType.`8`
+  of $(9):
+    return CommentLogType.`9`
+  of $(10):
+    return CommentLogType.`10`
+  of $(11):
+    return CommentLogType.`11`
+  of $(12):
+    return CommentLogType.`12`
+  of $(13):
+    return CommentLogType.`13`
+  of $(14):
+    return CommentLogType.`14`
+  of $(15):
+    return CommentLogType.`15`
+  of $(16):
+    return CommentLogType.`16`
+  of $(17):
+    return CommentLogType.`17`
+  of $(18):
+    return CommentLogType.`18`
+  of $(19):
+    return CommentLogType.`19`
+  of $(20):
+    return CommentLogType.`20`
+  of $(21):
+    return CommentLogType.`21`
+  of $(22):
+    return CommentLogType.`22`
+  of $(23):
+    return CommentLogType.`23`
+  of $(24):
+    return CommentLogType.`24`
+  of $(25):
+    return CommentLogType.`25`
+  of $(26):
+    return CommentLogType.`26`
+  of $(27):
+    return CommentLogType.`27`
+  of $(28):
+    return CommentLogType.`28`
+  of $(29):
+    return CommentLogType.`29`
+  of $(30):
+    return CommentLogType.`30`
+  of $(31):
+    return CommentLogType.`31`
+  of $(32):
+    return CommentLogType.`32`
+  of $(33):
+    return CommentLogType.`33`
+  of $(34):
+    return CommentLogType.`34`
+  of $(35):
+    return CommentLogType.`35`
+  of $(36):
+    return CommentLogType.`36`
+  of $(37):
+    return CommentLogType.`37`
+  of $(38):
+    return CommentLogType.`38`
+  of $(39):
+    return CommentLogType.`39`
+  of $(40):
+    return CommentLogType.`40`
+  of $(41):
+    return CommentLogType.`41`
+  of $(42):
+    return CommentLogType.`42`
+  of $(43):
+    return CommentLogType.`43`
+  of $(44):
+    return CommentLogType.`44`
+  of $(45):
+    return CommentLogType.`45`
+  of $(46):
+    return CommentLogType.`46`
+  of $(47):
+    return CommentLogType.`47`
+  of $(48):
+    return CommentLogType.`48`
+  of $(49):
+    return CommentLogType.`49`
+  of $(50):
+    return CommentLogType.`50`
+  of $(51):
+    return CommentLogType.`51`
+  of $(52):
+    return CommentLogType.`52`
+  of $(53):
+    return CommentLogType.`53`
+  of $(54):
+    return CommentLogType.`54`
+  else:
+    raise newException(ValueError, "Invalid enum value for CommentLogType: " & strVal)

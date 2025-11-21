@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,15 +18,29 @@ import model_custom_config_parameters
 import model_search_users_response
 import model_user_search_result
 
+# AnyOf type
+type SearchUsers200responseKind* {.pure.} = enum
+  SearchUsersResponseVariant
+  APIErrorVariant
+
 type SearchUsers200response* = object
   ## 
-  status*: APIStatus
-  users*: seq[UserSearchResult]
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: SearchUsers200responseKind
+  of SearchUsers200responseKind.SearchUsersResponseVariant:
+    SearchUsersResponseValue*: SearchUsersResponse
+  of SearchUsers200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[SearchUsers200response]): SearchUsers200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return SearchUsers200response(kind: SearchUsers200responseKind.SearchUsersResponseVariant, SearchUsersResponseValue: to(node, SearchUsersResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as SearchUsersResponse: ", e.msg
+  try:
+    return SearchUsers200response(kind: SearchUsers200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of SearchUsers200response. JSON: " & $node)

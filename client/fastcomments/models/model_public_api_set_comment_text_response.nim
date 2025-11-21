@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_set_comment_text_result
@@ -18,3 +20,18 @@ type PublicAPISetCommentTextResponse* = object
   comment*: SetCommentTextResult
   status*: APIStatus
 
+
+# Custom JSON deserialization for PublicAPISetCommentTextResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicAPISetCommentTextResponse]): PublicAPISetCommentTextResponse =
+  result = PublicAPISetCommentTextResponse()
+  if node.kind == JObject:
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], SetCommentTextResult)
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+
+# Custom JSON serialization for PublicAPISetCommentTextResponse with custom field names
+proc `%`*(obj: PublicAPISetCommentTextResponse): JsonNode =
+  result = newJObject()
+  result["comment"] = %obj.comment
+  result["status"] = %obj.status

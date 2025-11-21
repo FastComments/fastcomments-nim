@@ -9,21 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_get_user_presence_statuses_response
 
+# AnyOf type
+type GetUserPresenceStatuses200responseKind* {.pure.} = enum
+  GetUserPresenceStatusesResponseVariant
+  APIErrorVariant
+
 type GetUserPresenceStatuses200response* = object
   ## 
-  status*: APIStatus
-  userIdsOnline*: Table[string, bool] ## Construct a type with a set of properties K of type T
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetUserPresenceStatuses200responseKind
+  of GetUserPresenceStatuses200responseKind.GetUserPresenceStatusesResponseVariant:
+    GetUserPresenceStatusesResponseValue*: GetUserPresenceStatusesResponse
+  of GetUserPresenceStatuses200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetUserPresenceStatuses200response]): GetUserPresenceStatuses200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetUserPresenceStatuses200response(kind: GetUserPresenceStatuses200responseKind.GetUserPresenceStatusesResponseVariant, GetUserPresenceStatusesResponseValue: to(node, GetUserPresenceStatusesResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetUserPresenceStatusesResponse: ", e.msg
+  try:
+    return GetUserPresenceStatuses200response(kind: GetUserPresenceStatuses200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetUserPresenceStatuses200response. JSON: " & $node)

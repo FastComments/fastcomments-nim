@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_media_asset
@@ -16,8 +18,36 @@ import model_media_asset
 type UploadImageResponse* = object
   ## 
   status*: APIStatus
-  url*: string
-  media*: seq[MediaAsset]
-  reason*: string
-  code*: string
+  url*: Option[string]
+  media*: Option[seq[MediaAsset]]
+  reason*: Option[string]
+  code*: Option[string]
 
+
+# Custom JSON deserialization for UploadImageResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[UploadImageResponse]): UploadImageResponse =
+  result = UploadImageResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("media") and node["media"].kind != JNull:
+      result.media = some(to(node["media"], typeof(result.media.get())))
+    if node.hasKey("reason") and node["reason"].kind != JNull:
+      result.reason = some(to(node["reason"], typeof(result.reason.get())))
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], typeof(result.code.get())))
+
+# Custom JSON serialization for UploadImageResponse with custom field names
+proc `%`*(obj: UploadImageResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  if obj.media.isSome():
+    result["media"] = %obj.media.get()
+  if obj.reason.isSome():
+    result["reason"] = %obj.reason.get()
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()

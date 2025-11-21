@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_feed_post
@@ -18,9 +20,44 @@ type PublicFeedPostsResponse* = object
   ## 
   status*: APIStatus
   feedPosts*: seq[FeedPost]
-  user*: UserSessionInfo
-  urlIdWS*: string
-  userIdWS*: string
-  tenantIdWS*: string
-  myReacts*: Table[string, Table[string, bool]]
+  user*: Option[UserSessionInfo]
+  urlIdWS*: Option[string]
+  userIdWS*: Option[string]
+  tenantIdWS*: Option[string]
+  myReacts*: Option[Table[string, Table[string, bool]]]
 
+
+# Custom JSON deserialization for PublicFeedPostsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicFeedPostsResponse]): PublicFeedPostsResponse =
+  result = PublicFeedPostsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("feedPosts"):
+      result.feedPosts = to(node["feedPosts"], seq[FeedPost])
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+    if node.hasKey("urlIdWS") and node["urlIdWS"].kind != JNull:
+      result.urlIdWS = some(to(node["urlIdWS"], typeof(result.urlIdWS.get())))
+    if node.hasKey("userIdWS") and node["userIdWS"].kind != JNull:
+      result.userIdWS = some(to(node["userIdWS"], typeof(result.userIdWS.get())))
+    if node.hasKey("tenantIdWS") and node["tenantIdWS"].kind != JNull:
+      result.tenantIdWS = some(to(node["tenantIdWS"], typeof(result.tenantIdWS.get())))
+    if node.hasKey("myReacts") and node["myReacts"].kind != JNull:
+      result.myReacts = some(to(node["myReacts"], typeof(result.myReacts.get())))
+
+# Custom JSON serialization for PublicFeedPostsResponse with custom field names
+proc `%`*(obj: PublicFeedPostsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["feedPosts"] = %obj.feedPosts
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()
+  if obj.urlIdWS.isSome():
+    result["urlIdWS"] = %obj.urlIdWS.get()
+  if obj.userIdWS.isSome():
+    result["userIdWS"] = %obj.userIdWS.get()
+  if obj.tenantIdWS.isSome():
+    result["tenantIdWS"] = %obj.tenantIdWS.get()
+  if obj.myReacts.isSome():
+    result["myReacts"] = %obj.myReacts.get()

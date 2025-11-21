@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -18,3 +20,21 @@ type PublicAPIGetCommentTextResponse* = object
   commentText*: string
   sanitizedCommentText*: string
 
+
+# Custom JSON deserialization for PublicAPIGetCommentTextResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicAPIGetCommentTextResponse]): PublicAPIGetCommentTextResponse =
+  result = PublicAPIGetCommentTextResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("commentText"):
+      result.commentText = to(node["commentText"], string)
+    if node.hasKey("sanitizedCommentText"):
+      result.sanitizedCommentText = to(node["sanitizedCommentText"], string)
+
+# Custom JSON serialization for PublicAPIGetCommentTextResponse with custom field names
+proc `%`*(obj: PublicAPIGetCommentTextResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["commentText"] = %obj.commentText
+  result["sanitizedCommentText"] = %obj.sanitizedCommentText

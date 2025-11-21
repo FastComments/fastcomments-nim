@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -18,3 +20,21 @@ type GetCommentVoteUserNamesSuccessResponse* = object
   voteUserNames*: seq[string]
   hasMore*: bool
 
+
+# Custom JSON deserialization for GetCommentVoteUserNamesSuccessResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetCommentVoteUserNamesSuccessResponse]): GetCommentVoteUserNamesSuccessResponse =
+  result = GetCommentVoteUserNamesSuccessResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("voteUserNames"):
+      result.voteUserNames = to(node["voteUserNames"], seq[string])
+    if node.hasKey("hasMore"):
+      result.hasMore = to(node["hasMore"], bool)
+
+# Custom JSON serialization for GetCommentVoteUserNamesSuccessResponse with custom field names
+proc `%`*(obj: GetCommentVoteUserNamesSuccessResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["voteUserNames"] = %obj.voteUserNames
+  result["hasMore"] = %obj.hasMore

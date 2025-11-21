@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type Actions* {.pure.} = enum
@@ -19,7 +21,7 @@ type Actions* {.pure.} = enum
 type SpamRule* = object
   ## 
   actions*: Actions
-  commentContains*: string
+  commentContains*: Option[string]
 
 func `%`*(v: Actions): JsonNode =
   result = case v:
@@ -33,3 +35,16 @@ func `$`*(v: Actions): string =
     of Actions.NotSpam: $("not-spam")
     of Actions.IgnoreRepeat: $("ignore-repeat")
 
+proc to*(node: JsonNode, T: typedesc[Actions]): Actions =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum Actions, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("spam"):
+    return Actions.Spam
+  of $("not-spam"):
+    return Actions.NotSpam
+  of $("ignore-repeat"):
+    return Actions.IgnoreRepeat
+  else:
+    raise newException(ValueError, "Invalid enum value for Actions: " & strVal)

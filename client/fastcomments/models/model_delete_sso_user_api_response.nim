@@ -9,13 +9,39 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_apisso_user
 
 type DeleteSSOUserAPIResponse* = object
   ## 
-  reason*: string
-  code*: string
-  user*: APISSOUser
+  reason*: Option[string]
+  code*: Option[string]
+  user*: Option[APISSOUser]
   status*: string
 
+
+# Custom JSON deserialization for DeleteSSOUserAPIResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[DeleteSSOUserAPIResponse]): DeleteSSOUserAPIResponse =
+  result = DeleteSSOUserAPIResponse()
+  if node.kind == JObject:
+    if node.hasKey("reason") and node["reason"].kind != JNull:
+      result.reason = some(to(node["reason"], typeof(result.reason.get())))
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], typeof(result.code.get())))
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+
+# Custom JSON serialization for DeleteSSOUserAPIResponse with custom field names
+proc `%`*(obj: DeleteSSOUserAPIResponse): JsonNode =
+  result = newJObject()
+  if obj.reason.isSome():
+    result["reason"] = %obj.reason.get()
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()
+  result["status"] = %obj.status

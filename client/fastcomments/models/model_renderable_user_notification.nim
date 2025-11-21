@@ -9,31 +9,116 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_notification_object_type
 import model_notification_type
 
 type RenderableUserNotification* = object
   ## 
-  conversationId*: string
-  contextHTML*: string
-  fromUserNames*: seq[string]
-  fromUserIds*: seq[string]
-  relatedIds*: seq[string]
-  count*: int64
+  conversationId*: Option[string]
+  contextHTML*: Option[string]
+  fromUserNames*: Option[seq[string]]
+  fromUserIds*: Option[seq[string]]
+  relatedIds*: Option[seq[string]]
+  count*: Option[int64]
   optedOut*: bool
-  fromUserAvatarSrc*: string
-  fromUserId*: string
-  fromUserName*: string
-  fromCommentId*: string
+  fromUserAvatarSrc*: Option[string]
+  fromUserId*: Option[string]
+  fromUserName*: Option[string]
+  fromCommentId*: Option[string]
   `type`*: NotificationType
   createdAt*: string
   sent*: string
   viewed*: string
   relatedObjectId*: string
   relatedObjectType*: NotificationObjectType
-  pageTitle*: string
+  pageTitle*: Option[string]
   url*: string
   urlId*: string
   id*: string
 
+
+# Custom JSON deserialization for RenderableUserNotification with custom field names
+proc to*(node: JsonNode, T: typedesc[RenderableUserNotification]): RenderableUserNotification =
+  result = RenderableUserNotification()
+  if node.kind == JObject:
+    if node.hasKey("conversationId") and node["conversationId"].kind != JNull:
+      result.conversationId = some(to(node["conversationId"], typeof(result.conversationId.get())))
+    if node.hasKey("contextHTML") and node["contextHTML"].kind != JNull:
+      result.contextHTML = some(to(node["contextHTML"], typeof(result.contextHTML.get())))
+    if node.hasKey("fromUserNames") and node["fromUserNames"].kind != JNull:
+      result.fromUserNames = some(to(node["fromUserNames"], typeof(result.fromUserNames.get())))
+    if node.hasKey("fromUserIds") and node["fromUserIds"].kind != JNull:
+      result.fromUserIds = some(to(node["fromUserIds"], typeof(result.fromUserIds.get())))
+    if node.hasKey("relatedIds") and node["relatedIds"].kind != JNull:
+      result.relatedIds = some(to(node["relatedIds"], typeof(result.relatedIds.get())))
+    if node.hasKey("count") and node["count"].kind != JNull:
+      result.count = some(to(node["count"], typeof(result.count.get())))
+    if node.hasKey("optedOut"):
+      result.optedOut = to(node["optedOut"], bool)
+    if node.hasKey("fromUserAvatarSrc") and node["fromUserAvatarSrc"].kind != JNull:
+      result.fromUserAvatarSrc = some(to(node["fromUserAvatarSrc"], typeof(result.fromUserAvatarSrc.get())))
+    if node.hasKey("fromUserId") and node["fromUserId"].kind != JNull:
+      result.fromUserId = some(to(node["fromUserId"], typeof(result.fromUserId.get())))
+    if node.hasKey("fromUserName") and node["fromUserName"].kind != JNull:
+      result.fromUserName = some(to(node["fromUserName"], typeof(result.fromUserName.get())))
+    if node.hasKey("fromCommentId") and node["fromCommentId"].kind != JNull:
+      result.fromCommentId = some(to(node["fromCommentId"], typeof(result.fromCommentId.get())))
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], NotificationType)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("sent"):
+      result.sent = to(node["sent"], string)
+    if node.hasKey("viewed"):
+      result.viewed = to(node["viewed"], string)
+    if node.hasKey("relatedObjectId"):
+      result.relatedObjectId = to(node["relatedObjectId"], string)
+    if node.hasKey("relatedObjectType"):
+      result.relatedObjectType = to(node["relatedObjectType"], NotificationObjectType)
+    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
+      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+
+# Custom JSON serialization for RenderableUserNotification with custom field names
+proc `%`*(obj: RenderableUserNotification): JsonNode =
+  result = newJObject()
+  if obj.conversationId.isSome():
+    result["conversationId"] = %obj.conversationId.get()
+  if obj.contextHTML.isSome():
+    result["contextHTML"] = %obj.contextHTML.get()
+  if obj.fromUserNames.isSome():
+    result["fromUserNames"] = %obj.fromUserNames.get()
+  if obj.fromUserIds.isSome():
+    result["fromUserIds"] = %obj.fromUserIds.get()
+  if obj.relatedIds.isSome():
+    result["relatedIds"] = %obj.relatedIds.get()
+  if obj.count.isSome():
+    result["count"] = %obj.count.get()
+  result["optedOut"] = %obj.optedOut
+  if obj.fromUserAvatarSrc.isSome():
+    result["fromUserAvatarSrc"] = %obj.fromUserAvatarSrc.get()
+  if obj.fromUserId.isSome():
+    result["fromUserId"] = %obj.fromUserId.get()
+  if obj.fromUserName.isSome():
+    result["fromUserName"] = %obj.fromUserName.get()
+  if obj.fromCommentId.isSome():
+    result["fromCommentId"] = %obj.fromCommentId.get()
+  result["type"] = %obj.`type`
+  result["createdAt"] = %obj.createdAt
+  result["sent"] = %obj.sent
+  result["viewed"] = %obj.viewed
+  result["relatedObjectId"] = %obj.relatedObjectId
+  result["relatedObjectType"] = %obj.relatedObjectType
+  if obj.pageTitle.isSome():
+    result["pageTitle"] = %obj.pageTitle.get()
+  result["url"] = %obj.url
+  result["urlId"] = %obj.urlId
+  result["_id"] = %obj.id

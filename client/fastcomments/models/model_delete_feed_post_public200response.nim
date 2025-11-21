@@ -9,20 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_delete_feed_post_public200response_any_of
 
+# AnyOf type
+type DeleteFeedPostPublic200responseKind* {.pure.} = enum
+  DeleteFeedPostPublic200responseAnyOfVariant
+  APIErrorVariant
+
 type DeleteFeedPostPublic200response* = object
   ## 
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: DeleteFeedPostPublic200responseKind
+  of DeleteFeedPostPublic200responseKind.DeleteFeedPostPublic200responseAnyOfVariant:
+    DeleteFeedPostPublic_200_response_anyOfValue*: DeleteFeedPostPublic200responseAnyOf
+  of DeleteFeedPostPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[DeleteFeedPostPublic200response]): DeleteFeedPostPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return DeleteFeedPostPublic200response(kind: DeleteFeedPostPublic200responseKind.DeleteFeedPostPublic200responseAnyOfVariant, DeleteFeedPostPublic_200_response_anyOfValue: to(node, DeleteFeedPostPublic200responseAnyOf))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as DeleteFeedPostPublic200responseAnyOf: ", e.msg
+  try:
+    return DeleteFeedPostPublic200response(kind: DeleteFeedPostPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of DeleteFeedPostPublic200response. JSON: " & $node)

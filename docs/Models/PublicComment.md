@@ -31,6 +31,7 @@
 | **feedbackIds** | **List** |  | [optional] [default to null] |
 | **requiresVerification** | **Boolean** |  | [optional] [default to null] |
 | **editKey** | **String** |  | [optional] [default to null] |
+| **approved** | **Boolean** |  | [optional] [default to null] |
 | **isUnread** | **Boolean** |  | [optional] [default to null] |
 | **myVoteId** | **String** |  | [optional] [default to null] |
 | **isVotedDown** | **Boolean** |  | [optional] [default to null] |

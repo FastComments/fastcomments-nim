@@ -9,13 +9,14 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type UpdateAPIPageData* = object
   ## 
-  isClosed*: bool
-  accessibleByGroupIds*: seq[string]
-  title*: string
-  url*: string
-  urlId*: string
-
+  isClosed*: Option[bool]
+  accessibleByGroupIds*: Option[seq[string]]
+  title*: Option[string]
+  url*: Option[string]
+  urlId*: Option[string]

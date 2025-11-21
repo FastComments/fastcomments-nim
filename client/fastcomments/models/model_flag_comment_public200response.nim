@@ -9,20 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_empty_response
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 
+# AnyOf type
+type FlagCommentPublic200responseKind* {.pure.} = enum
+  APIEmptyResponseVariant
+  APIErrorVariant
+
 type FlagCommentPublic200response* = object
   ## 
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: FlagCommentPublic200responseKind
+  of FlagCommentPublic200responseKind.APIEmptyResponseVariant:
+    APIEmptyResponseValue*: APIEmptyResponse
+  of FlagCommentPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[FlagCommentPublic200response]): FlagCommentPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return FlagCommentPublic200response(kind: FlagCommentPublic200responseKind.APIEmptyResponseVariant, APIEmptyResponseValue: to(node, APIEmptyResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIEmptyResponse: ", e.msg
+  try:
+    return FlagCommentPublic200response(kind: FlagCommentPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of FlagCommentPublic200response. JSON: " & $node)

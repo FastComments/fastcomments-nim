@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,15 +18,29 @@ import model_custom_config_parameters
 import model_feed_post
 import model_get_feed_posts_response
 
+# AnyOf type
+type GetFeedPosts200responseKind* {.pure.} = enum
+  GetFeedPostsResponseVariant
+  APIErrorVariant
+
 type GetFeedPosts200response* = object
   ## 
-  status*: APIStatus
-  feedPosts*: seq[FeedPost]
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetFeedPosts200responseKind
+  of GetFeedPosts200responseKind.GetFeedPostsResponseVariant:
+    GetFeedPostsResponseValue*: GetFeedPostsResponse
+  of GetFeedPosts200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetFeedPosts200response]): GetFeedPosts200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetFeedPosts200response(kind: GetFeedPosts200responseKind.GetFeedPostsResponseVariant, GetFeedPostsResponseValue: to(node, GetFeedPostsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetFeedPostsResponse: ", e.msg
+  try:
+    return GetFeedPosts200response(kind: GetFeedPosts200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetFeedPosts200response. JSON: " & $node)

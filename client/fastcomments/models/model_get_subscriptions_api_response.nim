@@ -9,13 +9,39 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_user_subscription
 
 type GetSubscriptionsAPIResponse* = object
   ## 
-  reason*: string
-  code*: string
-  subscriptions*: seq[APIUserSubscription]
+  reason*: Option[string]
+  code*: Option[string]
+  subscriptions*: Option[seq[APIUserSubscription]]
   status*: string
 
+
+# Custom JSON deserialization for GetSubscriptionsAPIResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetSubscriptionsAPIResponse]): GetSubscriptionsAPIResponse =
+  result = GetSubscriptionsAPIResponse()
+  if node.kind == JObject:
+    if node.hasKey("reason") and node["reason"].kind != JNull:
+      result.reason = some(to(node["reason"], typeof(result.reason.get())))
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], typeof(result.code.get())))
+    if node.hasKey("subscriptions") and node["subscriptions"].kind != JNull:
+      result.subscriptions = some(to(node["subscriptions"], typeof(result.subscriptions.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+
+# Custom JSON serialization for GetSubscriptionsAPIResponse with custom field names
+proc `%`*(obj: GetSubscriptionsAPIResponse): JsonNode =
+  result = newJObject()
+  if obj.reason.isSome():
+    result["reason"] = %obj.reason.get()
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()
+  if obj.subscriptions.isSome():
+    result["subscriptions"] = %obj.subscriptions.get()
+  result["status"] = %obj.status

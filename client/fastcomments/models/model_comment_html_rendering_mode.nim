@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CommentHTMLRenderingMode* {.pure.} = enum
@@ -25,3 +27,14 @@ func `$`*(v: CommentHTMLRenderingMode): string =
     of CommentHTMLRenderingMode.`0`: $(0)
     of CommentHTMLRenderingMode.`1`: $(1)
 
+proc to*(node: JsonNode, T: typedesc[CommentHTMLRenderingMode]): CommentHTMLRenderingMode =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum CommentHTMLRenderingMode, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return CommentHTMLRenderingMode.`0`
+  of $(1):
+    return CommentHTMLRenderingMode.`1`
+  else:
+    raise newException(ValueError, "Invalid enum value for CommentHTMLRenderingMode: " & strVal)

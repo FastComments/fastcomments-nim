@@ -9,22 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_get_comment_vote_user_names_success_response
 
+# AnyOf type
+type GetCommentVoteUserNames200responseKind* {.pure.} = enum
+  GetCommentVoteUserNamesSuccessResponseVariant
+  APIErrorVariant
+
 type GetCommentVoteUserNames200response* = object
   ## 
-  status*: APIStatus
-  voteUserNames*: seq[string]
-  hasMore*: bool
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetCommentVoteUserNames200responseKind
+  of GetCommentVoteUserNames200responseKind.GetCommentVoteUserNamesSuccessResponseVariant:
+    GetCommentVoteUserNamesSuccessResponseValue*: GetCommentVoteUserNamesSuccessResponse
+  of GetCommentVoteUserNames200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetCommentVoteUserNames200response]): GetCommentVoteUserNames200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetCommentVoteUserNames200response(kind: GetCommentVoteUserNames200responseKind.GetCommentVoteUserNamesSuccessResponseVariant, GetCommentVoteUserNamesSuccessResponseValue: to(node, GetCommentVoteUserNamesSuccessResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetCommentVoteUserNamesSuccessResponse: ", e.msg
+  try:
+    return GetCommentVoteUserNames200response(kind: GetCommentVoteUserNames200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetCommentVoteUserNames200response. JSON: " & $node)

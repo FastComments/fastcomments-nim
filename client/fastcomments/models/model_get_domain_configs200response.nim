@@ -9,15 +9,36 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_any_type
 import model_get_domain_configs200response_any_of
 import model_get_domain_configs200response_any_of1
 
+# AnyOf type
+type GetDomainConfigs200responseKind* {.pure.} = enum
+  GetDomainConfigs200responseAnyOfVariant
+  GetDomainConfigs200responseAnyOf1Variant
+
 type GetDomainConfigs200response* = object
   ## 
-  configurations*: JsonNode
-  status*: JsonNode
-  reason*: string
-  code*: string
+  case kind*: GetDomainConfigs200responseKind
+  of GetDomainConfigs200responseKind.GetDomainConfigs200responseAnyOfVariant:
+    GetDomainConfigs_200_response_anyOfValue*: GetDomainConfigs200responseAnyOf
+  of GetDomainConfigs200responseKind.GetDomainConfigs200responseAnyOf1Variant:
+    GetDomainConfigs_200_response_anyOf_1Value*: GetDomainConfigs200responseAnyOf1
 
+proc to*(node: JsonNode, T: typedesc[GetDomainConfigs200response]): GetDomainConfigs200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetDomainConfigs200response(kind: GetDomainConfigs200responseKind.GetDomainConfigs200responseAnyOfVariant, GetDomainConfigs_200_response_anyOfValue: to(node, GetDomainConfigs200responseAnyOf))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetDomainConfigs200responseAnyOf: ", e.msg
+  try:
+    return GetDomainConfigs200response(kind: GetDomainConfigs200responseKind.GetDomainConfigs200responseAnyOf1Variant, GetDomainConfigs_200_response_anyOf_1Value: to(node, GetDomainConfigs200responseAnyOf1))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetDomainConfigs200responseAnyOf1: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetDomainConfigs200response. JSON: " & $node)

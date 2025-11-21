@@ -9,11 +9,32 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CreateUserBadgeParams* = object
   ## 
   userId*: string
   badgeId*: string
-  displayedOnComments*: bool
+  displayedOnComments*: Option[bool]
 
+
+# Custom JSON deserialization for CreateUserBadgeParams with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateUserBadgeParams]): CreateUserBadgeParams =
+  result = CreateUserBadgeParams()
+  if node.kind == JObject:
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("badgeId"):
+      result.badgeId = to(node["badgeId"], string)
+    if node.hasKey("displayedOnComments") and node["displayedOnComments"].kind != JNull:
+      result.displayedOnComments = some(to(node["displayedOnComments"], typeof(result.displayedOnComments.get())))
+
+# Custom JSON serialization for CreateUserBadgeParams with custom field names
+proc `%`*(obj: CreateUserBadgeParams): JsonNode =
+  result = newJObject()
+  result["userId"] = %obj.userId
+  result["badgeId"] = %obj.badgeId
+  if obj.displayedOnComments.isSome():
+    result["displayedOnComments"] = %obj.displayedOnComments.get()

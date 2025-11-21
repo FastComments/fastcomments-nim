@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type DeleteCommentAction* {.pure.} = enum
@@ -28,3 +30,16 @@ func `$`*(v: DeleteCommentAction): string =
     of DeleteCommentAction.HardRemoved: $("hard-removed")
     of DeleteCommentAction.Anonymized: $("anonymized")
 
+proc to*(node: JsonNode, T: typedesc[DeleteCommentAction]): DeleteCommentAction =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum DeleteCommentAction, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("already-deleted"):
+    return DeleteCommentAction.AlreadyDeleted
+  of $("hard-removed"):
+    return DeleteCommentAction.HardRemoved
+  of $("anonymized"):
+    return DeleteCommentAction.Anonymized
+  else:
+    raise newException(ValueError, "Invalid enum value for DeleteCommentAction: " & strVal)

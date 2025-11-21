@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_meta_item
 
@@ -21,8 +23,52 @@ type QuestionResult* = object
   userId*: string
   createdAt*: string
   value*: int
-  commentId*: string
+  commentId*: Option[string]
   questionId*: string
-  meta*: seq[MetaItem]
+  meta*: Option[seq[MetaItem]]
   ipHash*: string
 
+
+# Custom JSON deserialization for QuestionResult with custom field names
+proc to*(node: JsonNode, T: typedesc[QuestionResult]): QuestionResult =
+  result = QuestionResult()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("anonUserId"):
+      result.anonUserId = to(node["anonUserId"], string)
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("value"):
+      result.value = to(node["value"], int)
+    if node.hasKey("commentId") and node["commentId"].kind != JNull:
+      result.commentId = some(to(node["commentId"], typeof(result.commentId.get())))
+    if node.hasKey("questionId"):
+      result.questionId = to(node["questionId"], string)
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+    if node.hasKey("ipHash"):
+      result.ipHash = to(node["ipHash"], string)
+
+# Custom JSON serialization for QuestionResult with custom field names
+proc `%`*(obj: QuestionResult): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  result["urlId"] = %obj.urlId
+  result["anonUserId"] = %obj.anonUserId
+  result["userId"] = %obj.userId
+  result["createdAt"] = %obj.createdAt
+  result["value"] = %obj.value
+  if obj.commentId.isSome():
+    result["commentId"] = %obj.commentId.get()
+  result["questionId"] = %obj.questionId
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+  result["ipHash"] = %obj.ipHash

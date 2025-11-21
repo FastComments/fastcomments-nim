@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_object
@@ -19,7 +21,34 @@ type SaveCommentsResponseWithPresence* = object
   ## 
   status*: APIStatus
   comment*: PublicComment
-  user*: UserSessionInfo
-  moduleData*: Table[string, JsonNode] ## Construct a type with a set of properties K of type T
-  userIdWS*: string
+  user*: Option[UserSessionInfo]
+  moduleData*: Option[Table[string, JsonNode]] ## Construct a type with a set of properties K of type T
+  userIdWS*: Option[string]
 
+
+# Custom JSON deserialization for SaveCommentsResponseWithPresence with custom field names
+proc to*(node: JsonNode, T: typedesc[SaveCommentsResponseWithPresence]): SaveCommentsResponseWithPresence =
+  result = SaveCommentsResponseWithPresence()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], PublicComment)
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+    if node.hasKey("moduleData") and node["moduleData"].kind != JNull:
+      result.moduleData = some(to(node["moduleData"], typeof(result.moduleData.get())))
+    if node.hasKey("userIdWS") and node["userIdWS"].kind != JNull:
+      result.userIdWS = some(to(node["userIdWS"], typeof(result.userIdWS.get())))
+
+# Custom JSON serialization for SaveCommentsResponseWithPresence with custom field names
+proc `%`*(obj: SaveCommentsResponseWithPresence): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["comment"] = %obj.comment
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()
+  if obj.moduleData.isSome():
+    result["moduleData"] = %obj.moduleData.get()
+  if obj.userIdWS.isSome():
+    result["userIdWS"] = %obj.userIdWS.get()

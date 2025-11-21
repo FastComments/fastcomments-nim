@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CommenterNameFormats* {.pure.} = enum
@@ -34,3 +36,20 @@ func `$`*(v: CommenterNameFormats): string =
     of CommenterNameFormats.`3`: $(3)
     of CommenterNameFormats.`4`: $(4)
 
+proc to*(node: JsonNode, T: typedesc[CommenterNameFormats]): CommenterNameFormats =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum CommenterNameFormats, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return CommenterNameFormats.`0`
+  of $(1):
+    return CommenterNameFormats.`1`
+  of $(2):
+    return CommenterNameFormats.`2`
+  of $(3):
+    return CommenterNameFormats.`3`
+  of $(4):
+    return CommenterNameFormats.`4`
+  else:
+    raise newException(ValueError, "Invalid enum value for CommenterNameFormats: " & strVal)

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_html_rendering_mode
 import model_comment_question_results_rendering_type
@@ -27,76 +29,76 @@ import model_vote_style
 
 type CustomConfigParameters* = object
   ## 
-  absoluteAndRelativeDates*: bool
-  absoluteDates*: bool
-  allowAnon*: bool
-  allowAnonFlag*: bool
-  allowAnonVotes*: bool
-  allowedLanguages*: seq[string]
-  collapseReplies*: bool
-  commentCountFormat*: string
-  commentHTMLRenderingMode*: CommentHTMLRenderingMode
-  commentThreadDeleteMode*: CommentThreadDeletionMode
-  commenterNameFormat*: CommenterNameFormats
-  countAboveToggle*: int
-  customCSS*: string
-  defaultAvatarSrc*: string
-  defaultSortDirection*: SortDirections
-  defaultUsername*: string
-  disableAutoAdminMigration*: bool
-  disableAutoHashTagCreation*: bool
-  disableBlocking*: bool
-  disableCommenterCommentDelete*: bool
-  disableCommenterCommentEdit*: bool
-  disableEmailInputs*: bool
-  disableLiveCommenting*: bool
-  disableNotificationBell*: bool
-  disableProfiles*: bool
-  disableSuccessMessage*: bool
-  disableToolbar*: bool
-  disableUnverifiedLabel*: bool
-  disableVoting*: bool
-  enableCommenterLinks*: bool
-  enableSearch*: bool
-  enableSpoilers*: bool
-  enableThirdPartyCookieBypass*: bool
-  enableViewCounts*: bool
-  enableVoteList*: bool
-  enableWYSIWYG*: bool
-  gifRating*: GifRating
-  hasDarkBackground*: bool
-  headerHTML*: string
-  hideAvatars*: bool
-  hideCommentsUnderCountTextFormat*: string
-  imageContentProfanityLevel*: ImageContentProfanityLevel
-  inputAfterComments*: bool
-  limitCommentsByGroups*: bool
-  locale*: string
-  maxCommentCharacterLength*: int
-  maxCommentCreatedCountPUPM*: int
-  noCustomConfig*: bool
-  noImageUploads*: bool
-  noStyles*: bool
-  pageSize*: int
-  readonly*: bool
-  requireSSO*: bool
-  enableResizeHandle*: bool
-  restrictedLinkDomains*: seq[string]
-  showBadgesInTopBar*: bool
-  showCommentSaveSuccess*: bool
-  showLiveRightAway*: bool
-  showQuestion*: bool
-  spamRules*: seq[SpamRule]
-  ssoSecLvl*: SSOSecurityLevel
-  translations*: Table[string, string] ## Construct a type with a set of properties K of type T
-  useShowCommentsToggle*: bool
-  useSingleLineCommentInput*: bool
-  voteStyle*: VoteStyle
-  widgetQuestionId*: string
-  widgetQuestionResultsStyle*: CommentQuestionResultsRenderingType
-  widgetQuestionStyle*: QuestionRenderingType
-  widgetQuestionWhenToSave*: QuestionWhenSave
-  widgetQuestionsRequired*: CommentQuestionsRequired
-  widgetSubQuestionVisibility*: QuestionSubQuestionVisibility
-  wrap*: bool
-
+  absoluteAndRelativeDates*: Option[bool]
+  absoluteDates*: Option[bool]
+  allowAnon*: Option[bool]
+  allowAnonFlag*: Option[bool]
+  allowAnonVotes*: Option[bool]
+  allowedLanguages*: Option[seq[string]]
+  collapseReplies*: Option[bool]
+  commentCountFormat*: Option[string]
+  commentHTMLRenderingMode*: Option[CommentHTMLRenderingMode]
+  commentThreadDeleteMode*: Option[CommentThreadDeletionMode]
+  commenterNameFormat*: Option[CommenterNameFormats]
+  countAboveToggle*: Option[int]
+  customCSS*: Option[string]
+  defaultAvatarSrc*: Option[string]
+  defaultSortDirection*: Option[SortDirections]
+  defaultUsername*: Option[string]
+  disableAutoAdminMigration*: Option[bool]
+  disableAutoHashTagCreation*: Option[bool]
+  disableBlocking*: Option[bool]
+  disableCommenterCommentDelete*: Option[bool]
+  disableCommenterCommentEdit*: Option[bool]
+  disableEmailInputs*: Option[bool]
+  disableLiveCommenting*: Option[bool]
+  disableNotificationBell*: Option[bool]
+  disableProfiles*: Option[bool]
+  disableSuccessMessage*: Option[bool]
+  disableToolbar*: Option[bool]
+  disableUnverifiedLabel*: Option[bool]
+  disableVoting*: Option[bool]
+  enableCommenterLinks*: Option[bool]
+  enableSearch*: Option[bool]
+  enableSpoilers*: Option[bool]
+  enableThirdPartyCookieBypass*: Option[bool]
+  enableViewCounts*: Option[bool]
+  enableVoteList*: Option[bool]
+  enableWYSIWYG*: Option[bool]
+  gifRating*: Option[GifRating]
+  hasDarkBackground*: Option[bool]
+  headerHTML*: Option[string]
+  hideAvatars*: Option[bool]
+  hideCommentsUnderCountTextFormat*: Option[string]
+  imageContentProfanityLevel*: Option[ImageContentProfanityLevel]
+  inputAfterComments*: Option[bool]
+  limitCommentsByGroups*: Option[bool]
+  locale*: Option[string]
+  maxCommentCharacterLength*: Option[int]
+  maxCommentCreatedCountPUPM*: Option[int]
+  noCustomConfig*: Option[bool]
+  noImageUploads*: Option[bool]
+  noStyles*: Option[bool]
+  pageSize*: Option[int]
+  readonly*: Option[bool]
+  noNewRootComments*: Option[bool]
+  requireSSO*: Option[bool]
+  enableResizeHandle*: Option[bool]
+  restrictedLinkDomains*: Option[seq[string]]
+  showBadgesInTopBar*: Option[bool]
+  showCommentSaveSuccess*: Option[bool]
+  showLiveRightAway*: Option[bool]
+  showQuestion*: Option[bool]
+  spamRules*: Option[seq[SpamRule]]
+  ssoSecLvl*: Option[SSOSecurityLevel]
+  translations*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
+  useShowCommentsToggle*: Option[bool]
+  useSingleLineCommentInput*: Option[bool]
+  voteStyle*: Option[VoteStyle]
+  widgetQuestionId*: Option[string]
+  widgetQuestionResultsStyle*: Option[CommentQuestionResultsRenderingType]
+  widgetQuestionStyle*: Option[QuestionRenderingType]
+  widgetQuestionWhenToSave*: Option[QuestionWhenSave]
+  widgetQuestionsRequired*: Option[CommentQuestionsRequired]
+  widgetSubQuestionVisibility*: Option[QuestionSubQuestionVisibility]
+  wrap*: Option[bool]
