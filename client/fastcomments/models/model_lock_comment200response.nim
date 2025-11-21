@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[LockComment200response]): LockComment200res
     when defined(debug):
       echo "Failed to deserialize as APIEmptyResponse: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of LockComment200response. JSON: " & $node)
+

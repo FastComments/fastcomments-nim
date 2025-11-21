@@ -48,3 +48,4 @@ proc to*(node: JsonNode, T: typedesc[GifRating]): GifRating =
     return GifRating.R
   else:
     raise newException(ValueError, "Invalid enum value for GifRating: " & strVal)
+

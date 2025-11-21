@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[QuestionRenderingType]): QuestionRenderingT
     return QuestionRenderingType.`1`
   else:
     raise newException(ValueError, "Invalid enum value for QuestionRenderingType: " & strVal)
+

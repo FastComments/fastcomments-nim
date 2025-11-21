@@ -102,3 +102,4 @@ type CustomConfigParameters* = object
   widgetQuestionsRequired*: Option[CommentQuestionsRequired]
   widgetSubQuestionVisibility*: Option[QuestionSubQuestionVisibility]
   wrap*: Option[bool]
+

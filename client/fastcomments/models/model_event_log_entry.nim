@@ -49,3 +49,4 @@ proc `%`*(obj: EventLogEntry): JsonNode =
   result["urlId"] = %obj.urlId
   result["broadcastId"] = %obj.broadcastId
   result["data"] = %obj.data
+

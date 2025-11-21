@@ -17,3 +17,4 @@ import model_aggregation_value
 type AggregationItem* = object
   ## 
   groups*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
+

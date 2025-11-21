@@ -21,31 +21,3 @@ type CreateAPIUserSubscriptionData* = object
   anonUserId*: Option[string]
   userId*: Option[string]
 
-
-# Custom JSON deserialization for CreateAPIUserSubscriptionData with custom field names
-proc to*(node: JsonNode, T: typedesc[CreateAPIUserSubscriptionData]): CreateAPIUserSubscriptionData =
-  result = CreateAPIUserSubscriptionData()
-  if node.kind == JObject:
-    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
-      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
-    if node.hasKey("url") and node["url"].kind != JNull:
-      result.url = some(to(node["url"], typeof(result.url.get())))
-    if node.hasKey("urlId"):
-      result.urlId = to(node["urlId"], string)
-    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
-      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
-    if node.hasKey("userId") and node["userId"].kind != JNull:
-      result.userId = some(to(node["userId"], typeof(result.userId.get())))
-
-# Custom JSON serialization for CreateAPIUserSubscriptionData with custom field names
-proc `%`*(obj: CreateAPIUserSubscriptionData): JsonNode =
-  result = newJObject()
-  if obj.pageTitle.isSome():
-    result["pageTitle"] = %obj.pageTitle.get()
-  if obj.url.isSome():
-    result["url"] = %obj.url.get()
-  result["urlId"] = %obj.urlId
-  if obj.anonUserId.isSome():
-    result["anonUserId"] = %obj.anonUserId.get()
-  if obj.userId.isSome():
-    result["userId"] = %obj.userId.get()

@@ -21,22 +21,3 @@ type PublicAPIDeleteCommentResponse* = object
   hardRemoved*: bool
   status*: APIStatus
 
-
-# Custom JSON deserialization for PublicAPIDeleteCommentResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[PublicAPIDeleteCommentResponse]): PublicAPIDeleteCommentResponse =
-  result = PublicAPIDeleteCommentResponse()
-  if node.kind == JObject:
-    if node.hasKey("comment") and node["comment"].kind != JNull:
-      result.comment = some(to(node["comment"], typeof(result.comment.get())))
-    if node.hasKey("hardRemoved"):
-      result.hardRemoved = to(node["hardRemoved"], bool)
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-
-# Custom JSON serialization for PublicAPIDeleteCommentResponse with custom field names
-proc `%`*(obj: PublicAPIDeleteCommentResponse): JsonNode =
-  result = newJObject()
-  if obj.comment.isSome():
-    result["comment"] = %obj.comment.get()
-  result["hardRemoved"] = %obj.hardRemoved
-  result["status"] = %obj.status

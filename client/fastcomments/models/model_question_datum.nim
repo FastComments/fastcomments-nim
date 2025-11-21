@@ -17,3 +17,4 @@ type QuestionDatum* = object
   ## 
   v*: Table[string, float64] ## Construct a type with a set of properties K of type T
   total*: int64
+

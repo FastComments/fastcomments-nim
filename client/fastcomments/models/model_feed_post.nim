@@ -104,3 +104,4 @@ proc `%`*(obj: FeedPost): JsonNode =
     result["reacts"] = %obj.reacts.get()
   if obj.commentCount.isSome():
     result["commentCount"] = %obj.commentCount.get()
+

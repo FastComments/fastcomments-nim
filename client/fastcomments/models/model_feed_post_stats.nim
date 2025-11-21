@@ -17,3 +17,4 @@ type FeedPostStats* = object
   ## 
   reacts*: Option[Table[string, int]]
   commentCount*: Option[int]
+

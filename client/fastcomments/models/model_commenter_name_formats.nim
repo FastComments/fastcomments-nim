@@ -53,3 +53,4 @@ proc to*(node: JsonNode, T: typedesc[CommenterNameFormats]): CommenterNameFormat
     return CommenterNameFormats.`4`
   else:
     raise newException(ValueError, "Invalid enum value for CommenterNameFormats: " & strVal)
+

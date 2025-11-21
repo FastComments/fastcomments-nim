@@ -18,18 +18,3 @@ type AggregationResponseStats* = object
   timeMS*: int64
   scanned*: int64
 
-
-# Custom JSON deserialization for AggregationResponseStats with custom field names
-proc to*(node: JsonNode, T: typedesc[AggregationResponseStats]): AggregationResponseStats =
-  result = AggregationResponseStats()
-  if node.kind == JObject:
-    if node.hasKey("timeMS"):
-      result.timeMS = to(node["timeMS"], int64)
-    if node.hasKey("scanned"):
-      result.scanned = to(node["scanned"], int64)
-
-# Custom JSON serialization for AggregationResponseStats with custom field names
-proc `%`*(obj: AggregationResponseStats): JsonNode =
-  result = newJObject()
-  result["timeMS"] = %obj.timeMS
-  result["scanned"] = %obj.scanned

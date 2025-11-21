@@ -28,7 +28,6 @@ func `%`*(v: VoteDir): JsonNode =
   result = case v:
     of VoteDir.Up: %"up"
     of VoteDir.Down: %"down"
-
 func `$`*(v: VoteDir): string =
   result = case v:
     of VoteDir.Up: $("up")
@@ -45,3 +44,4 @@ proc to*(node: JsonNode, T: typedesc[VoteDir]): VoteDir =
     return VoteDir.Down
   else:
     raise newException(ValueError, "Invalid enum value for VoteDir: " & strVal)
+

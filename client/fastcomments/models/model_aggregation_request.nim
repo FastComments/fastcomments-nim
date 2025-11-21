@@ -23,3 +23,4 @@ type AggregationRequest* = object
   groupBy*: Option[seq[string]]
   operations*: seq[AggregationOperation]
   sort*: Option[AggregationRequest_sort]
+

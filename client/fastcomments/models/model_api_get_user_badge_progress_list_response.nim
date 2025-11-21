@@ -26,7 +26,7 @@ proc to*(node: JsonNode, T: typedesc[APIGetUserBadgeProgressListResponse]): APIG
   result = APIGetUserBadgeProgressListResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("userBadgeProgresses"):
       # Array of types with custom JSON - manually iterate and deserialize
       let arrayNode = node["userBadgeProgresses"]
@@ -40,3 +40,4 @@ proc `%`*(obj: APIGetUserBadgeProgressListResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["userBadgeProgresses"] = %obj.userBadgeProgresses
+

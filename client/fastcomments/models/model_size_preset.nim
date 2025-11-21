@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[SizePreset]): SizePreset =
     return SizePreset.CrossPlatform
   else:
     raise newException(ValueError, "Invalid enum value for SizePreset: " & strVal)
+

@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[AggregateTimeBucket]): AggregateTimeBucket 
     return AggregateTimeBucket.Year
   else:
     raise newException(ValueError, "Invalid enum value for AggregateTimeBucket: " & strVal)
+

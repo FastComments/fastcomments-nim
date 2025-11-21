@@ -19,18 +19,3 @@ type CheckBlockedCommentsResponse* = object
   commentStatuses*: Table[string, bool] ## Construct a type with a set of properties K of type T
   status*: APIStatus
 
-
-# Custom JSON deserialization for CheckBlockedCommentsResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[CheckBlockedCommentsResponse]): CheckBlockedCommentsResponse =
-  result = CheckBlockedCommentsResponse()
-  if node.kind == JObject:
-    if node.hasKey("commentStatuses"):
-      result.commentStatuses = to(node["commentStatuses"], Table[string, bool])
-    if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
-
-# Custom JSON serialization for CheckBlockedCommentsResponse with custom field names
-proc `%`*(obj: CheckBlockedCommentsResponse): JsonNode =
-  result = newJObject()
-  result["commentStatuses"] = %obj.commentStatuses
-  result["status"] = %obj.status

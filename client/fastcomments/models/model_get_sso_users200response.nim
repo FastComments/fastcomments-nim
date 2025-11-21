@@ -19,23 +19,3 @@ type GetSSOUsers200response* = object
   users*: seq[APISSOUser]
   status*: string
 
-
-# Custom JSON deserialization for GetSSOUsers200response with custom field names
-proc to*(node: JsonNode, T: typedesc[GetSSOUsers200response]): GetSSOUsers200response =
-  result = GetSSOUsers200response()
-  if node.kind == JObject:
-    if node.hasKey("users"):
-      # Array of types with custom JSON - manually iterate and deserialize
-      let arrayNode = node["users"]
-      if arrayNode.kind == JArray:
-        result.users = @[]
-        for item in arrayNode.items:
-          result.users.add(to(item, APISSOUser))
-    if node.hasKey("status"):
-      result.status = to(node["status"], string)
-
-# Custom JSON serialization for GetSSOUsers200response with custom field names
-proc `%`*(obj: GetSSOUsers200response): JsonNode =
-  result = newJObject()
-  result["users"] = %obj.users
-  result["status"] = %obj.status

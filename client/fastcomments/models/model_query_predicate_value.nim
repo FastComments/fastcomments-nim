@@ -47,3 +47,4 @@ proc to*(node: JsonNode, T: typedesc[QueryPredicateValue]): QueryPredicateValue 
     when defined(debug):
       echo "Failed to deserialize as bool: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of QueryPredicateValue. JSON: " & $node)
+

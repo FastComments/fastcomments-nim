@@ -39,3 +39,4 @@ proc to*(node: JsonNode, T: typedesc[RecordStringStringOrNumberValue]): RecordSt
     when defined(debug):
       echo "Failed to deserialize as float64: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of RecordStringStringOrNumberValue. JSON: " & $node)
+

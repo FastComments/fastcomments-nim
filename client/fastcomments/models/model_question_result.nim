@@ -72,3 +72,4 @@ proc `%`*(obj: QuestionResult): JsonNode =
   if obj.meta.isSome():
     result["meta"] = %obj.meta.get()
   result["ipHash"] = %obj.ipHash
+

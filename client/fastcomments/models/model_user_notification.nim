@@ -135,3 +135,4 @@ proc `%`*(obj: UserNotification): JsonNode =
     result["fromUserIds"] = %obj.fromUserIds.get()
   if obj.fromUserNames.isSome():
     result["fromUserNames"] = %obj.fromUserNames.get()
+

@@ -17,3 +17,4 @@ import model_bulk_aggregate_question_item
 type BulkAggregateQuestionResultsRequest* = object
   ## 
   aggregations*: seq[BulkAggregateQuestionItem]
+

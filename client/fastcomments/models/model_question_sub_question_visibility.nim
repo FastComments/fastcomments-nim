@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[QuestionSubQuestionVisibility]): QuestionSu
     return QuestionSubQuestionVisibility.`1`
   else:
     raise newException(ValueError, "Invalid enum value for QuestionSubQuestionVisibility: " & strVal)
+

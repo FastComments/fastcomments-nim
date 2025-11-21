@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[DeleteCommentAction]): DeleteCommentAction 
     return DeleteCommentAction.Anonymized
   else:
     raise newException(ValueError, "Invalid enum value for DeleteCommentAction: " & strVal)
+

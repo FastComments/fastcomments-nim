@@ -44,3 +44,4 @@ proc to*(node: JsonNode, T: typedesc[GetAuditLogs200response]): GetAuditLogs200r
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of GetAuditLogs200response. JSON: " & $node)
+

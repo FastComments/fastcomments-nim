@@ -20,3 +20,4 @@ type AggregationValue* = object
   numericValue*: Option[float64]
   distinctCount*: Option[int64]
   distinctCounts*: Option[Table[string, float64]] ## Construct a type with a set of properties K of type T
+

@@ -19,18 +19,3 @@ type NotificationAndCount* = object
   `type`*: NotificationType
   count*: int64
 
-
-# Custom JSON deserialization for NotificationAndCount with custom field names
-proc to*(node: JsonNode, T: typedesc[NotificationAndCount]): NotificationAndCount =
-  result = NotificationAndCount()
-  if node.kind == JObject:
-    if node.hasKey("type"):
-      result.`type` = to(node["type"], NotificationType)
-    if node.hasKey("count"):
-      result.count = to(node["count"], int64)
-
-# Custom JSON serialization for NotificationAndCount with custom field names
-proc `%`*(obj: NotificationAndCount): JsonNode =
-  result = newJObject()
-  result["type"] = %obj.`type`
-  result["count"] = %obj.count

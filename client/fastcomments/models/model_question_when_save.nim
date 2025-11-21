@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[QuestionWhenSave]): QuestionWhenSave =
     return QuestionWhenSave.`1`
   else:
     raise newException(ValueError, "Invalid enum value for QuestionWhenSave: " & strVal)
+

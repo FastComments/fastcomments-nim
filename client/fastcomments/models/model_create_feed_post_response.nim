@@ -26,7 +26,7 @@ proc to*(node: JsonNode, T: typedesc[CreateFeedPostResponse]): CreateFeedPostRes
   result = CreateFeedPostResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("feedPost"):
       result.feedPost = to(node["feedPost"], FeedPost)
 
@@ -35,3 +35,4 @@ proc `%`*(obj: CreateFeedPostResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["feedPost"] = %obj.feedPost
+

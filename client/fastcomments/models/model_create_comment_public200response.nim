@@ -46,3 +46,4 @@ proc to*(node: JsonNode, T: typedesc[CreateCommentPublic200response]): CreateCom
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of CreateCommentPublic200response. JSON: " & $node)
+

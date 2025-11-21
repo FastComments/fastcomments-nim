@@ -52,3 +52,4 @@ proc to*(node: JsonNode, T: typedesc[UpdateUserNotificationStatus200response]): 
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of UpdateUserNotificationStatus200response. JSON: " & $node)
+

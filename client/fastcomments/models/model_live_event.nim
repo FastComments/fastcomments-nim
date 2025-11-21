@@ -112,3 +112,4 @@ proc `%`*(obj: LiveEvent): JsonNode =
     result["ul"] = %obj.ul.get()
   if obj.changes.isSome():
     result["changes"] = %obj.changes.get()
+

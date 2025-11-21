@@ -122,3 +122,4 @@ proc `%`*(obj: RenderableUserNotification): JsonNode =
   result["url"] = %obj.url
   result["urlId"] = %obj.urlId
   result["_id"] = %obj.id
+

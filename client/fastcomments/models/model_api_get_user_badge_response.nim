@@ -26,7 +26,7 @@ proc to*(node: JsonNode, T: typedesc[APIGetUserBadgeResponse]): APIGetUserBadgeR
   result = APIGetUserBadgeResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("userBadge"):
       result.userBadge = to(node["userBadge"], UserBadge)
 
@@ -35,3 +35,4 @@ proc `%`*(obj: APIGetUserBadgeResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["userBadge"] = %obj.userBadge
+

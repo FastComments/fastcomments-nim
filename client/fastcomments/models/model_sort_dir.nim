@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[SORTDIR]): SORTDIR =
     return SORTDIR.DESC
   else:
     raise newException(ValueError, "Invalid enum value for SORTDIR: " & strVal)
+

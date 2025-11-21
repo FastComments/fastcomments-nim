@@ -19,3 +19,4 @@ type FeedPostMediaItem* = object
   title*: Option[string]
   linkUrl*: Option[string]
   sizes*: seq[FeedPostMediaItemAsset]
+

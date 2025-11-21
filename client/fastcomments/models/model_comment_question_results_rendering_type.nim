@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[CommentQuestionResultsRenderingType]): Comm
     return CommentQuestionResultsRenderingType.`2`
   else:
     raise newException(ValueError, "Invalid enum value for CommentQuestionResultsRenderingType: " & strVal)
+

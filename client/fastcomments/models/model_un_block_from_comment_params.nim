@@ -17,16 +17,3 @@ type UnBlockFromCommentParams* = object
   ## 
   commentIdsToCheck*: Option[seq[string]]
 
-
-# Custom JSON deserialization for UnBlockFromCommentParams with custom field names
-proc to*(node: JsonNode, T: typedesc[UnBlockFromCommentParams]): UnBlockFromCommentParams =
-  result = UnBlockFromCommentParams()
-  if node.kind == JObject:
-    if node.hasKey("commentIdsToCheck") and node["commentIdsToCheck"].kind != JNull:
-      result.commentIdsToCheck = some(to(node["commentIdsToCheck"], typeof(result.commentIdsToCheck.get())))
-
-# Custom JSON serialization for UnBlockFromCommentParams with custom field names
-proc `%`*(obj: UnBlockFromCommentParams): JsonNode =
-  result = newJObject()
-  if obj.commentIdsToCheck.isSome():
-    result["commentIdsToCheck"] = %obj.commentIdsToCheck.get()

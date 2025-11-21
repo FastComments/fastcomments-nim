@@ -18,3 +18,4 @@ type BlockSuccess* = object
   ## 
   status*: APIStatus
   commentStatuses*: Table[string, bool] ## Construct a type with a set of properties K of type T
+

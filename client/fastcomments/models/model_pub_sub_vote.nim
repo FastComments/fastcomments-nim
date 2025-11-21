@@ -63,3 +63,4 @@ proc `%`*(obj: PubSubVote): JsonNode =
   result["createdAt"] = %obj.createdAt
   if obj.verificationId.isSome():
     result["verificationId"] = %obj.verificationId.get()
+

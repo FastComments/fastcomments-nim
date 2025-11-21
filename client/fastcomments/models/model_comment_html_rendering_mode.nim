@@ -38,3 +38,4 @@ proc to*(node: JsonNode, T: typedesc[CommentHTMLRenderingMode]): CommentHTMLRend
     return CommentHTMLRenderingMode.`1`
   else:
     raise newException(ValueError, "Invalid enum value for CommentHTMLRenderingMode: " & strVal)
+

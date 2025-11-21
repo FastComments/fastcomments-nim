@@ -26,12 +26,18 @@ proc to*(node: JsonNode, T: typedesc[GetFeedPostsResponse]): GetFeedPostsRespons
   result = GetFeedPostsResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("feedPosts"):
-      result.feedPosts = to(node["feedPosts"], seq[FeedPost])
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["feedPosts"]
+      if arrayNode.kind == JArray:
+        result.feedPosts = @[]
+        for item in arrayNode.items:
+          result.feedPosts.add(to(item, FeedPost))
 
 # Custom JSON serialization for GetFeedPostsResponse with custom field names
 proc `%`*(obj: GetFeedPostsResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["feedPosts"] = %obj.feedPosts
+

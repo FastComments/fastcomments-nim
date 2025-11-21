@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[RepeatCommentHandlingAction]): RepeatCommen
     return RepeatCommentHandlingAction.`2`
   else:
     raise newException(ValueError, "Invalid enum value for RepeatCommentHandlingAction: " & strVal)
+

@@ -18,3 +18,4 @@ type MediaAsset* = object
   w*: int
   h*: int
   src*: string
+

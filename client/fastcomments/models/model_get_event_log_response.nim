@@ -26,12 +26,18 @@ proc to*(node: JsonNode, T: typedesc[GetEventLogResponse]): GetEventLogResponse 
   result = GetEventLogResponse()
   if node.kind == JObject:
     if node.hasKey("events"):
-      result.events = to(node["events"], seq[EventLogEntry])
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["events"]
+      if arrayNode.kind == JArray:
+        result.events = @[]
+        for item in arrayNode.items:
+          result.events.add(to(item, EventLogEntry))
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
 
 # Custom JSON serialization for GetEventLogResponse with custom field names
 proc `%`*(obj: GetEventLogResponse): JsonNode =
   result = newJObject()
   result["events"] = %obj.events
   result["status"] = %obj.status
+

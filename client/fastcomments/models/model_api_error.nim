@@ -25,3 +25,4 @@ type APIError* = object
   maxCharacterLength*: Option[int]
   translatedError*: Option[string]
   customConfig*: Option[CustomConfigParameters]
+

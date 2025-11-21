@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[SortDirections]): SortDirections =
     return SortDirections.MR
   else:
     raise newException(ValueError, "Invalid enum value for SortDirections: " & strVal)
+

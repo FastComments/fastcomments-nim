@@ -22,3 +22,4 @@ type QuestionResultAggregationOverall* = object
   total*: int64
   average*: Option[float64]
   createdAt*: string
+

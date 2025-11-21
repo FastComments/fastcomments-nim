@@ -19,23 +19,3 @@ type DeleteSubscriptionAPIResponse* = object
   code*: Option[string]
   status*: string
 
-
-# Custom JSON deserialization for DeleteSubscriptionAPIResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[DeleteSubscriptionAPIResponse]): DeleteSubscriptionAPIResponse =
-  result = DeleteSubscriptionAPIResponse()
-  if node.kind == JObject:
-    if node.hasKey("reason") and node["reason"].kind != JNull:
-      result.reason = some(to(node["reason"], typeof(result.reason.get())))
-    if node.hasKey("code") and node["code"].kind != JNull:
-      result.code = some(to(node["code"], typeof(result.code.get())))
-    if node.hasKey("status"):
-      result.status = to(node["status"], string)
-
-# Custom JSON serialization for DeleteSubscriptionAPIResponse with custom field names
-proc `%`*(obj: DeleteSubscriptionAPIResponse): JsonNode =
-  result = newJObject()
-  if obj.reason.isSome():
-    result["reason"] = %obj.reason.get()
-  if obj.code.isSome():
-    result["code"] = %obj.code.get()
-  result["status"] = %obj.status

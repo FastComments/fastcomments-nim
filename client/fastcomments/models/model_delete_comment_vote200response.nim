@@ -43,3 +43,4 @@ proc to*(node: JsonNode, T: typedesc[DeleteCommentVote200response]): DeleteComme
     when defined(debug):
       echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of DeleteCommentVote200response. JSON: " & $node)
+

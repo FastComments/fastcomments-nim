@@ -39,3 +39,4 @@ proc `%`*(obj: FindCommentsByRangeResponse): JsonNode =
   result = newJObject()
   result["results"] = %obj.results
   result["createdAt"] = %obj.createdAt
+

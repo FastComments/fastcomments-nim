@@ -26,7 +26,7 @@ proc to*(node: JsonNode, T: typedesc[GetAuditLogsResponse]): GetAuditLogsRespons
   result = GetAuditLogsResponse()
   if node.kind == JObject:
     if node.hasKey("status"):
-      result.status = model_api_status.to(node["status"], APIStatus)
+      result.status = to(node["status"], APIStatus)
     if node.hasKey("auditLogs"):
       # Array of types with custom JSON - manually iterate and deserialize
       let arrayNode = node["auditLogs"]
@@ -40,3 +40,4 @@ proc `%`*(obj: GetAuditLogsResponse): JsonNode =
   result = newJObject()
   result["status"] = %obj.status
   result["auditLogs"] = %obj.auditLogs
+

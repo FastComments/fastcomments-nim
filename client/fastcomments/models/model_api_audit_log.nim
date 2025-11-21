@@ -48,7 +48,6 @@ func `%`*(v: CrudType): JsonNode =
     of CrudType.U: %"u"
     of CrudType.D: %"d"
     of CrudType.Login: %"login"
-
 func `$`*(v: CrudType): string =
   result = case v:
     of CrudType.C: $("c")
@@ -80,7 +79,6 @@ func `%`*(v: `From`): JsonNode =
     of `From`.Ui: %"ui"
     of `From`.Api: %"api"
     of `From`.Cron: %"cron"
-
 func `$`*(v: `From`): string =
   result = case v:
     of `From`.Ui: $("ui")
@@ -155,3 +153,4 @@ proc `%`*(obj: APIAuditLog): JsonNode =
     result["serverStartDate"] = %obj.serverStartDate.get()
   if obj.objectDetails.isSome():
     result["objectDetails"] = %obj.objectDetails.get()
+

@@ -21,22 +21,3 @@ type CommentLogEntry* = object
   t*: CommentLogType
   da*: Option[CommentLogData]
 
-
-# Custom JSON deserialization for CommentLogEntry with custom field names
-proc to*(node: JsonNode, T: typedesc[CommentLogEntry]): CommentLogEntry =
-  result = CommentLogEntry()
-  if node.kind == JObject:
-    if node.hasKey("d"):
-      result.d = to(node["d"], string)
-    if node.hasKey("t"):
-      result.t = to(node["t"], CommentLogType)
-    if node.hasKey("da") and node["da"].kind != JNull:
-      result.da = some(to(node["da"], typeof(result.da.get())))
-
-# Custom JSON serialization for CommentLogEntry with custom field names
-proc `%`*(obj: CommentLogEntry): JsonNode =
-  result = newJObject()
-  result["d"] = %obj.d
-  result["t"] = %obj.t
-  if obj.da.isSome():
-    result["da"] = %obj.da.get()

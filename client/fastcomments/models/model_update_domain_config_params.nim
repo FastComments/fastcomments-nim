@@ -22,3 +22,4 @@ type UpdateDomainConfigParams* = object
   logoSrc100px*: Option[string]
   footerUnsubscribeURL*: Option[string]
   emailHeaders*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
+

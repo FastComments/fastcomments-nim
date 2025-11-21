@@ -26,7 +26,6 @@ func `%`*(v: Dir): JsonNode =
   result = case v:
     of Dir.Asc: %"asc"
     of Dir.Desc: %"desc"
-
 func `$`*(v: Dir): string =
   result = case v:
     of Dir.Asc: $("asc")
@@ -43,3 +42,4 @@ proc to*(node: JsonNode, T: typedesc[Dir]): Dir =
     return Dir.Desc
   else:
     raise newException(ValueError, "Invalid enum value for Dir: " & strVal)
+
