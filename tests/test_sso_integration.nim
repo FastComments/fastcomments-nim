@@ -333,6 +333,10 @@ suite "SSO Integration Tests":
         # Verify we can find our comment
         var foundOurComment = false
         for comment in successResp.comments:
+          # Check that _id field is properly returned and not empty
+          check comment.id != ""
+          echo "✓ Comment has valid _id: ", comment.id
+
           if comment.commentHTML != "":
             let commentText = comment.commentHTML
             if $timestamp in commentText:
