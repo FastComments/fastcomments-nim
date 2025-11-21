@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_audit_log
 import model_api_error
@@ -16,15 +18,29 @@ import model_api_status
 import model_custom_config_parameters
 import model_get_audit_logs_response
 
+# AnyOf type
+type GetAuditLogs200responseKind* {.pure.} = enum
+  GetAuditLogsResponseVariant
+  APIErrorVariant
+
 type GetAuditLogs200response* = object
   ## 
-  status*: APIStatus
-  auditLogs*: seq[APIAuditLog]
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetAuditLogs200responseKind
+  of GetAuditLogs200responseKind.GetAuditLogsResponseVariant:
+    GetAuditLogsResponseValue*: GetAuditLogsResponse
+  of GetAuditLogs200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetAuditLogs200response]): GetAuditLogs200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetAuditLogs200response(kind: GetAuditLogs200responseKind.GetAuditLogsResponseVariant, GetAuditLogsResponseValue: to(node, GetAuditLogsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetAuditLogsResponse: ", e.msg
+  try:
+    return GetAuditLogs200response(kind: GetAuditLogs200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetAuditLogs200response. JSON: " & $node)

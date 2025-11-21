@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_hash_tag_info
 import model_comment_user_mention_info
@@ -16,6 +18,26 @@ import model_comment_user_mention_info
 type CommentTextUpdateRequest* = object
   ## 
   comment*: string
-  mentions*: seq[CommentUserMentionInfo]
-  hashTags*: seq[CommentUserHashTagInfo]
+  mentions*: Option[seq[CommentUserMentionInfo]]
+  hashTags*: Option[seq[CommentUserHashTagInfo]]
 
+
+# Custom JSON deserialization for CommentTextUpdateRequest with custom field names
+proc to*(node: JsonNode, T: typedesc[CommentTextUpdateRequest]): CommentTextUpdateRequest =
+  result = CommentTextUpdateRequest()
+  if node.kind == JObject:
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], string)
+    if node.hasKey("mentions") and node["mentions"].kind != JNull:
+      result.mentions = some(to(node["mentions"], typeof(result.mentions.get())))
+    if node.hasKey("hashTags") and node["hashTags"].kind != JNull:
+      result.hashTags = some(to(node["hashTags"], typeof(result.hashTags.get())))
+
+# Custom JSON serialization for CommentTextUpdateRequest with custom field names
+proc `%`*(obj: CommentTextUpdateRequest): JsonNode =
+  result = newJObject()
+  result["comment"] = %obj.comment
+  if obj.mentions.isSome():
+    result["mentions"] = %obj.mentions.get()
+  if obj.hashTags.isSome():
+    result["hashTags"] = %obj.hashTags.get()

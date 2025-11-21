@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -18,3 +20,21 @@ type ReactFeedPostResponse* = object
   reactType*: string
   isUndo*: bool
 
+
+# Custom JSON deserialization for ReactFeedPostResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ReactFeedPostResponse]): ReactFeedPostResponse =
+  result = ReactFeedPostResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("reactType"):
+      result.reactType = to(node["reactType"], string)
+    if node.hasKey("isUndo"):
+      result.isUndo = to(node["isUndo"], bool)
+
+# Custom JSON serialization for ReactFeedPostResponse with custom field names
+proc `%`*(obj: ReactFeedPostResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["reactType"] = %obj.reactType
+  result["isUndo"] = %obj.isUndo

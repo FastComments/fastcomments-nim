@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type SortDirections* {.pure.} = enum
@@ -28,3 +30,16 @@ func `$`*(v: SortDirections): string =
     of SortDirections.NF: $("NF")
     of SortDirections.MR: $("MR")
 
+proc to*(node: JsonNode, T: typedesc[SortDirections]): SortDirections =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum SortDirections, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("OF"):
+    return SortDirections.OF
+  of $("NF"):
+    return SortDirections.NF
+  of $("MR"):
+    return SortDirections.MR
+  else:
+    raise newException(ValueError, "Invalid enum value for SortDirections: " & strVal)

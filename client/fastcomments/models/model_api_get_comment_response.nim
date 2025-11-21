@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_comment
 import model_api_status
@@ -18,3 +20,18 @@ type APIGetCommentResponse* = object
   status*: APIStatus
   comment*: APIComment
 
+
+# Custom JSON deserialization for APIGetCommentResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[APIGetCommentResponse]): APIGetCommentResponse =
+  result = APIGetCommentResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], APIComment)
+
+# Custom JSON serialization for APIGetCommentResponse with custom field names
+proc `%`*(obj: APIGetCommentResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["comment"] = %obj.comment

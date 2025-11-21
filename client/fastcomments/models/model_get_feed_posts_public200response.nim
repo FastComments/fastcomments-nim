@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -17,20 +19,29 @@ import model_feed_post
 import model_public_feed_posts_response
 import model_user_session_info
 
+# AnyOf type
+type GetFeedPostsPublic200responseKind* {.pure.} = enum
+  PublicFeedPostsResponseVariant
+  APIErrorVariant
+
 type GetFeedPostsPublic200response* = object
   ## 
-  myReacts*: Table[string, Table[string, bool]]
-  status*: APIStatus
-  feedPosts*: seq[FeedPost]
-  user*: UserSessionInfo
-  urlIdWS*: string
-  userIdWS*: string
-  tenantIdWS*: string
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetFeedPostsPublic200responseKind
+  of GetFeedPostsPublic200responseKind.PublicFeedPostsResponseVariant:
+    PublicFeedPostsResponseValue*: PublicFeedPostsResponse
+  of GetFeedPostsPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetFeedPostsPublic200response]): GetFeedPostsPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetFeedPostsPublic200response(kind: GetFeedPostsPublic200responseKind.PublicFeedPostsResponseVariant, PublicFeedPostsResponseValue: to(node, PublicFeedPostsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as PublicFeedPostsResponse: ", e.msg
+  try:
+    return GetFeedPostsPublic200response(kind: GetFeedPostsPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetFeedPostsPublic200response. JSON: " & $node)

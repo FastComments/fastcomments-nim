@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_user_badge
@@ -18,3 +20,18 @@ type APIGetUserBadgeResponse* = object
   status*: APIStatus
   userBadge*: UserBadge
 
+
+# Custom JSON deserialization for APIGetUserBadgeResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[APIGetUserBadgeResponse]): APIGetUserBadgeResponse =
+  result = APIGetUserBadgeResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("userBadge"):
+      result.userBadge = to(node["userBadge"], UserBadge)
+
+# Custom JSON serialization for APIGetUserBadgeResponse with custom field names
+proc `%`*(obj: APIGetUserBadgeResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["userBadge"] = %obj.userBadge

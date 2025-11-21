@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_badge_info
 import model_feed_post
@@ -22,19 +24,91 @@ import model_user_notification
 type LiveEvent* = object
   ## 
   `type`*: LiveEventType
-  timestamp*: int64
-  ts*: int64
-  broadcastId*: string
-  userId*: string
-  badges*: seq[CommentUserBadgeInfo]
-  notification*: UserNotification
-  vote*: PubSubVote
-  comment*: PubSubComment
-  feedPost*: FeedPost
-  extraInfo*: LiveEvent_extraInfo
-  config*: JsonNode
-  isClosed*: bool
-  uj*: seq[string]
-  ul*: seq[string]
-  changes*: Table[string, int]
+  timestamp*: Option[int64]
+  ts*: Option[int64]
+  broadcastId*: Option[string]
+  userId*: Option[string]
+  badges*: Option[seq[CommentUserBadgeInfo]]
+  notification*: Option[UserNotification]
+  vote*: Option[PubSubVote]
+  comment*: Option[PubSubComment]
+  feedPost*: Option[FeedPost]
+  extraInfo*: Option[LiveEvent_extraInfo]
+  config*: Option[JsonNode]
+  isClosed*: Option[bool]
+  uj*: Option[seq[string]]
+  ul*: Option[seq[string]]
+  changes*: Option[Table[string, int]]
 
+
+# Custom JSON deserialization for LiveEvent with custom field names
+proc to*(node: JsonNode, T: typedesc[LiveEvent]): LiveEvent =
+  result = LiveEvent()
+  if node.kind == JObject:
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], LiveEventType)
+    if node.hasKey("timestamp") and node["timestamp"].kind != JNull:
+      result.timestamp = some(to(node["timestamp"], typeof(result.timestamp.get())))
+    if node.hasKey("ts") and node["ts"].kind != JNull:
+      result.ts = some(to(node["ts"], typeof(result.ts.get())))
+    if node.hasKey("broadcastId") and node["broadcastId"].kind != JNull:
+      result.broadcastId = some(to(node["broadcastId"], typeof(result.broadcastId.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("notification") and node["notification"].kind != JNull:
+      result.notification = some(to(node["notification"], typeof(result.notification.get())))
+    if node.hasKey("vote") and node["vote"].kind != JNull:
+      result.vote = some(to(node["vote"], typeof(result.vote.get())))
+    if node.hasKey("comment") and node["comment"].kind != JNull:
+      result.comment = some(to(node["comment"], typeof(result.comment.get())))
+    if node.hasKey("feedPost") and node["feedPost"].kind != JNull:
+      result.feedPost = some(to(node["feedPost"], typeof(result.feedPost.get())))
+    if node.hasKey("extraInfo") and node["extraInfo"].kind != JNull:
+      result.extraInfo = some(to(node["extraInfo"], typeof(result.extraInfo.get())))
+    if node.hasKey("config") and node["config"].kind != JNull:
+      result.config = some(to(node["config"], typeof(result.config.get())))
+    if node.hasKey("isClosed") and node["isClosed"].kind != JNull:
+      result.isClosed = some(to(node["isClosed"], typeof(result.isClosed.get())))
+    if node.hasKey("uj") and node["uj"].kind != JNull:
+      result.uj = some(to(node["uj"], typeof(result.uj.get())))
+    if node.hasKey("ul") and node["ul"].kind != JNull:
+      result.ul = some(to(node["ul"], typeof(result.ul.get())))
+    if node.hasKey("changes") and node["changes"].kind != JNull:
+      result.changes = some(to(node["changes"], typeof(result.changes.get())))
+
+# Custom JSON serialization for LiveEvent with custom field names
+proc `%`*(obj: LiveEvent): JsonNode =
+  result = newJObject()
+  result["type"] = %obj.`type`
+  if obj.timestamp.isSome():
+    result["timestamp"] = %obj.timestamp.get()
+  if obj.ts.isSome():
+    result["ts"] = %obj.ts.get()
+  if obj.broadcastId.isSome():
+    result["broadcastId"] = %obj.broadcastId.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  if obj.notification.isSome():
+    result["notification"] = %obj.notification.get()
+  if obj.vote.isSome():
+    result["vote"] = %obj.vote.get()
+  if obj.comment.isSome():
+    result["comment"] = %obj.comment.get()
+  if obj.feedPost.isSome():
+    result["feedPost"] = %obj.feedPost.get()
+  if obj.extraInfo.isSome():
+    result["extraInfo"] = %obj.extraInfo.get()
+  if obj.config.isSome():
+    result["config"] = %obj.config.get()
+  if obj.isClosed.isSome():
+    result["isClosed"] = %obj.isClosed.get()
+  if obj.uj.isSome():
+    result["uj"] = %obj.uj.get()
+  if obj.ul.isSome():
+    result["ul"] = %obj.ul.get()
+  if obj.changes.isSome():
+    result["changes"] = %obj.changes.get()

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,18 +18,29 @@ import model_custom_config_parameters
 import model_get_my_notifications_response
 import model_renderable_user_notification
 
+# AnyOf type
+type GetUserNotifications200responseKind* {.pure.} = enum
+  GetMyNotificationsResponseVariant
+  APIErrorVariant
+
 type GetUserNotifications200response* = object
   ## 
-  translations*: Table[string, string] ## Construct a type with a set of properties K of type T
-  isSubscribed*: bool
-  hasMore*: bool
-  notifications*: seq[RenderableUserNotification]
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetUserNotifications200responseKind
+  of GetUserNotifications200responseKind.GetMyNotificationsResponseVariant:
+    GetMyNotificationsResponseValue*: GetMyNotificationsResponse
+  of GetUserNotifications200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetUserNotifications200response]): GetUserNotifications200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetUserNotifications200response(kind: GetUserNotifications200responseKind.GetMyNotificationsResponseVariant, GetMyNotificationsResponseValue: to(node, GetMyNotificationsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetMyNotificationsResponse: ", e.msg
+  try:
+    return GetUserNotifications200response(kind: GetUserNotifications200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetUserNotifications200response. JSON: " & $node)

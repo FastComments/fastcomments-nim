@@ -9,47 +9,211 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_badge_info
 
 type PublicComment* = object
   ## 
   id*: string
-  userId*: string
+  userId*: Option[string]
   commenterName*: string
-  commenterLink*: string
+  commenterLink*: Option[string]
   commentHTML*: string
-  parentId*: string
-  date*: string
-  votes*: int
-  votesUp*: int
-  votesDown*: int
+  parentId*: Option[string]
+  date*: Option[string]
+  votes*: Option[int]
+  votesUp*: Option[int]
+  votesDown*: Option[int]
   verified*: bool
-  avatarSrc*: string
-  hasImages*: bool
-  isByAdmin*: bool
-  isByModerator*: bool
-  isPinned*: bool
-  isLocked*: bool
-  displayLabel*: string
-  rating*: float64
-  badges*: seq[CommentUserBadgeInfo]
-  viewCount*: int64
-  isDeleted*: bool
-  isDeletedUser*: bool
-  isSpam*: bool
-  anonUserId*: string
-  feedbackIds*: seq[string]
-  requiresVerification*: bool
-  editKey*: string
-  isUnread*: bool
-  myVoteId*: string
-  isVotedDown*: bool
-  isVotedUp*: bool
-  hasChildren*: bool ## This is always set when asTree=true
-  nestedChildrenCount*: int ## The total nested child count included in this response (may be more available w/ pagination) Only set with asTree=true, otherwise this will be null.
-  childCount*: int ## You must ask the API to count children (with asTree=true&countChildren=true), otherwise this will be null. This will be the complete direct child count, whereas children may only contain a subset based on pagination.
-  children*: seq[PublicComment]
-  isFlagged*: bool
-  isBlocked*: bool
+  avatarSrc*: Option[string]
+  hasImages*: Option[bool]
+  isByAdmin*: Option[bool]
+  isByModerator*: Option[bool]
+  isPinned*: Option[bool]
+  isLocked*: Option[bool]
+  displayLabel*: Option[string]
+  rating*: Option[float64]
+  badges*: Option[seq[CommentUserBadgeInfo]]
+  viewCount*: Option[int64]
+  isDeleted*: Option[bool]
+  isDeletedUser*: Option[bool]
+  isSpam*: Option[bool]
+  anonUserId*: Option[string]
+  feedbackIds*: Option[seq[string]]
+  requiresVerification*: Option[bool]
+  editKey*: Option[string]
+  approved*: Option[bool]
+  isUnread*: Option[bool]
+  myVoteId*: Option[string]
+  isVotedDown*: Option[bool]
+  isVotedUp*: Option[bool]
+  hasChildren*: Option[bool] ## This is always set when asTree=true
+  nestedChildrenCount*: Option[int] ## The total nested child count included in this response (may be more available w/ pagination) Only set with asTree=true, otherwise this will be null.
+  childCount*: Option[int] ## You must ask the API to count children (with asTree=true&countChildren=true), otherwise this will be null. This will be the complete direct child count, whereas children may only contain a subset based on pagination.
+  children*: Option[seq[PublicComment]]
+  isFlagged*: Option[bool]
+  isBlocked*: Option[bool]
 
+
+# Custom JSON deserialization for PublicComment with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicComment]): PublicComment =
+  result = PublicComment()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("commenterName"):
+      result.commenterName = to(node["commenterName"], string)
+    if node.hasKey("commenterLink") and node["commenterLink"].kind != JNull:
+      result.commenterLink = some(to(node["commenterLink"], typeof(result.commenterLink.get())))
+    if node.hasKey("commentHTML"):
+      result.commentHTML = to(node["commentHTML"], string)
+    if node.hasKey("parentId") and node["parentId"].kind != JNull:
+      result.parentId = some(to(node["parentId"], typeof(result.parentId.get())))
+    if node.hasKey("date") and node["date"].kind != JNull:
+      result.date = some(to(node["date"], typeof(result.date.get())))
+    if node.hasKey("votes") and node["votes"].kind != JNull:
+      result.votes = some(to(node["votes"], typeof(result.votes.get())))
+    if node.hasKey("votesUp") and node["votesUp"].kind != JNull:
+      result.votesUp = some(to(node["votesUp"], typeof(result.votesUp.get())))
+    if node.hasKey("votesDown") and node["votesDown"].kind != JNull:
+      result.votesDown = some(to(node["votesDown"], typeof(result.votesDown.get())))
+    if node.hasKey("verified"):
+      result.verified = to(node["verified"], bool)
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("hasImages") and node["hasImages"].kind != JNull:
+      result.hasImages = some(to(node["hasImages"], typeof(result.hasImages.get())))
+    if node.hasKey("isByAdmin") and node["isByAdmin"].kind != JNull:
+      result.isByAdmin = some(to(node["isByAdmin"], typeof(result.isByAdmin.get())))
+    if node.hasKey("isByModerator") and node["isByModerator"].kind != JNull:
+      result.isByModerator = some(to(node["isByModerator"], typeof(result.isByModerator.get())))
+    if node.hasKey("isPinned") and node["isPinned"].kind != JNull:
+      result.isPinned = some(to(node["isPinned"], typeof(result.isPinned.get())))
+    if node.hasKey("isLocked") and node["isLocked"].kind != JNull:
+      result.isLocked = some(to(node["isLocked"], typeof(result.isLocked.get())))
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+    if node.hasKey("rating") and node["rating"].kind != JNull:
+      result.rating = some(to(node["rating"], typeof(result.rating.get())))
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("viewCount") and node["viewCount"].kind != JNull:
+      result.viewCount = some(to(node["viewCount"], typeof(result.viewCount.get())))
+    if node.hasKey("isDeleted") and node["isDeleted"].kind != JNull:
+      result.isDeleted = some(to(node["isDeleted"], typeof(result.isDeleted.get())))
+    if node.hasKey("isDeletedUser") and node["isDeletedUser"].kind != JNull:
+      result.isDeletedUser = some(to(node["isDeletedUser"], typeof(result.isDeletedUser.get())))
+    if node.hasKey("isSpam") and node["isSpam"].kind != JNull:
+      result.isSpam = some(to(node["isSpam"], typeof(result.isSpam.get())))
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("feedbackIds") and node["feedbackIds"].kind != JNull:
+      result.feedbackIds = some(to(node["feedbackIds"], typeof(result.feedbackIds.get())))
+    if node.hasKey("requiresVerification") and node["requiresVerification"].kind != JNull:
+      result.requiresVerification = some(to(node["requiresVerification"], typeof(result.requiresVerification.get())))
+    if node.hasKey("editKey") and node["editKey"].kind != JNull:
+      result.editKey = some(to(node["editKey"], typeof(result.editKey.get())))
+    if node.hasKey("approved") and node["approved"].kind != JNull:
+      result.approved = some(to(node["approved"], typeof(result.approved.get())))
+    if node.hasKey("isUnread") and node["isUnread"].kind != JNull:
+      result.isUnread = some(to(node["isUnread"], typeof(result.isUnread.get())))
+    if node.hasKey("myVoteId") and node["myVoteId"].kind != JNull:
+      result.myVoteId = some(to(node["myVoteId"], typeof(result.myVoteId.get())))
+    if node.hasKey("isVotedDown") and node["isVotedDown"].kind != JNull:
+      result.isVotedDown = some(to(node["isVotedDown"], typeof(result.isVotedDown.get())))
+    if node.hasKey("isVotedUp") and node["isVotedUp"].kind != JNull:
+      result.isVotedUp = some(to(node["isVotedUp"], typeof(result.isVotedUp.get())))
+    if node.hasKey("hasChildren") and node["hasChildren"].kind != JNull:
+      result.hasChildren = some(to(node["hasChildren"], typeof(result.hasChildren.get())))
+    if node.hasKey("nestedChildrenCount") and node["nestedChildrenCount"].kind != JNull:
+      result.nestedChildrenCount = some(to(node["nestedChildrenCount"], typeof(result.nestedChildrenCount.get())))
+    if node.hasKey("childCount") and node["childCount"].kind != JNull:
+      result.childCount = some(to(node["childCount"], typeof(result.childCount.get())))
+    if node.hasKey("children") and node["children"].kind != JNull:
+      result.children = some(to(node["children"], typeof(result.children.get())))
+    if node.hasKey("isFlagged") and node["isFlagged"].kind != JNull:
+      result.isFlagged = some(to(node["isFlagged"], typeof(result.isFlagged.get())))
+    if node.hasKey("isBlocked") and node["isBlocked"].kind != JNull:
+      result.isBlocked = some(to(node["isBlocked"], typeof(result.isBlocked.get())))
+
+# Custom JSON serialization for PublicComment with custom field names
+proc `%`*(obj: PublicComment): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  result["commenterName"] = %obj.commenterName
+  if obj.commenterLink.isSome():
+    result["commenterLink"] = %obj.commenterLink.get()
+  result["commentHTML"] = %obj.commentHTML
+  if obj.parentId.isSome():
+    result["parentId"] = %obj.parentId.get()
+  if obj.date.isSome():
+    result["date"] = %obj.date.get()
+  if obj.votes.isSome():
+    result["votes"] = %obj.votes.get()
+  if obj.votesUp.isSome():
+    result["votesUp"] = %obj.votesUp.get()
+  if obj.votesDown.isSome():
+    result["votesDown"] = %obj.votesDown.get()
+  result["verified"] = %obj.verified
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.hasImages.isSome():
+    result["hasImages"] = %obj.hasImages.get()
+  if obj.isByAdmin.isSome():
+    result["isByAdmin"] = %obj.isByAdmin.get()
+  if obj.isByModerator.isSome():
+    result["isByModerator"] = %obj.isByModerator.get()
+  if obj.isPinned.isSome():
+    result["isPinned"] = %obj.isPinned.get()
+  if obj.isLocked.isSome():
+    result["isLocked"] = %obj.isLocked.get()
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+  if obj.rating.isSome():
+    result["rating"] = %obj.rating.get()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  if obj.viewCount.isSome():
+    result["viewCount"] = %obj.viewCount.get()
+  if obj.isDeleted.isSome():
+    result["isDeleted"] = %obj.isDeleted.get()
+  if obj.isDeletedUser.isSome():
+    result["isDeletedUser"] = %obj.isDeletedUser.get()
+  if obj.isSpam.isSome():
+    result["isSpam"] = %obj.isSpam.get()
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  if obj.feedbackIds.isSome():
+    result["feedbackIds"] = %obj.feedbackIds.get()
+  if obj.requiresVerification.isSome():
+    result["requiresVerification"] = %obj.requiresVerification.get()
+  if obj.editKey.isSome():
+    result["editKey"] = %obj.editKey.get()
+  if obj.approved.isSome():
+    result["approved"] = %obj.approved.get()
+  if obj.isUnread.isSome():
+    result["isUnread"] = %obj.isUnread.get()
+  if obj.myVoteId.isSome():
+    result["myVoteId"] = %obj.myVoteId.get()
+  if obj.isVotedDown.isSome():
+    result["isVotedDown"] = %obj.isVotedDown.get()
+  if obj.isVotedUp.isSome():
+    result["isVotedUp"] = %obj.isVotedUp.get()
+  if obj.hasChildren.isSome():
+    result["hasChildren"] = %obj.hasChildren.get()
+  if obj.nestedChildrenCount.isSome():
+    result["nestedChildrenCount"] = %obj.nestedChildrenCount.get()
+  if obj.childCount.isSome():
+    result["childCount"] = %obj.childCount.get()
+  if obj.children.isSome():
+    result["children"] = %obj.children.get()
+  if obj.isFlagged.isSome():
+    result["isFlagged"] = %obj.isFlagged.get()
+  if obj.isBlocked.isSome():
+    result["isBlocked"] = %obj.isBlocked.get()

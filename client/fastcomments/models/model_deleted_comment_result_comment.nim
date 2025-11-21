@@ -9,12 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type DeletedCommentResultComment* = object
   ## 
-  isDeleted*: bool
+  isDeleted*: Option[bool]
   commentHTML*: string
   commenterName*: string
-  userId*: string
+  userId*: Option[string]
 
+
+# Custom JSON deserialization for DeletedCommentResultComment with custom field names
+proc to*(node: JsonNode, T: typedesc[DeletedCommentResultComment]): DeletedCommentResultComment =
+  result = DeletedCommentResultComment()
+  if node.kind == JObject:
+    if node.hasKey("isDeleted") and node["isDeleted"].kind != JNull:
+      result.isDeleted = some(to(node["isDeleted"], typeof(result.isDeleted.get())))
+    if node.hasKey("commentHTML"):
+      result.commentHTML = to(node["commentHTML"], string)
+    if node.hasKey("commenterName"):
+      result.commenterName = to(node["commenterName"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+
+# Custom JSON serialization for DeletedCommentResultComment with custom field names
+proc `%`*(obj: DeletedCommentResultComment): JsonNode =
+  result = newJObject()
+  if obj.isDeleted.isSome():
+    result["isDeleted"] = %obj.isDeleted.get()
+  result["commentHTML"] = %obj.commentHTML
+  result["commenterName"] = %obj.commenterName
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()

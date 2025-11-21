@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type SSOSecurityLevel* {.pure.} = enum
@@ -25,3 +27,14 @@ func `$`*(v: SSOSecurityLevel): string =
     of SSOSecurityLevel.`0`: $(0)
     of SSOSecurityLevel.`1`: $(1)
 
+proc to*(node: JsonNode, T: typedesc[SSOSecurityLevel]): SSOSecurityLevel =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum SSOSecurityLevel, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return SSOSecurityLevel.`0`
+  of $(1):
+    return SSOSecurityLevel.`1`
+  else:
+    raise newException(ValueError, "Invalid enum value for SSOSecurityLevel: " & strVal)

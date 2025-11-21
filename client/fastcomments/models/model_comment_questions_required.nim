@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CommentQuestionsRequired* {.pure.} = enum
@@ -25,3 +27,14 @@ func `$`*(v: CommentQuestionsRequired): string =
     of CommentQuestionsRequired.`0`: $(0)
     of CommentQuestionsRequired.`1`: $(1)
 
+proc to*(node: JsonNode, T: typedesc[CommentQuestionsRequired]): CommentQuestionsRequired =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum CommentQuestionsRequired, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return CommentQuestionsRequired.`0`
+  of $(1):
+    return CommentQuestionsRequired.`1`
+  else:
+    raise newException(ValueError, "Invalid enum value for CommentQuestionsRequired: " & strVal)

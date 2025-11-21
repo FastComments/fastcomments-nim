@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_vote_response_user
 
@@ -20,10 +22,10 @@ type Status* {.pure.} = enum
 type VoteResponse* = object
   ## 
   status*: Status
-  voteId*: string
-  isVerified*: bool
-  user*: VoteResponseUser
-  editKey*: string
+  voteId*: Option[string]
+  isVerified*: Option[bool]
+  user*: Option[VoteResponseUser]
+  editKey*: Option[string]
 
 func `%`*(v: Status): JsonNode =
   result = case v:
@@ -37,3 +39,45 @@ func `$`*(v: Status): string =
     of Status.Failed: $("failed")
     of Status.PendingVerification: $("pending-verification")
 
+proc to*(node: JsonNode, T: typedesc[Status]): Status =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum Status, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("success"):
+    return Status.Success
+  of $("failed"):
+    return Status.Failed
+  of $("pending-verification"):
+    return Status.PendingVerification
+  else:
+    raise newException(ValueError, "Invalid enum value for Status: " & strVal)
+
+
+# Custom JSON deserialization for VoteResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[VoteResponse]): VoteResponse =
+  result = VoteResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], Status)
+    if node.hasKey("voteId") and node["voteId"].kind != JNull:
+      result.voteId = some(to(node["voteId"], typeof(result.voteId.get())))
+    if node.hasKey("isVerified") and node["isVerified"].kind != JNull:
+      result.isVerified = some(to(node["isVerified"], typeof(result.isVerified.get())))
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+    if node.hasKey("editKey") and node["editKey"].kind != JNull:
+      result.editKey = some(to(node["editKey"], typeof(result.editKey.get())))
+
+# Custom JSON serialization for VoteResponse with custom field names
+proc `%`*(obj: VoteResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  if obj.voteId.isSome():
+    result["voteId"] = %obj.voteId.get()
+  if obj.isVerified.isSome():
+    result["isVerified"] = %obj.isVerified.get()
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()
+  if obj.editKey.isSome():
+    result["editKey"] = %obj.editKey.get()

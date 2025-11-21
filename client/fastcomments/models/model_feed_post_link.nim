@@ -9,12 +9,13 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type FeedPostLink* = object
   ## 
-  text*: string
-  title*: string
-  description*: string
-  url*: string
-
+  text*: Option[string]
+  title*: Option[string]
+  description*: Option[string]
+  url*: Option[string]

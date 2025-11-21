@@ -9,20 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_empty_success_response
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 
+# AnyOf type
+type UpdateUserBadge200responseKind* {.pure.} = enum
+  APIEmptySuccessResponseVariant
+  APIErrorVariant
+
 type UpdateUserBadge200response* = object
   ## 
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: UpdateUserBadge200responseKind
+  of UpdateUserBadge200responseKind.APIEmptySuccessResponseVariant:
+    APIEmptySuccessResponseValue*: APIEmptySuccessResponse
+  of UpdateUserBadge200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[UpdateUserBadge200response]): UpdateUserBadge200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return UpdateUserBadge200response(kind: UpdateUserBadge200responseKind.APIEmptySuccessResponseVariant, APIEmptySuccessResponseValue: to(node, APIEmptySuccessResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIEmptySuccessResponse: ", e.msg
+  try:
+    return UpdateUserBadge200response(kind: UpdateUserBadge200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of UpdateUserBadge200response. JSON: " & $node)

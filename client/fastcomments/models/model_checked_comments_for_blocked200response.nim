@@ -9,21 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_check_blocked_comments_response
 import model_custom_config_parameters
 
+# AnyOf type
+type CheckedCommentsForBlocked200responseKind* {.pure.} = enum
+  CheckBlockedCommentsResponseVariant
+  APIErrorVariant
+
 type CheckedCommentsForBlocked200response* = object
   ## 
-  commentStatuses*: Table[string, bool] ## Construct a type with a set of properties K of type T
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: CheckedCommentsForBlocked200responseKind
+  of CheckedCommentsForBlocked200responseKind.CheckBlockedCommentsResponseVariant:
+    CheckBlockedCommentsResponseValue*: CheckBlockedCommentsResponse
+  of CheckedCommentsForBlocked200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[CheckedCommentsForBlocked200response]): CheckedCommentsForBlocked200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return CheckedCommentsForBlocked200response(kind: CheckedCommentsForBlocked200responseKind.CheckBlockedCommentsResponseVariant, CheckBlockedCommentsResponseValue: to(node, CheckBlockedCommentsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as CheckBlockedCommentsResponse: ", e.msg
+  try:
+    return CheckedCommentsForBlocked200response(kind: CheckedCommentsForBlocked200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of CheckedCommentsForBlocked200response. JSON: " & $node)

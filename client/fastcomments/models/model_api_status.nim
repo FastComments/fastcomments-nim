@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type APIStatus* {.pure.} = enum
@@ -25,3 +27,14 @@ func `$`*(v: APIStatus): string =
     of APIStatus.Success: $("success")
     of APIStatus.Failed: $("failed")
 
+proc to*(node: JsonNode, T: typedesc[APIStatus]): APIStatus =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum APIStatus, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("success"):
+    return APIStatus.Success
+  of $("failed"):
+    return APIStatus.Failed
+  else:
+    raise newException(ValueError, "Invalid enum value for APIStatus: " & strVal)

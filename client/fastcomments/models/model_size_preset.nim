@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type SizePreset* {.pure.} = enum
@@ -25,3 +27,14 @@ func `$`*(v: SizePreset): string =
     of SizePreset.Default: $("Default")
     of SizePreset.CrossPlatform: $("CrossPlatform")
 
+proc to*(node: JsonNode, T: typedesc[SizePreset]): SizePreset =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum SizePreset, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("Default"):
+    return SizePreset.Default
+  of $("CrossPlatform"):
+    return SizePreset.CrossPlatform
+  else:
+    raise newException(ValueError, "Invalid enum value for SizePreset: " & strVal)

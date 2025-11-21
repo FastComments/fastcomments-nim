@@ -9,21 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_user_reacts_response
 
+# AnyOf type
+type GetUserReactsPublic200responseKind* {.pure.} = enum
+  UserReactsResponseVariant
+  APIErrorVariant
+
 type GetUserReactsPublic200response* = object
   ## 
-  status*: APIStatus
-  reacts*: Table[string, Table[string, bool]]
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetUserReactsPublic200responseKind
+  of GetUserReactsPublic200responseKind.UserReactsResponseVariant:
+    UserReactsResponseValue*: UserReactsResponse
+  of GetUserReactsPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetUserReactsPublic200response]): GetUserReactsPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetUserReactsPublic200response(kind: GetUserReactsPublic200responseKind.UserReactsResponseVariant, UserReactsResponseValue: to(node, UserReactsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as UserReactsResponse: ", e.msg
+  try:
+    return GetUserReactsPublic200response(kind: GetUserReactsPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetUserReactsPublic200response. JSON: " & $node)

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_find_comments_by_range_item
 
@@ -17,3 +19,23 @@ type FindCommentsByRangeResponse* = object
   results*: seq[FindCommentsByRangeItem]
   createdAt*: string
 
+
+# Custom JSON deserialization for FindCommentsByRangeResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[FindCommentsByRangeResponse]): FindCommentsByRangeResponse =
+  result = FindCommentsByRangeResponse()
+  if node.kind == JObject:
+    if node.hasKey("results"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["results"]
+      if arrayNode.kind == JArray:
+        result.results = @[]
+        for item in arrayNode.items:
+          result.results.add(to(item, FindCommentsByRangeItem))
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+
+# Custom JSON serialization for FindCommentsByRangeResponse with custom field names
+proc `%`*(obj: FindCommentsByRangeResponse): JsonNode =
+  result = newJObject()
+  result["results"] = %obj.results
+  result["createdAt"] = %obj.createdAt

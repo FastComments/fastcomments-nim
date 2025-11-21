@@ -9,14 +9,44 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
 type FlagCommentResponse* = object
   ## 
-  statusCode*: int
+  statusCode*: Option[int]
   status*: APIStatus
-  code*: string
-  reason*: string
-  wasUnapproved*: bool
+  code*: Option[string]
+  reason*: Option[string]
+  wasUnapproved*: Option[bool]
 
+
+# Custom JSON deserialization for FlagCommentResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[FlagCommentResponse]): FlagCommentResponse =
+  result = FlagCommentResponse()
+  if node.kind == JObject:
+    if node.hasKey("statusCode") and node["statusCode"].kind != JNull:
+      result.statusCode = some(to(node["statusCode"], typeof(result.statusCode.get())))
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], typeof(result.code.get())))
+    if node.hasKey("reason") and node["reason"].kind != JNull:
+      result.reason = some(to(node["reason"], typeof(result.reason.get())))
+    if node.hasKey("wasUnapproved") and node["wasUnapproved"].kind != JNull:
+      result.wasUnapproved = some(to(node["wasUnapproved"], typeof(result.wasUnapproved.get())))
+
+# Custom JSON serialization for FlagCommentResponse with custom field names
+proc `%`*(obj: FlagCommentResponse): JsonNode =
+  result = newJObject()
+  if obj.statusCode.isSome():
+    result["statusCode"] = %obj.statusCode.get()
+  result["status"] = %obj.status
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()
+  if obj.reason.isSome():
+    result["reason"] = %obj.reason.get()
+  if obj.wasUnapproved.isSome():
+    result["wasUnapproved"] = %obj.wasUnapproved.get()

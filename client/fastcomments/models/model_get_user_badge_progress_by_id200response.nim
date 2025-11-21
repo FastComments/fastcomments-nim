@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_get_user_badge_progress_response
@@ -16,15 +18,29 @@ import model_api_status
 import model_custom_config_parameters
 import model_user_badge_progress
 
+# AnyOf type
+type GetUserBadgeProgressById200responseKind* {.pure.} = enum
+  APIGetUserBadgeProgressResponseVariant
+  APIErrorVariant
+
 type GetUserBadgeProgressById200response* = object
   ## 
-  status*: APIStatus
-  userBadgeProgress*: UserBadgeProgress
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetUserBadgeProgressById200responseKind
+  of GetUserBadgeProgressById200responseKind.APIGetUserBadgeProgressResponseVariant:
+    APIGetUserBadgeProgressResponseValue*: APIGetUserBadgeProgressResponse
+  of GetUserBadgeProgressById200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetUserBadgeProgressById200response]): GetUserBadgeProgressById200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetUserBadgeProgressById200response(kind: GetUserBadgeProgressById200responseKind.APIGetUserBadgeProgressResponseVariant, APIGetUserBadgeProgressResponseValue: to(node, APIGetUserBadgeProgressResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIGetUserBadgeProgressResponse: ", e.msg
+  try:
+    return GetUserBadgeProgressById200response(kind: GetUserBadgeProgressById200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetUserBadgeProgressById200response. JSON: " & $node)

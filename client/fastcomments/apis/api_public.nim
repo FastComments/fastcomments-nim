@@ -62,10 +62,7 @@ const basepath = "https://fastcomments.com"
 template constructResult[T](response: Response): untyped =
   if response.code in {Http200, Http201, Http202, Http204, Http206}:
     try:
-      when name(stripGenericParams(T.typedesc).typedesc) == name(Table):
-        (some(json.to(parseJson(response.body), T.typedesc)), response)
-      else:
-        (some(marshal.to[T](response.body)), response)
+      (some(to(parseJson(response.body), T)), response)
     except JsonParsingError:
       # The server returned a malformed response though the response code is 2XX
       # TODO: need better error handling
@@ -78,10 +75,11 @@ template constructResult[T](response: Response): untyped =
 proc blockFromCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, publicBlockFromCommentParams: PublicBlockFromCommentParams, sso: string): (Option[BlockFromCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/block-from-comment/{commentId}" & "?" & url_encoded_query_params, $(%publicBlockFromCommentParams))
   constructResult[BlockFromCommentPublic_200_response](response)
@@ -89,11 +87,12 @@ proc blockFromCommentPublic*(httpClient: HttpClient, tenantId: string, commentId
 
 proc checkedCommentsForBlocked*(httpClient: HttpClient, tenantId: string, commentIds: string, sso: string): (Option[CheckedCommentsForBlocked_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("commentIds", $commentIds), # A comma separated list of comment ids.
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("commentIds", $commentIds))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/check-blocked-comments" & "?" & url_encoded_query_params)
   constructResult[CheckedCommentsForBlocked_200_response](response)
@@ -102,12 +101,14 @@ proc checkedCommentsForBlocked*(httpClient: HttpClient, tenantId: string, commen
 proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: string, broadcastId: string, commentData: CommentData, sessionId: string, sso: string): (Option[CreateCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("broadcastId", $broadcastId), # 
-    ("sessionId", $sessionId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $sessionId != "":
+    query_params_list.add(("sessionId", $sessionId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}" & "?" & url_encoded_query_params, $(%commentData))
   constructResult[CreateCommentPublic_200_response](response)
@@ -116,10 +117,12 @@ proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: strin
 proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, broadcastId: string, sso: string): (Option[CreateFeedPostPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/feed-posts/{tenantId}" & "?" & url_encoded_query_params, $(%createFeedPostParams))
   constructResult[CreateFeedPostPublic_200_response](response)
@@ -127,11 +130,13 @@ proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedP
 
 proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, editKey: string, sso: string): (Option[DeleteCommentPublic_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("editKey", $editKey), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $editKey != "":
+    query_params_list.add(("editKey", $editKey))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/comments/{tenantId}/{commentId}" & "?" & url_encoded_query_params)
   constructResult[DeleteCommentPublic_200_response](response)
@@ -139,12 +144,14 @@ proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: s
 
 proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: string, voteId: string, urlId: string, broadcastId: string, editKey: string, sso: string): (Option[DeleteCommentVote_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("broadcastId", $broadcastId), # 
-    ("editKey", $editKey), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $editKey != "":
+    query_params_list.add(("editKey", $editKey))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/comments/{tenantId}/{commentId}/vote/{voteId}" & "?" & url_encoded_query_params)
   constructResult[DeleteCommentVote_200_response](response)
@@ -152,10 +159,12 @@ proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: str
 
 proc deleteFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, broadcastId: string, sso: string): (Option[DeleteFeedPostPublic_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/feed-posts/{tenantId}/{postId}" & "?" & url_encoded_query_params)
   constructResult[DeleteFeedPostPublic_200_response](response)
@@ -163,11 +172,12 @@ proc deleteFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: str
 
 proc flagCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, isFlagged: bool, sso: string): (Option[FlagCommentPublic_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("isFlagged", $isFlagged), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("isFlagged", $isFlagged))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/flag-comment/{commentId}" & "?" & url_encoded_query_params)
   constructResult[FlagCommentPublic_200_response](response)
@@ -175,10 +185,12 @@ proc flagCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: str
 
 proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, editKey: string, sso: string): (Option[GetCommentText_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("editKey", $editKey), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $editKey != "":
+    query_params_list.add(("editKey", $editKey))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/comments/{tenantId}/{commentId}/text" & "?" & url_encoded_query_params)
   constructResult[GetCommentText_200_response](response)
@@ -186,10 +198,11 @@ proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string
 
 proc getCommentVoteUserNames*(httpClient: HttpClient, tenantId: string, commentId: string, dir: int, sso: string): (Option[GetCommentVoteUserNames_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("dir", $dir), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("dir", $dir))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/comments/{tenantId}/{commentId}/votes" & "?" & url_encoded_query_params)
   constructResult[GetCommentVoteUserNames_200_response](response)
@@ -197,35 +210,61 @@ proc getCommentVoteUserNames*(httpClient: HttpClient, tenantId: string, commentI
 
 proc getCommentsPublic*(httpClient: HttpClient, tenantId: string, urlId: string, page: int, direction: SortDirections, sso: string, skip: int, skipChildren: int, limit: int, limitChildren: int, countChildren: bool, fetchPageForCommentId: string, includeConfig: bool, countAll: bool, includei10n: bool, locale: string, modules: string, isCrawler: bool, includeNotificationCount: bool, asTree: bool, maxTreeDepth: int, useFullTranslationIds: bool, parentId: string, searchText: string, hashTags: seq[string], userId: string, customConfigStr: string, afterCommentId: string, beforeCommentId: string): (Option[GetCommentsPublic_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("page", $page), # 
-    ("direction", $direction), # 
-    ("sso", $sso), # 
-    ("skip", $skip), # 
-    ("skipChildren", $skipChildren), # 
-    ("limit", $limit), # 
-    ("limitChildren", $limitChildren), # 
-    ("countChildren", $countChildren), # 
-    ("fetchPageForCommentId", $fetchPageForCommentId), # 
-    ("includeConfig", $includeConfig), # 
-    ("countAll", $countAll), # 
-    ("includei10n", $includei10n), # 
-    ("locale", $locale), # 
-    ("modules", $modules), # 
-    ("isCrawler", $isCrawler), # 
-    ("includeNotificationCount", $includeNotificationCount), # 
-    ("asTree", $asTree), # 
-    ("maxTreeDepth", $maxTreeDepth), # 
-    ("useFullTranslationIds", $useFullTranslationIds), # 
-    ("parentId", $parentId), # 
-    ("searchText", $searchText), # 
-    ("hashTags", $hashTags.join(",")), # 
-    ("userId", $userId), # 
-    ("customConfigStr", $customConfigStr), # 
-    ("afterCommentId", $afterCommentId), # 
-    ("beforeCommentId", $beforeCommentId), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  if $page != "":
+    query_params_list.add(("page", $page))
+  if $direction != "":
+    query_params_list.add(("direction", $direction))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  if $skipChildren != "":
+    query_params_list.add(("skipChildren", $skipChildren))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if $limitChildren != "":
+    query_params_list.add(("limitChildren", $limitChildren))
+  if $countChildren != "":
+    query_params_list.add(("countChildren", $countChildren))
+  if $fetchPageForCommentId != "":
+    query_params_list.add(("fetchPageForCommentId", $fetchPageForCommentId))
+  if $includeConfig != "":
+    query_params_list.add(("includeConfig", $includeConfig))
+  if $countAll != "":
+    query_params_list.add(("countAll", $countAll))
+  if $includei10n != "":
+    query_params_list.add(("includei10n", $includei10n))
+  if $locale != "":
+    query_params_list.add(("locale", $locale))
+  if $modules != "":
+    query_params_list.add(("modules", $modules))
+  if $isCrawler != "":
+    query_params_list.add(("isCrawler", $isCrawler))
+  if $includeNotificationCount != "":
+    query_params_list.add(("includeNotificationCount", $includeNotificationCount))
+  if $asTree != "":
+    query_params_list.add(("asTree", $asTree))
+  if $maxTreeDepth != "":
+    query_params_list.add(("maxTreeDepth", $maxTreeDepth))
+  if $useFullTranslationIds != "":
+    query_params_list.add(("useFullTranslationIds", $useFullTranslationIds))
+  if $parentId != "":
+    query_params_list.add(("parentId", $parentId))
+  if $searchText != "":
+    query_params_list.add(("searchText", $searchText))
+  if hashTags.len > 0:
+    query_params_list.add(("hashTags", $hashTags.join(",")))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $customConfigStr != "":
+    query_params_list.add(("customConfigStr", $customConfigStr))
+  if $afterCommentId != "":
+    query_params_list.add(("afterCommentId", $afterCommentId))
+  if $beforeCommentId != "":
+    query_params_list.add(("beforeCommentId", $beforeCommentId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/comments/{tenantId}" & "?" & url_encoded_query_params)
   constructResult[GetCommentsPublic_200_response](response)
@@ -233,12 +272,12 @@ proc getCommentsPublic*(httpClient: HttpClient, tenantId: string, urlId: string,
 
 proc getEventLog*(httpClient: HttpClient, tenantId: string, urlId: string, userIdWS: string, startTime: int64, endTime: int64): (Option[GetEventLog_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("userIdWS", $userIdWS), # 
-    ("startTime", $startTime), # 
-    ("endTime", $endTime), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("userIdWS", $userIdWS))
+  query_params_list.add(("startTime", $startTime))
+  query_params_list.add(("endTime", $endTime))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/event-log/{tenantId}" & "?" & url_encoded_query_params)
   constructResult[GetEventLog_200_response](response)
@@ -246,14 +285,20 @@ proc getEventLog*(httpClient: HttpClient, tenantId: string, urlId: string, userI
 
 proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, afterId: string, limit: int, tags: seq[string], sso: string, isCrawler: bool, includeUserInfo: bool): (Option[GetFeedPostsPublic_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("afterId", $afterId), # 
-    ("limit", $limit), # 
-    ("tags", $tags.join(",")), # 
-    ("sso", $sso), # 
-    ("isCrawler", $isCrawler), # 
-    ("includeUserInfo", $includeUserInfo), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $afterId != "":
+    query_params_list.add(("afterId", $afterId))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  if tags.len > 0:
+    query_params_list.add(("tags", $tags.join(",")))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  if $isCrawler != "":
+    query_params_list.add(("isCrawler", $isCrawler))
+  if $includeUserInfo != "":
+    query_params_list.add(("includeUserInfo", $includeUserInfo))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/feed-posts/{tenantId}" & "?" & url_encoded_query_params)
   constructResult[GetFeedPostsPublic_200_response](response)
@@ -261,10 +306,11 @@ proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, afterId: stri
 
 proc getFeedPostsStats*(httpClient: HttpClient, tenantId: string, postIds: seq[string], sso: string): (Option[GetFeedPostsStats_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("postIds", $postIds.join(",")), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("postIds", $postIds.join(",")))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/feed-posts/{tenantId}/stats" & "?" & url_encoded_query_params)
   constructResult[GetFeedPostsStats_200_response](response)
@@ -272,12 +318,12 @@ proc getFeedPostsStats*(httpClient: HttpClient, tenantId: string, postIds: seq[s
 
 proc getGlobalEventLog*(httpClient: HttpClient, tenantId: string, urlId: string, userIdWS: string, startTime: int64, endTime: int64): (Option[GetEventLog_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("userIdWS", $userIdWS), # 
-    ("startTime", $startTime), # 
-    ("endTime", $endTime), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("userIdWS", $userIdWS))
+  query_params_list.add(("startTime", $startTime))
+  query_params_list.add(("endTime", $endTime))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/event-log/global/{tenantId}" & "?" & url_encoded_query_params)
   constructResult[GetEventLog_200_response](response)
@@ -285,10 +331,11 @@ proc getGlobalEventLog*(httpClient: HttpClient, tenantId: string, urlId: string,
 
 proc getUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetUserNotificationCount_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/user-notifications/get-count" & "?" & url_encoded_query_params)
   constructResult[GetUserNotificationCount_200_response](response)
@@ -296,18 +343,27 @@ proc getUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: st
 
 proc getUserNotifications*(httpClient: HttpClient, tenantId: string, pageSize: int, afterId: string, includeContext: bool, afterCreatedAt: int64, unreadOnly: bool, dmOnly: bool, noDm: bool, includeTranslations: bool, sso: string): (Option[GetUserNotifications_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("pageSize", $pageSize), # 
-    ("afterId", $afterId), # 
-    ("includeContext", $includeContext), # 
-    ("afterCreatedAt", $afterCreatedAt), # 
-    ("unreadOnly", $unreadOnly), # 
-    ("dmOnly", $dmOnly), # 
-    ("noDm", $noDm), # 
-    ("includeTranslations", $includeTranslations), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $pageSize != "":
+    query_params_list.add(("pageSize", $pageSize))
+  if $afterId != "":
+    query_params_list.add(("afterId", $afterId))
+  if $includeContext != "":
+    query_params_list.add(("includeContext", $includeContext))
+  if $afterCreatedAt != "":
+    query_params_list.add(("afterCreatedAt", $afterCreatedAt))
+  if $unreadOnly != "":
+    query_params_list.add(("unreadOnly", $unreadOnly))
+  if $dmOnly != "":
+    query_params_list.add(("dmOnly", $dmOnly))
+  if $noDm != "":
+    query_params_list.add(("noDm", $noDm))
+  if $includeTranslations != "":
+    query_params_list.add(("includeTranslations", $includeTranslations))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/user-notifications" & "?" & url_encoded_query_params)
   constructResult[GetUserNotifications_200_response](response)
@@ -315,11 +371,11 @@ proc getUserNotifications*(httpClient: HttpClient, tenantId: string, pageSize: i
 
 proc getUserPresenceStatuses*(httpClient: HttpClient, tenantId: string, urlIdWS: string, userIds: string): (Option[GetUserPresenceStatuses_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("urlIdWS", $urlIdWS), # 
-    ("userIds", $userIds), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("urlIdWS", $urlIdWS))
+  query_params_list.add(("userIds", $userIds))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/user-presence-status" & "?" & url_encoded_query_params)
   constructResult[GetUserPresenceStatuses_200_response](response)
@@ -327,10 +383,12 @@ proc getUserPresenceStatuses*(httpClient: HttpClient, tenantId: string, urlIdWS:
 
 proc getUserReactsPublic*(httpClient: HttpClient, tenantId: string, postIds: seq[string], sso: string): (Option[GetUserReactsPublic_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("postIds", $postIds.join(",")), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if postIds.len > 0:
+    query_params_list.add(("postIds", $postIds.join(",")))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/feed-posts/{tenantId}/user-reacts" & "?" & url_encoded_query_params)
   constructResult[GetUserReactsPublic_200_response](response)
@@ -338,10 +396,11 @@ proc getUserReactsPublic*(httpClient: HttpClient, tenantId: string, postIds: seq
 
 proc lockComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[LockComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}/{commentId}/lock" & "?" & url_encoded_query_params)
   constructResult[LockComment_200_response](response)
@@ -349,10 +408,11 @@ proc lockComment*(httpClient: HttpClient, tenantId: string, commentId: string, b
 
 proc pinComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[PinComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}/{commentId}/pin" & "?" & url_encoded_query_params)
   constructResult[PinComment_200_response](response)
@@ -361,11 +421,14 @@ proc pinComment*(httpClient: HttpClient, tenantId: string, commentId: string, br
 proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, reactBodyParams: ReactBodyParams, isUndo: bool, broadcastId: string, sso: string): (Option[ReactFeedPostPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("isUndo", $isUndo), # 
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $isUndo != "":
+    query_params_list.add(("isUndo", $isUndo))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/feed-posts/{tenantId}/react/{postId}" & "?" & url_encoded_query_params, $(%reactBodyParams))
   constructResult[ReactFeedPostPublic_200_response](response)
@@ -373,10 +436,11 @@ proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: stri
 
 proc resetUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: string): (Option[ResetUserNotifications_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/user-notifications/reset-count" & "?" & url_encoded_query_params)
   constructResult[ResetUserNotifications_200_response](response)
@@ -384,15 +448,21 @@ proc resetUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: 
 
 proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, afterId: string, afterCreatedAt: int64, unreadOnly: bool, dmOnly: bool, noDm: bool, sso: string): (Option[ResetUserNotifications_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("afterId", $afterId), # 
-    ("afterCreatedAt", $afterCreatedAt), # 
-    ("unreadOnly", $unreadOnly), # 
-    ("dmOnly", $dmOnly), # 
-    ("noDm", $noDm), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $afterId != "":
+    query_params_list.add(("afterId", $afterId))
+  if $afterCreatedAt != "":
+    query_params_list.add(("afterCreatedAt", $afterCreatedAt))
+  if $unreadOnly != "":
+    query_params_list.add(("unreadOnly", $unreadOnly))
+  if $dmOnly != "":
+    query_params_list.add(("dmOnly", $dmOnly))
+  if $noDm != "":
+    query_params_list.add(("noDm", $noDm))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/user-notifications/reset" & "?" & url_encoded_query_params)
   constructResult[ResetUserNotifications_200_response](response)
@@ -400,12 +470,14 @@ proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, afterId: 
 
 proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usernameStartsWith: string, mentionGroupIds: seq[string], sso: string): (Option[SearchUsers_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("usernameStartsWith", $usernameStartsWith), # 
-    ("mentionGroupIds", $mentionGroupIds.join(",")), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("usernameStartsWith", $usernameStartsWith))
+  if mentionGroupIds.len > 0:
+    query_params_list.add(("mentionGroupIds", $mentionGroupIds.join(",")))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/user-search/{tenantId}" & "?" & url_encoded_query_params)
   constructResult[SearchUsers_200_response](response)
@@ -414,11 +486,13 @@ proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usern
 proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, commentTextUpdateRequest: CommentTextUpdateRequest, editKey: string, sso: string): (Option[SetCommentText_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("editKey", $editKey), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $editKey != "":
+    query_params_list.add(("editKey", $editKey))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}/{commentId}/update-text" & "?" & url_encoded_query_params, $(%commentTextUpdateRequest))
   constructResult[SetCommentText_200_response](response)
@@ -427,20 +501,22 @@ proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string
 proc unBlockCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, publicBlockFromCommentParams: PublicBlockFromCommentParams, sso: string): (Option[UnBlockCommentPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
   let response = httpClient.request(basepath & fmt"/block-from-comment/{commentId}" & "?" & url_encoded_query_params, httpMethod = HttpDelete, body = $(%publicBlockFromCommentParams))
   constructResult[UnBlockCommentPublic_200_response](response)
 
 
 proc unLockComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[LockComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}/{commentId}/unlock" & "?" & url_encoded_query_params)
   constructResult[LockComment_200_response](response)
@@ -448,10 +524,11 @@ proc unLockComment*(httpClient: HttpClient, tenantId: string, commentId: string,
 
 proc unPinComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[PinComment_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}/{commentId}/unpin" & "?" & url_encoded_query_params)
   constructResult[PinComment_200_response](response)
@@ -460,10 +537,12 @@ proc unPinComment*(httpClient: HttpClient, tenantId: string, commentId: string, 
 proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, updateFeedPostParams: UpdateFeedPostParams, broadcastId: string, sso: string): (Option[CreateFeedPostPublic_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("broadcastId", $broadcastId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/feed-posts/{tenantId}/{postId}" & "?" & url_encoded_query_params, $(%updateFeedPostParams))
   constructResult[CreateFeedPostPublic_200_response](response)
@@ -471,11 +550,12 @@ proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: str
 
 proc updateUserNotificationCommentSubscriptionStatus*(httpClient: HttpClient, tenantId: string, notificationId: string, optedInOrOut: string, commentId: string, sso: string): (Option[UpdateUserNotificationStatus_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("commentId", $commentId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("commentId", $commentId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/user-notifications/{notificationId}/mark-opted/{optedInOrOut}" & "?" & url_encoded_query_params)
   constructResult[UpdateUserNotificationStatus_200_response](response)
@@ -483,13 +563,14 @@ proc updateUserNotificationCommentSubscriptionStatus*(httpClient: HttpClient, te
 
 proc updateUserNotificationPageSubscriptionStatus*(httpClient: HttpClient, tenantId: string, urlId: string, url: string, pageTitle: string, subscribedOrUnsubscribed: string, sso: string): (Option[UpdateUserNotificationStatus_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("urlId", $urlId), # 
-    ("url", $url), # 
-    ("pageTitle", $pageTitle), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("url", $url))
+  query_params_list.add(("pageTitle", $pageTitle))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/user-notifications/set-subscription-state/{subscribedOrUnsubscribed}" & "?" & url_encoded_query_params)
   constructResult[UpdateUserNotificationStatus_200_response](response)
@@ -497,10 +578,11 @@ proc updateUserNotificationPageSubscriptionStatus*(httpClient: HttpClient, tenan
 
 proc updateUserNotificationStatus*(httpClient: HttpClient, tenantId: string, notificationId: string, newStatus: string, sso: string): (Option[UpdateUserNotificationStatus_200_response], Response) =
   ## 
-  let url_encoded_query_params = encodeQuery([
-    ("tenantId", $tenantId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/user-notifications/{notificationId}/mark/{newStatus}" & "?" & url_encoded_query_params)
   constructResult[UpdateUserNotificationStatus_200_response](response)
@@ -509,10 +591,12 @@ proc updateUserNotificationStatus*(httpClient: HttpClient, tenantId: string, not
 proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, sizePreset: SizePreset, urlId: string): (Option[UploadImageResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "multipart/form-data"
-  let url_encoded_query_params = encodeQuery([
-    ("sizePreset", $sizePreset), # Size preset: \"Default\" (1000x1000px) or \"CrossPlatform\" (creates sizes for popular devices)
-    ("urlId", $urlId), # Page id that upload is happening from, to configure
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  if $sizePreset != "":
+    query_params_list.add(("sizePreset", $sizePreset))
+  if $urlId != "":
+    query_params_list.add(("urlId", $urlId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
   let multipart_data = newMultipartData({
     "file": $file, # 
   })
@@ -524,12 +608,14 @@ proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, sizePr
 proc voteComment*(httpClient: HttpClient, tenantId: string, commentId: string, urlId: string, broadcastId: string, voteBodyParams: VoteBodyParams, sessionId: string, sso: string): (Option[VoteComment_200_response], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
-  let url_encoded_query_params = encodeQuery([
-    ("urlId", $urlId), # 
-    ("broadcastId", $broadcastId), # 
-    ("sessionId", $sessionId), # 
-    ("sso", $sso), # 
-  ])
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("urlId", $urlId))
+  query_params_list.add(("broadcastId", $broadcastId))
+  if $sessionId != "":
+    query_params_list.add(("sessionId", $sessionId))
+  if $sso != "":
+    query_params_list.add(("sso", $sso))
+  let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/comments/{tenantId}/{commentId}/vote" & "?" & url_encoded_query_params, $(%voteBodyParams))
   constructResult[VoteComment_200_response](response)

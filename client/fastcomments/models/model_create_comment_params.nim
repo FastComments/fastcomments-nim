@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_hash_tag_info
 import model_comment_user_mention_info
@@ -17,38 +19,178 @@ import model_record_string_string_or_number_value
 
 type CreateCommentParams* = object
   ## 
-  date*: int64
-  localDateString*: string
-  localDateHours*: int
+  date*: Option[int64]
+  localDateString*: Option[string]
+  localDateHours*: Option[int]
   commenterName*: string
-  commenterEmail*: string
-  commenterLink*: string
+  commenterEmail*: Option[string]
+  commenterLink*: Option[string]
   comment*: string
-  productId*: int
-  userId*: string
-  avatarSrc*: string
-  parentId*: string
-  mentions*: seq[CommentUserMentionInfo]
-  hashTags*: seq[CommentUserHashTagInfo]
-  pageTitle*: string
-  isFromMyAccountPage*: bool
+  productId*: Option[int]
+  userId*: Option[string]
+  avatarSrc*: Option[string]
+  parentId*: Option[string]
+  mentions*: Option[seq[CommentUserMentionInfo]]
+  hashTags*: Option[seq[CommentUserHashTagInfo]]
+  pageTitle*: Option[string]
+  isFromMyAccountPage*: Option[bool]
   url*: string
   urlId*: string
-  meta*: JsonNode
-  moderationGroupIds*: seq[string]
-  rating*: float64
-  fromOfflineRestore*: bool
-  autoplayDelayMS*: int64
-  feedbackIds*: seq[string]
-  questionValues*: Table[string, RecordStringStringOrNumberValue] ## Construct a type with a set of properties K of type T
-  approved*: bool
-  domain*: string
-  ip*: string
-  isPinned*: bool
+  meta*: Option[JsonNode]
+  moderationGroupIds*: Option[seq[string]]
+  rating*: Option[float64]
+  fromOfflineRestore*: Option[bool]
+  autoplayDelayMS*: Option[int64]
+  feedbackIds*: Option[seq[string]]
+  questionValues*: Option[Table[string, RecordStringStringOrNumberValue]] ## Construct a type with a set of properties K of type T
+  approved*: Option[bool]
+  domain*: Option[string]
+  ip*: Option[string]
+  isPinned*: Option[bool]
   locale*: string ## Example: en_us
-  reviewed*: bool
-  verified*: bool
-  votes*: int
-  votesDown*: int
-  votesUp*: int
+  reviewed*: Option[bool]
+  verified*: Option[bool]
+  votes*: Option[int]
+  votesDown*: Option[int]
+  votesUp*: Option[int]
 
+
+# Custom JSON deserialization for CreateCommentParams with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateCommentParams]): CreateCommentParams =
+  result = CreateCommentParams()
+  if node.kind == JObject:
+    if node.hasKey("date") and node["date"].kind != JNull:
+      result.date = some(to(node["date"], typeof(result.date.get())))
+    if node.hasKey("localDateString") and node["localDateString"].kind != JNull:
+      result.localDateString = some(to(node["localDateString"], typeof(result.localDateString.get())))
+    if node.hasKey("localDateHours") and node["localDateHours"].kind != JNull:
+      result.localDateHours = some(to(node["localDateHours"], typeof(result.localDateHours.get())))
+    if node.hasKey("commenterName"):
+      result.commenterName = to(node["commenterName"], string)
+    if node.hasKey("commenterEmail") and node["commenterEmail"].kind != JNull:
+      result.commenterEmail = some(to(node["commenterEmail"], typeof(result.commenterEmail.get())))
+    if node.hasKey("commenterLink") and node["commenterLink"].kind != JNull:
+      result.commenterLink = some(to(node["commenterLink"], typeof(result.commenterLink.get())))
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], string)
+    if node.hasKey("productId") and node["productId"].kind != JNull:
+      result.productId = some(to(node["productId"], typeof(result.productId.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("parentId") and node["parentId"].kind != JNull:
+      result.parentId = some(to(node["parentId"], typeof(result.parentId.get())))
+    if node.hasKey("mentions") and node["mentions"].kind != JNull:
+      result.mentions = some(to(node["mentions"], typeof(result.mentions.get())))
+    if node.hasKey("hashTags") and node["hashTags"].kind != JNull:
+      result.hashTags = some(to(node["hashTags"], typeof(result.hashTags.get())))
+    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
+      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
+    if node.hasKey("isFromMyAccountPage") and node["isFromMyAccountPage"].kind != JNull:
+      result.isFromMyAccountPage = some(to(node["isFromMyAccountPage"], typeof(result.isFromMyAccountPage.get())))
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+    if node.hasKey("moderationGroupIds") and node["moderationGroupIds"].kind != JNull:
+      result.moderationGroupIds = some(to(node["moderationGroupIds"], typeof(result.moderationGroupIds.get())))
+    if node.hasKey("rating") and node["rating"].kind != JNull:
+      result.rating = some(to(node["rating"], typeof(result.rating.get())))
+    if node.hasKey("fromOfflineRestore") and node["fromOfflineRestore"].kind != JNull:
+      result.fromOfflineRestore = some(to(node["fromOfflineRestore"], typeof(result.fromOfflineRestore.get())))
+    if node.hasKey("autoplayDelayMS") and node["autoplayDelayMS"].kind != JNull:
+      result.autoplayDelayMS = some(to(node["autoplayDelayMS"], typeof(result.autoplayDelayMS.get())))
+    if node.hasKey("feedbackIds") and node["feedbackIds"].kind != JNull:
+      result.feedbackIds = some(to(node["feedbackIds"], typeof(result.feedbackIds.get())))
+    if node.hasKey("questionValues") and node["questionValues"].kind != JNull:
+      result.questionValues = some(to(node["questionValues"], typeof(result.questionValues.get())))
+    if node.hasKey("approved") and node["approved"].kind != JNull:
+      result.approved = some(to(node["approved"], typeof(result.approved.get())))
+    if node.hasKey("domain") and node["domain"].kind != JNull:
+      result.domain = some(to(node["domain"], typeof(result.domain.get())))
+    if node.hasKey("ip") and node["ip"].kind != JNull:
+      result.ip = some(to(node["ip"], typeof(result.ip.get())))
+    if node.hasKey("isPinned") and node["isPinned"].kind != JNull:
+      result.isPinned = some(to(node["isPinned"], typeof(result.isPinned.get())))
+    if node.hasKey("locale"):
+      result.locale = to(node["locale"], string)
+    if node.hasKey("reviewed") and node["reviewed"].kind != JNull:
+      result.reviewed = some(to(node["reviewed"], typeof(result.reviewed.get())))
+    if node.hasKey("verified") and node["verified"].kind != JNull:
+      result.verified = some(to(node["verified"], typeof(result.verified.get())))
+    if node.hasKey("votes") and node["votes"].kind != JNull:
+      result.votes = some(to(node["votes"], typeof(result.votes.get())))
+    if node.hasKey("votesDown") and node["votesDown"].kind != JNull:
+      result.votesDown = some(to(node["votesDown"], typeof(result.votesDown.get())))
+    if node.hasKey("votesUp") and node["votesUp"].kind != JNull:
+      result.votesUp = some(to(node["votesUp"], typeof(result.votesUp.get())))
+
+# Custom JSON serialization for CreateCommentParams with custom field names
+proc `%`*(obj: CreateCommentParams): JsonNode =
+  result = newJObject()
+  if obj.date.isSome():
+    result["date"] = %obj.date.get()
+  if obj.localDateString.isSome():
+    result["localDateString"] = %obj.localDateString.get()
+  if obj.localDateHours.isSome():
+    result["localDateHours"] = %obj.localDateHours.get()
+  result["commenterName"] = %obj.commenterName
+  if obj.commenterEmail.isSome():
+    result["commenterEmail"] = %obj.commenterEmail.get()
+  if obj.commenterLink.isSome():
+    result["commenterLink"] = %obj.commenterLink.get()
+  result["comment"] = %obj.comment
+  if obj.productId.isSome():
+    result["productId"] = %obj.productId.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.parentId.isSome():
+    result["parentId"] = %obj.parentId.get()
+  if obj.mentions.isSome():
+    result["mentions"] = %obj.mentions.get()
+  if obj.hashTags.isSome():
+    result["hashTags"] = %obj.hashTags.get()
+  if obj.pageTitle.isSome():
+    result["pageTitle"] = %obj.pageTitle.get()
+  if obj.isFromMyAccountPage.isSome():
+    result["isFromMyAccountPage"] = %obj.isFromMyAccountPage.get()
+  result["url"] = %obj.url
+  result["urlId"] = %obj.urlId
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+  if obj.moderationGroupIds.isSome():
+    result["moderationGroupIds"] = %obj.moderationGroupIds.get()
+  if obj.rating.isSome():
+    result["rating"] = %obj.rating.get()
+  if obj.fromOfflineRestore.isSome():
+    result["fromOfflineRestore"] = %obj.fromOfflineRestore.get()
+  if obj.autoplayDelayMS.isSome():
+    result["autoplayDelayMS"] = %obj.autoplayDelayMS.get()
+  if obj.feedbackIds.isSome():
+    result["feedbackIds"] = %obj.feedbackIds.get()
+  if obj.questionValues.isSome():
+    result["questionValues"] = %obj.questionValues.get()
+  if obj.approved.isSome():
+    result["approved"] = %obj.approved.get()
+  if obj.domain.isSome():
+    result["domain"] = %obj.domain.get()
+  if obj.ip.isSome():
+    result["ip"] = %obj.ip.get()
+  if obj.isPinned.isSome():
+    result["isPinned"] = %obj.isPinned.get()
+  result["locale"] = %obj.locale
+  if obj.reviewed.isSome():
+    result["reviewed"] = %obj.reviewed.get()
+  if obj.verified.isSome():
+    result["verified"] = %obj.verified.get()
+  if obj.votes.isSome():
+    result["votes"] = %obj.votes.get()
+  if obj.votesDown.isSome():
+    result["votesDown"] = %obj.votesDown.get()
+  if obj.votesUp.isSome():
+    result["votesUp"] = %obj.votesUp.get()

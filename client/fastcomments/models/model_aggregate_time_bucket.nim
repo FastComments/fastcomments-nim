@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type AggregateTimeBucket* {.pure.} = enum
@@ -28,3 +30,16 @@ func `$`*(v: AggregateTimeBucket): string =
     of AggregateTimeBucket.Month: $("month")
     of AggregateTimeBucket.Year: $("year")
 
+proc to*(node: JsonNode, T: typedesc[AggregateTimeBucket]): AggregateTimeBucket =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum AggregateTimeBucket, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("day"):
+    return AggregateTimeBucket.Day
+  of $("month"):
+    return AggregateTimeBucket.Month
+  of $("year"):
+    return AggregateTimeBucket.Year
+  else:
+    raise newException(ValueError, "Invalid enum value for AggregateTimeBucket: " & strVal)

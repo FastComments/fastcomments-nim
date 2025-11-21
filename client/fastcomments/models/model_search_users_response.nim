@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_user_search_result
@@ -18,3 +20,23 @@ type SearchUsersResponse* = object
   status*: APIStatus
   users*: seq[UserSearchResult]
 
+
+# Custom JSON deserialization for SearchUsersResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[SearchUsersResponse]): SearchUsersResponse =
+  result = SearchUsersResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("users"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["users"]
+      if arrayNode.kind == JArray:
+        result.users = @[]
+        for item in arrayNode.items:
+          result.users.add(to(item, UserSearchResult))
+
+# Custom JSON serialization for SearchUsersResponse with custom field names
+proc `%`*(obj: SearchUsersResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["users"] = %obj.users

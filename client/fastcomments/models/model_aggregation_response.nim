@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_aggregation_item
 import model_aggregation_response_stats
@@ -18,5 +20,24 @@ type AggregationResponse* = object
   ## The API response returns the aggregated data along with simple stats
   status*: APIStatus
   data*: seq[AggregationItem]
-  stats*: AggregationResponse_stats
+  stats*: Option[AggregationResponse_stats]
 
+
+# Custom JSON deserialization for AggregationResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationResponse]): AggregationResponse =
+  result = AggregationResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("data"):
+      result.data = to(node["data"], seq[AggregationItem])
+    if node.hasKey("stats") and node["stats"].kind != JNull:
+      result.stats = some(to(node["stats"], typeof(result.stats.get())))
+
+# Custom JSON serialization for AggregationResponse with custom field names
+proc `%`*(obj: AggregationResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["data"] = %obj.data
+  if obj.stats.isSome():
+    result["stats"] = %obj.stats.get()

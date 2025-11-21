@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type PubSubVote* = object
@@ -18,8 +20,46 @@ type PubSubVote* = object
   urlId*: string
   urlIdRaw*: string
   commentId*: string
-  userId*: string
+  userId*: Option[string]
   direction*: int
   createdAt*: int64
-  verificationId*: string
+  verificationId*: Option[string]
 
+
+# Custom JSON deserialization for PubSubVote with custom field names
+proc to*(node: JsonNode, T: typedesc[PubSubVote]): PubSubVote =
+  result = PubSubVote()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("urlIdRaw"):
+      result.urlIdRaw = to(node["urlIdRaw"], string)
+    if node.hasKey("commentId"):
+      result.commentId = to(node["commentId"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("direction"):
+      result.direction = to(node["direction"], int)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], int64)
+    if node.hasKey("verificationId") and node["verificationId"].kind != JNull:
+      result.verificationId = some(to(node["verificationId"], typeof(result.verificationId.get())))
+
+# Custom JSON serialization for PubSubVote with custom field names
+proc `%`*(obj: PubSubVote): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  result["urlId"] = %obj.urlId
+  result["urlIdRaw"] = %obj.urlIdRaw
+  result["commentId"] = %obj.commentId
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  result["direction"] = %obj.direction
+  result["createdAt"] = %obj.createdAt
+  if obj.verificationId.isSome():
+    result["verificationId"] = %obj.verificationId.get()

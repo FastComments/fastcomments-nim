@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,15 +18,29 @@ import model_combine_question_results_with_comments_response
 import model_custom_config_parameters
 import model_find_comments_by_range_response
 
+# AnyOf type
+type CombineCommentsWithQuestionResults200responseKind* {.pure.} = enum
+  CombineQuestionResultsWithCommentsResponseVariant
+  APIErrorVariant
+
 type CombineCommentsWithQuestionResults200response* = object
   ## 
-  status*: APIStatus
-  data*: FindCommentsByRangeResponse
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: CombineCommentsWithQuestionResults200responseKind
+  of CombineCommentsWithQuestionResults200responseKind.CombineQuestionResultsWithCommentsResponseVariant:
+    CombineQuestionResultsWithCommentsResponseValue*: CombineQuestionResultsWithCommentsResponse
+  of CombineCommentsWithQuestionResults200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[CombineCommentsWithQuestionResults200response]): CombineCommentsWithQuestionResults200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return CombineCommentsWithQuestionResults200response(kind: CombineCommentsWithQuestionResults200responseKind.CombineQuestionResultsWithCommentsResponseVariant, CombineQuestionResultsWithCommentsResponseValue: to(node, CombineQuestionResultsWithCommentsResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as CombineQuestionResultsWithCommentsResponse: ", e.msg
+  try:
+    return CombineCommentsWithQuestionResults200response(kind: CombineCommentsWithQuestionResults200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of CombineCommentsWithQuestionResults200response. JSON: " & $node)

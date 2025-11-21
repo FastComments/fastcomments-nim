@@ -9,9 +9,24 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type UpdateUserBadgeParams* = object
   ## 
-  displayedOnComments*: bool
+  displayedOnComments*: Option[bool]
 
+
+# Custom JSON deserialization for UpdateUserBadgeParams with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateUserBadgeParams]): UpdateUserBadgeParams =
+  result = UpdateUserBadgeParams()
+  if node.kind == JObject:
+    if node.hasKey("displayedOnComments") and node["displayedOnComments"].kind != JNull:
+      result.displayedOnComments = some(to(node["displayedOnComments"], typeof(result.displayedOnComments.get())))
+
+# Custom JSON serialization for UpdateUserBadgeParams with custom field names
+proc `%`*(obj: UpdateUserBadgeParams): JsonNode =
+  result = newJObject()
+  if obj.displayedOnComments.isSome():
+    result["displayedOnComments"] = %obj.displayedOnComments.get()

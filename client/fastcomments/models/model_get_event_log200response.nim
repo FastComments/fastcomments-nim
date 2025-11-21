@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,15 +18,29 @@ import model_custom_config_parameters
 import model_event_log_entry
 import model_get_event_log_response
 
+# AnyOf type
+type GetEventLog200responseKind* {.pure.} = enum
+  GetEventLogResponseVariant
+  APIErrorVariant
+
 type GetEventLog200response* = object
   ## 
-  events*: seq[EventLogEntry]
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: GetEventLog200responseKind
+  of GetEventLog200responseKind.GetEventLogResponseVariant:
+    GetEventLogResponseValue*: GetEventLogResponse
+  of GetEventLog200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[GetEventLog200response]): GetEventLog200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return GetEventLog200response(kind: GetEventLog200responseKind.GetEventLogResponseVariant, GetEventLogResponseValue: to(node, GetEventLogResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as GetEventLogResponse: ", e.msg
+  try:
+    return GetEventLog200response(kind: GetEventLog200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of GetEventLog200response. JSON: " & $node)

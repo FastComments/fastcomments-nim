@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -17,3 +19,18 @@ type GetUserNotificationCountResponse* = object
   status*: APIStatus
   count*: int64
 
+
+# Custom JSON deserialization for GetUserNotificationCountResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetUserNotificationCountResponse]): GetUserNotificationCountResponse =
+  result = GetUserNotificationCountResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("count"):
+      result.count = to(node["count"], int64)
+
+# Custom JSON serialization for GetUserNotificationCountResponse with custom field names
+proc `%`*(obj: GetUserNotificationCountResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["count"] = %obj.count

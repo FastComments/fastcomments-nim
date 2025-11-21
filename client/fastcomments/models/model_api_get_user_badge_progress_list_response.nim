@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_user_badge_progress
@@ -18,3 +20,23 @@ type APIGetUserBadgeProgressListResponse* = object
   status*: APIStatus
   userBadgeProgresses*: seq[UserBadgeProgress]
 
+
+# Custom JSON deserialization for APIGetUserBadgeProgressListResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[APIGetUserBadgeProgressListResponse]): APIGetUserBadgeProgressListResponse =
+  result = APIGetUserBadgeProgressListResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("userBadgeProgresses"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["userBadgeProgresses"]
+      if arrayNode.kind == JArray:
+        result.userBadgeProgresses = @[]
+        for item in arrayNode.items:
+          result.userBadgeProgresses.add(to(item, UserBadgeProgress))
+
+# Custom JSON serialization for APIGetUserBadgeProgressListResponse with custom field names
+proc `%`*(obj: APIGetUserBadgeProgressListResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["userBadgeProgresses"] = %obj.userBadgeProgresses

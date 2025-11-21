@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type APISSOUser* = object
@@ -25,12 +27,89 @@ type APISSOUser* = object
   optedInSubscriptionNotifications*: bool
   displayLabel*: string
   displayName*: string
-  isAccountOwner*: bool
-  isAdminAdmin*: bool
-  isCommentModeratorAdmin*: bool
-  isProfileActivityPrivate*: bool
-  isProfileCommentsPrivate*: bool
-  isProfileDMDisabled*: bool
-  hasBlockedUsers*: bool
-  groupIds*: seq[string]
+  isAccountOwner*: Option[bool]
+  isAdminAdmin*: Option[bool]
+  isCommentModeratorAdmin*: Option[bool]
+  isProfileActivityPrivate*: Option[bool]
+  isProfileCommentsPrivate*: Option[bool]
+  isProfileDMDisabled*: Option[bool]
+  hasBlockedUsers*: Option[bool]
+  groupIds*: Option[seq[string]]
 
+
+# Custom JSON deserialization for APISSOUser with custom field names
+proc to*(node: JsonNode, T: typedesc[APISSOUser]): APISSOUser =
+  result = APISSOUser()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("username"):
+      result.username = to(node["username"], string)
+    if node.hasKey("websiteUrl"):
+      result.websiteUrl = to(node["websiteUrl"], string)
+    if node.hasKey("email"):
+      result.email = to(node["email"], string)
+    if node.hasKey("signUpDate"):
+      result.signUpDate = to(node["signUpDate"], int64)
+    if node.hasKey("createdFromUrlId"):
+      result.createdFromUrlId = to(node["createdFromUrlId"], string)
+    if node.hasKey("loginCount"):
+      result.loginCount = to(node["loginCount"], int)
+    if node.hasKey("avatarSrc"):
+      result.avatarSrc = to(node["avatarSrc"], string)
+    if node.hasKey("optedInNotifications"):
+      result.optedInNotifications = to(node["optedInNotifications"], bool)
+    if node.hasKey("optedInSubscriptionNotifications"):
+      result.optedInSubscriptionNotifications = to(node["optedInSubscriptionNotifications"], bool)
+    if node.hasKey("displayLabel"):
+      result.displayLabel = to(node["displayLabel"], string)
+    if node.hasKey("displayName"):
+      result.displayName = to(node["displayName"], string)
+    if node.hasKey("isAccountOwner") and node["isAccountOwner"].kind != JNull:
+      result.isAccountOwner = some(to(node["isAccountOwner"], typeof(result.isAccountOwner.get())))
+    if node.hasKey("isAdminAdmin") and node["isAdminAdmin"].kind != JNull:
+      result.isAdminAdmin = some(to(node["isAdminAdmin"], typeof(result.isAdminAdmin.get())))
+    if node.hasKey("isCommentModeratorAdmin") and node["isCommentModeratorAdmin"].kind != JNull:
+      result.isCommentModeratorAdmin = some(to(node["isCommentModeratorAdmin"], typeof(result.isCommentModeratorAdmin.get())))
+    if node.hasKey("isProfileActivityPrivate") and node["isProfileActivityPrivate"].kind != JNull:
+      result.isProfileActivityPrivate = some(to(node["isProfileActivityPrivate"], typeof(result.isProfileActivityPrivate.get())))
+    if node.hasKey("isProfileCommentsPrivate") and node["isProfileCommentsPrivate"].kind != JNull:
+      result.isProfileCommentsPrivate = some(to(node["isProfileCommentsPrivate"], typeof(result.isProfileCommentsPrivate.get())))
+    if node.hasKey("isProfileDMDisabled") and node["isProfileDMDisabled"].kind != JNull:
+      result.isProfileDMDisabled = some(to(node["isProfileDMDisabled"], typeof(result.isProfileDMDisabled.get())))
+    if node.hasKey("hasBlockedUsers") and node["hasBlockedUsers"].kind != JNull:
+      result.hasBlockedUsers = some(to(node["hasBlockedUsers"], typeof(result.hasBlockedUsers.get())))
+    if node.hasKey("groupIds") and node["groupIds"].kind != JNull:
+      result.groupIds = some(to(node["groupIds"], typeof(result.groupIds.get())))
+
+# Custom JSON serialization for APISSOUser with custom field names
+proc `%`*(obj: APISSOUser): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["username"] = %obj.username
+  result["websiteUrl"] = %obj.websiteUrl
+  result["email"] = %obj.email
+  result["signUpDate"] = %obj.signUpDate
+  result["createdFromUrlId"] = %obj.createdFromUrlId
+  result["loginCount"] = %obj.loginCount
+  result["avatarSrc"] = %obj.avatarSrc
+  result["optedInNotifications"] = %obj.optedInNotifications
+  result["optedInSubscriptionNotifications"] = %obj.optedInSubscriptionNotifications
+  result["displayLabel"] = %obj.displayLabel
+  result["displayName"] = %obj.displayName
+  if obj.isAccountOwner.isSome():
+    result["isAccountOwner"] = %obj.isAccountOwner.get()
+  if obj.isAdminAdmin.isSome():
+    result["isAdminAdmin"] = %obj.isAdminAdmin.get()
+  if obj.isCommentModeratorAdmin.isSome():
+    result["isCommentModeratorAdmin"] = %obj.isCommentModeratorAdmin.get()
+  if obj.isProfileActivityPrivate.isSome():
+    result["isProfileActivityPrivate"] = %obj.isProfileActivityPrivate.get()
+  if obj.isProfileCommentsPrivate.isSome():
+    result["isProfileCommentsPrivate"] = %obj.isProfileCommentsPrivate.get()
+  if obj.isProfileDMDisabled.isSome():
+    result["isProfileDMDisabled"] = %obj.isProfileDMDisabled.get()
+  if obj.hasBlockedUsers.isSome():
+    result["hasBlockedUsers"] = %obj.hasBlockedUsers.get()
+  if obj.groupIds.isSome():
+    result["groupIds"] = %obj.groupIds.get()

@@ -9,10 +9,11 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_bulk_aggregate_question_item
 
 type BulkAggregateQuestionResultsRequest* = object
   ## 
   aggregations*: seq[BulkAggregateQuestionItem]
-

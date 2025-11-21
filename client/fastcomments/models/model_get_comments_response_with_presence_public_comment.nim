@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_custom_config_parameters
 import model_object
@@ -17,31 +19,150 @@ import model_user_session_info
 
 type GetCommentsResponseWithPresencePublicComment* = object
   ## 
-  statusCode*: int
+  statusCode*: Option[int]
   status*: string
-  code*: string
-  reason*: string
-  translatedWarning*: string
+  code*: Option[string]
+  reason*: Option[string]
+  translatedWarning*: Option[string]
   comments*: seq[PublicComment]
-  user*: UserSessionInfo
-  urlIdClean*: string
-  lastGenDate*: int64
-  includesPastPages*: bool
-  isDemo*: bool
-  commentCount*: int
-  isSiteAdmin*: bool
-  hasBillingIssue*: bool
-  moduleData*: Table[string, JsonNode] ## Construct a type with a set of properties K of type T
+  user*: Option[UserSessionInfo]
+  urlIdClean*: Option[string]
+  lastGenDate*: Option[int64]
+  includesPastPages*: Option[bool]
+  isDemo*: Option[bool]
+  commentCount*: Option[int]
+  isSiteAdmin*: Option[bool]
+  hasBillingIssue*: Option[bool]
+  moduleData*: Option[Table[string, JsonNode]] ## Construct a type with a set of properties K of type T
   pageNumber*: int
-  isWhiteLabeled*: bool
-  isProd*: bool
-  isCrawler*: bool
-  notificationCount*: int
-  hasMore*: bool
-  isClosed*: bool
-  presencePollState*: int
-  customConfig*: CustomConfigParameters
-  urlIdWS*: string
-  userIdWS*: string
-  tenantIdWS*: string
+  isWhiteLabeled*: Option[bool]
+  isProd*: Option[bool]
+  isCrawler*: Option[bool]
+  notificationCount*: Option[int]
+  hasMore*: Option[bool]
+  isClosed*: Option[bool]
+  presencePollState*: Option[int]
+  customConfig*: Option[CustomConfigParameters]
+  urlIdWS*: Option[string]
+  userIdWS*: Option[string]
+  tenantIdWS*: Option[string]
 
+
+# Custom JSON deserialization for GetCommentsResponseWithPresencePublicComment with custom field names
+proc to*(node: JsonNode, T: typedesc[GetCommentsResponseWithPresencePublicComment]): GetCommentsResponseWithPresencePublicComment =
+  result = GetCommentsResponseWithPresencePublicComment()
+  if node.kind == JObject:
+    if node.hasKey("statusCode") and node["statusCode"].kind != JNull:
+      result.statusCode = some(to(node["statusCode"], typeof(result.statusCode.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], typeof(result.code.get())))
+    if node.hasKey("reason") and node["reason"].kind != JNull:
+      result.reason = some(to(node["reason"], typeof(result.reason.get())))
+    if node.hasKey("translatedWarning") and node["translatedWarning"].kind != JNull:
+      result.translatedWarning = some(to(node["translatedWarning"], typeof(result.translatedWarning.get())))
+    if node.hasKey("comments"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["comments"]
+      if arrayNode.kind == JArray:
+        result.comments = @[]
+        for item in arrayNode.items:
+          result.comments.add(to(item, PublicComment))
+    if node.hasKey("user") and node["user"].kind != JNull:
+      result.user = some(to(node["user"], typeof(result.user.get())))
+    if node.hasKey("urlIdClean") and node["urlIdClean"].kind != JNull:
+      result.urlIdClean = some(to(node["urlIdClean"], typeof(result.urlIdClean.get())))
+    if node.hasKey("lastGenDate") and node["lastGenDate"].kind != JNull:
+      result.lastGenDate = some(to(node["lastGenDate"], typeof(result.lastGenDate.get())))
+    if node.hasKey("includesPastPages") and node["includesPastPages"].kind != JNull:
+      result.includesPastPages = some(to(node["includesPastPages"], typeof(result.includesPastPages.get())))
+    if node.hasKey("isDemo") and node["isDemo"].kind != JNull:
+      result.isDemo = some(to(node["isDemo"], typeof(result.isDemo.get())))
+    if node.hasKey("commentCount") and node["commentCount"].kind != JNull:
+      result.commentCount = some(to(node["commentCount"], typeof(result.commentCount.get())))
+    if node.hasKey("isSiteAdmin") and node["isSiteAdmin"].kind != JNull:
+      result.isSiteAdmin = some(to(node["isSiteAdmin"], typeof(result.isSiteAdmin.get())))
+    if node.hasKey("hasBillingIssue") and node["hasBillingIssue"].kind != JNull:
+      result.hasBillingIssue = some(to(node["hasBillingIssue"], typeof(result.hasBillingIssue.get())))
+    if node.hasKey("moduleData") and node["moduleData"].kind != JNull:
+      result.moduleData = some(to(node["moduleData"], typeof(result.moduleData.get())))
+    if node.hasKey("pageNumber"):
+      result.pageNumber = to(node["pageNumber"], int)
+    if node.hasKey("isWhiteLabeled") and node["isWhiteLabeled"].kind != JNull:
+      result.isWhiteLabeled = some(to(node["isWhiteLabeled"], typeof(result.isWhiteLabeled.get())))
+    if node.hasKey("isProd") and node["isProd"].kind != JNull:
+      result.isProd = some(to(node["isProd"], typeof(result.isProd.get())))
+    if node.hasKey("isCrawler") and node["isCrawler"].kind != JNull:
+      result.isCrawler = some(to(node["isCrawler"], typeof(result.isCrawler.get())))
+    if node.hasKey("notificationCount") and node["notificationCount"].kind != JNull:
+      result.notificationCount = some(to(node["notificationCount"], typeof(result.notificationCount.get())))
+    if node.hasKey("hasMore") and node["hasMore"].kind != JNull:
+      result.hasMore = some(to(node["hasMore"], typeof(result.hasMore.get())))
+    if node.hasKey("isClosed") and node["isClosed"].kind != JNull:
+      result.isClosed = some(to(node["isClosed"], typeof(result.isClosed.get())))
+    if node.hasKey("presencePollState") and node["presencePollState"].kind != JNull:
+      result.presencePollState = some(to(node["presencePollState"], typeof(result.presencePollState.get())))
+    if node.hasKey("customConfig") and node["customConfig"].kind != JNull:
+      result.customConfig = some(to(node["customConfig"], typeof(result.customConfig.get())))
+    if node.hasKey("urlIdWS") and node["urlIdWS"].kind != JNull:
+      result.urlIdWS = some(to(node["urlIdWS"], typeof(result.urlIdWS.get())))
+    if node.hasKey("userIdWS") and node["userIdWS"].kind != JNull:
+      result.userIdWS = some(to(node["userIdWS"], typeof(result.userIdWS.get())))
+    if node.hasKey("tenantIdWS") and node["tenantIdWS"].kind != JNull:
+      result.tenantIdWS = some(to(node["tenantIdWS"], typeof(result.tenantIdWS.get())))
+
+# Custom JSON serialization for GetCommentsResponseWithPresencePublicComment with custom field names
+proc `%`*(obj: GetCommentsResponseWithPresencePublicComment): JsonNode =
+  result = newJObject()
+  if obj.statusCode.isSome():
+    result["statusCode"] = %obj.statusCode.get()
+  result["status"] = %obj.status
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()
+  if obj.reason.isSome():
+    result["reason"] = %obj.reason.get()
+  if obj.translatedWarning.isSome():
+    result["translatedWarning"] = %obj.translatedWarning.get()
+  result["comments"] = %obj.comments
+  if obj.user.isSome():
+    result["user"] = %obj.user.get()
+  if obj.urlIdClean.isSome():
+    result["urlIdClean"] = %obj.urlIdClean.get()
+  if obj.lastGenDate.isSome():
+    result["lastGenDate"] = %obj.lastGenDate.get()
+  if obj.includesPastPages.isSome():
+    result["includesPastPages"] = %obj.includesPastPages.get()
+  if obj.isDemo.isSome():
+    result["isDemo"] = %obj.isDemo.get()
+  if obj.commentCount.isSome():
+    result["commentCount"] = %obj.commentCount.get()
+  if obj.isSiteAdmin.isSome():
+    result["isSiteAdmin"] = %obj.isSiteAdmin.get()
+  if obj.hasBillingIssue.isSome():
+    result["hasBillingIssue"] = %obj.hasBillingIssue.get()
+  if obj.moduleData.isSome():
+    result["moduleData"] = %obj.moduleData.get()
+  result["pageNumber"] = %obj.pageNumber
+  if obj.isWhiteLabeled.isSome():
+    result["isWhiteLabeled"] = %obj.isWhiteLabeled.get()
+  if obj.isProd.isSome():
+    result["isProd"] = %obj.isProd.get()
+  if obj.isCrawler.isSome():
+    result["isCrawler"] = %obj.isCrawler.get()
+  if obj.notificationCount.isSome():
+    result["notificationCount"] = %obj.notificationCount.get()
+  if obj.hasMore.isSome():
+    result["hasMore"] = %obj.hasMore.get()
+  if obj.isClosed.isSome():
+    result["isClosed"] = %obj.isClosed.get()
+  if obj.presencePollState.isSome():
+    result["presencePollState"] = %obj.presencePollState.get()
+  if obj.customConfig.isSome():
+    result["customConfig"] = %obj.customConfig.get()
+  if obj.urlIdWS.isSome():
+    result["urlIdWS"] = %obj.urlIdWS.get()
+  if obj.userIdWS.isSome():
+    result["userIdWS"] = %obj.userIdWS.get()
+  if obj.tenantIdWS.isSome():
+    result["tenantIdWS"] = %obj.tenantIdWS.get()

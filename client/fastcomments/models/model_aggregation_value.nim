@@ -9,13 +9,14 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type AggregationValue* = object
   ## 
-  groups*: Table[string, string] ## Construct a type with a set of properties K of type T
-  stringValue*: string
-  numericValue*: float64
-  distinctCount*: int64
-  distinctCounts*: Table[string, float64] ## Construct a type with a set of properties K of type T
-
+  groups*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
+  stringValue*: Option[string]
+  numericValue*: Option[float64]
+  distinctCount*: Option[int64]
+  distinctCounts*: Option[Table[string, float64]] ## Construct a type with a set of properties K of type T

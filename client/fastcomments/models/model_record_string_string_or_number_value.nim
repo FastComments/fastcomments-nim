@@ -9,8 +9,33 @@
 
 import json
 import tables
+import marshal
+import options
 
+
+# AnyOf type
+type RecordStringStringOrNumberValueKind* {.pure.} = enum
+  StringVariant
+  NumberVariant
 
 type RecordStringStringOrNumberValue* = object
   ## 
+  case kind*: RecordStringStringOrNumberValueKind
+  of RecordStringStringOrNumberValueKind.StringVariant:
+    stringValue*: string
+  of RecordStringStringOrNumberValueKind.NumberVariant:
+    numberValue*: float64
 
+proc to*(node: JsonNode, T: typedesc[RecordStringStringOrNumberValue]): RecordStringStringOrNumberValue =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return RecordStringStringOrNumberValue(kind: RecordStringStringOrNumberValueKind.StringVariant, stringValue: to(node, string))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as string: ", e.msg
+  try:
+    return RecordStringStringOrNumberValue(kind: RecordStringStringOrNumberValueKind.NumberVariant, numberValue: to(node, float64))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as float64: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of RecordStringStringOrNumberValue. JSON: " & $node)

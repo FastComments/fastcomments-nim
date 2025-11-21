@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type SetCommentTextResult* = object
@@ -16,3 +18,18 @@ type SetCommentTextResult* = object
   approved*: bool
   commentHTML*: string
 
+
+# Custom JSON deserialization for SetCommentTextResult with custom field names
+proc to*(node: JsonNode, T: typedesc[SetCommentTextResult]): SetCommentTextResult =
+  result = SetCommentTextResult()
+  if node.kind == JObject:
+    if node.hasKey("approved"):
+      result.approved = to(node["approved"], bool)
+    if node.hasKey("commentHTML"):
+      result.commentHTML = to(node["commentHTML"], string)
+
+# Custom JSON serialization for SetCommentTextResult with custom field names
+proc `%`*(obj: SetCommentTextResult): JsonNode =
+  result = newJObject()
+  result["approved"] = %obj.approved
+  result["commentHTML"] = %obj.commentHTML

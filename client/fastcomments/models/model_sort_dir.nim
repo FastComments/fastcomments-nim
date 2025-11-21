@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type SORTDIR* {.pure.} = enum
@@ -25,3 +27,14 @@ func `$`*(v: SORTDIR): string =
     of SORTDIR.ASC: $("ASC")
     of SORTDIR.DESC: $("DESC")
 
+proc to*(node: JsonNode, T: typedesc[SORTDIR]): SORTDIR =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum SORTDIR, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("ASC"):
+    return SORTDIR.ASC
+  of $("DESC"):
+    return SORTDIR.DESC
+  else:
+    raise newException(ValueError, "Invalid enum value for SORTDIR: " & strVal)

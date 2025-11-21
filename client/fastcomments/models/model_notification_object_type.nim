@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type NotificationObjectType* {.pure.} = enum
@@ -28,3 +30,16 @@ func `$`*(v: NotificationObjectType): string =
     of NotificationObjectType.`1`: $(1)
     of NotificationObjectType.`2`: $(2)
 
+proc to*(node: JsonNode, T: typedesc[NotificationObjectType]): NotificationObjectType =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum NotificationObjectType, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return NotificationObjectType.`0`
+  of $(1):
+    return NotificationObjectType.`1`
+  of $(2):
+    return NotificationObjectType.`2`
+  else:
+    raise newException(ValueError, "Invalid enum value for NotificationObjectType: " & strVal)

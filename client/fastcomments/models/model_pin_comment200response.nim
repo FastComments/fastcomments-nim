@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,15 +18,29 @@ import model_change_comment_pin_status_response
 import model_custom_config_parameters
 import model_record_string_before_string_or_null_after_string_or_null_value
 
+# AnyOf type
+type PinComment200responseKind* {.pure.} = enum
+  ChangeCommentPinStatusResponseVariant
+  APIErrorVariant
+
 type PinComment200response* = object
   ## 
-  commentPositions*: Table[string, RecordStringBeforeStringOrNullAfterStringOrNullValue] ## Construct a type with a set of properties K of type T
-  status*: APIStatus
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: PinComment200responseKind
+  of PinComment200responseKind.ChangeCommentPinStatusResponseVariant:
+    ChangeCommentPinStatusResponseValue*: ChangeCommentPinStatusResponse
+  of PinComment200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[PinComment200response]): PinComment200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return PinComment200response(kind: PinComment200responseKind.ChangeCommentPinStatusResponseVariant, ChangeCommentPinStatusResponseValue: to(node, ChangeCommentPinStatusResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as ChangeCommentPinStatusResponse: ", e.msg
+  try:
+    return PinComment200response(kind: PinComment200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of PinComment200response. JSON: " & $node)

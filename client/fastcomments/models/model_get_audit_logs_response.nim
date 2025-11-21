@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_audit_log
 import model_api_status
@@ -18,3 +20,23 @@ type GetAuditLogsResponse* = object
   status*: APIStatus
   auditLogs*: seq[APIAuditLog]
 
+
+# Custom JSON deserialization for GetAuditLogsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetAuditLogsResponse]): GetAuditLogsResponse =
+  result = GetAuditLogsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("auditLogs"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["auditLogs"]
+      if arrayNode.kind == JArray:
+        result.auditLogs = @[]
+        for item in arrayNode.items:
+          result.auditLogs.add(to(item, APIAuditLog))
+
+# Custom JSON serialization for GetAuditLogsResponse with custom field names
+proc `%`*(obj: GetAuditLogsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["auditLogs"] = %obj.auditLogs

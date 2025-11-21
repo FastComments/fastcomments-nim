@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -18,18 +20,29 @@ import model_public_comment
 import model_save_comments_response_with_presence
 import model_user_session_info
 
+# AnyOf type
+type CreateCommentPublic200responseKind* {.pure.} = enum
+  SaveCommentsResponseWithPresenceVariant
+  APIErrorVariant
+
 type CreateCommentPublic200response* = object
   ## 
-  status*: APIStatus
-  comment*: PublicComment
-  user*: UserSessionInfo
-  moduleData*: Table[string, JsonNode] ## Construct a type with a set of properties K of type T
-  userIdWS*: string
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: CreateCommentPublic200responseKind
+  of CreateCommentPublic200responseKind.SaveCommentsResponseWithPresenceVariant:
+    SaveCommentsResponseWithPresenceValue*: SaveCommentsResponseWithPresence
+  of CreateCommentPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[CreateCommentPublic200response]): CreateCommentPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return CreateCommentPublic200response(kind: CreateCommentPublic200responseKind.SaveCommentsResponseWithPresenceVariant, SaveCommentsResponseWithPresenceValue: to(node, SaveCommentsResponseWithPresence))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as SaveCommentsResponseWithPresence: ", e.msg
+  try:
+    return CreateCommentPublic200response(kind: CreateCommentPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of CreateCommentPublic200response. JSON: " & $node)

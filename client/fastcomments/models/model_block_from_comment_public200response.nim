@@ -9,21 +9,37 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
 import model_block_success
 import model_custom_config_parameters
 
+# AnyOf type
+type BlockFromCommentPublic200responseKind* {.pure.} = enum
+  BlockSuccessVariant
+  APIErrorVariant
+
 type BlockFromCommentPublic200response* = object
   ## 
-  status*: APIStatus
-  commentStatuses*: Table[string, bool] ## Construct a type with a set of properties K of type T
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: BlockFromCommentPublic200responseKind
+  of BlockFromCommentPublic200responseKind.BlockSuccessVariant:
+    BlockSuccessValue*: BlockSuccess
+  of BlockFromCommentPublic200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
+proc to*(node: JsonNode, T: typedesc[BlockFromCommentPublic200response]): BlockFromCommentPublic200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return BlockFromCommentPublic200response(kind: BlockFromCommentPublic200responseKind.BlockSuccessVariant, BlockSuccessValue: to(node, BlockSuccess))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as BlockSuccess: ", e.msg
+  try:
+    return BlockFromCommentPublic200response(kind: BlockFromCommentPublic200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of BlockFromCommentPublic200response. JSON: " & $node)

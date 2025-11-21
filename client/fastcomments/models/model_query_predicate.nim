@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_query_predicate_value
 
@@ -41,3 +43,20 @@ func `$`*(v: Operator): string =
     of Operator.LessThan: $("less_than")
     of Operator.Contains: $("contains")
 
+proc to*(node: JsonNode, T: typedesc[Operator]): Operator =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum Operator, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("eq"):
+    return Operator.Eq
+  of $("not_eq"):
+    return Operator.NotEq
+  of $("greater_than"):
+    return Operator.GreaterThan
+  of $("less_than"):
+    return Operator.LessThan
+  of $("contains"):
+    return Operator.Contains
+  else:
+    raise newException(ValueError, "Invalid enum value for Operator: " & strVal)

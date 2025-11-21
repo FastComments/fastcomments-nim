@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -16,4 +18,3 @@ type BlockSuccess* = object
   ## 
   status*: APIStatus
   commentStatuses*: Table[string, bool] ## Construct a type with a set of properties K of type T
-

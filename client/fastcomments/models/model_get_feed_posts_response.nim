@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_feed_post
@@ -18,3 +20,18 @@ type GetFeedPostsResponse* = object
   status*: APIStatus
   feedPosts*: seq[FeedPost]
 
+
+# Custom JSON deserialization for GetFeedPostsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetFeedPostsResponse]): GetFeedPostsResponse =
+  result = GetFeedPostsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("feedPosts"):
+      result.feedPosts = to(node["feedPosts"], seq[FeedPost])
+
+# Custom JSON serialization for GetFeedPostsResponse with custom field names
+proc `%`*(obj: GetFeedPostsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["feedPosts"] = %obj.feedPosts

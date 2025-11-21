@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -18,3 +20,21 @@ type UserNotificationWriteResponse* = object
   matchedCount*: int64
   modifiedCount*: int64
 
+
+# Custom JSON deserialization for UserNotificationWriteResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[UserNotificationWriteResponse]): UserNotificationWriteResponse =
+  result = UserNotificationWriteResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("matchedCount"):
+      result.matchedCount = to(node["matchedCount"], int64)
+    if node.hasKey("modifiedCount"):
+      result.modifiedCount = to(node["modifiedCount"], int64)
+
+# Custom JSON serialization for UserNotificationWriteResponse with custom field names
+proc `%`*(obj: UserNotificationWriteResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["matchedCount"] = %obj.matchedCount
+  result["modifiedCount"] = %obj.modifiedCount

@@ -9,28 +9,119 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type UpdateAPISSOUserData* = object
   ## 
-  groupIds*: seq[string]
-  hasBlockedUsers*: bool
-  isProfileDMDisabled*: bool
-  isProfileCommentsPrivate*: bool
-  isProfileActivityPrivate*: bool
-  isCommentModeratorAdmin*: bool
-  isAdminAdmin*: bool
-  isAccountOwner*: bool
-  displayName*: string
-  displayLabel*: string
-  optedInSubscriptionNotifications*: bool
-  optedInNotifications*: bool
-  avatarSrc*: string
-  loginCount*: int
-  createdFromUrlId*: string
-  signUpDate*: int64
-  email*: string
-  websiteUrl*: string
-  username*: string
-  id*: string
+  groupIds*: Option[seq[string]]
+  hasBlockedUsers*: Option[bool]
+  isProfileDMDisabled*: Option[bool]
+  isProfileCommentsPrivate*: Option[bool]
+  isProfileActivityPrivate*: Option[bool]
+  isCommentModeratorAdmin*: Option[bool]
+  isAdminAdmin*: Option[bool]
+  isAccountOwner*: Option[bool]
+  displayName*: Option[string]
+  displayLabel*: Option[string]
+  optedInSubscriptionNotifications*: Option[bool]
+  optedInNotifications*: Option[bool]
+  avatarSrc*: Option[string]
+  loginCount*: Option[int]
+  createdFromUrlId*: Option[string]
+  signUpDate*: Option[int64]
+  email*: Option[string]
+  websiteUrl*: Option[string]
+  username*: Option[string]
+  id*: Option[string]
 
+
+# Custom JSON deserialization for UpdateAPISSOUserData with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateAPISSOUserData]): UpdateAPISSOUserData =
+  result = UpdateAPISSOUserData()
+  if node.kind == JObject:
+    if node.hasKey("groupIds") and node["groupIds"].kind != JNull:
+      result.groupIds = some(to(node["groupIds"], typeof(result.groupIds.get())))
+    if node.hasKey("hasBlockedUsers") and node["hasBlockedUsers"].kind != JNull:
+      result.hasBlockedUsers = some(to(node["hasBlockedUsers"], typeof(result.hasBlockedUsers.get())))
+    if node.hasKey("isProfileDMDisabled") and node["isProfileDMDisabled"].kind != JNull:
+      result.isProfileDMDisabled = some(to(node["isProfileDMDisabled"], typeof(result.isProfileDMDisabled.get())))
+    if node.hasKey("isProfileCommentsPrivate") and node["isProfileCommentsPrivate"].kind != JNull:
+      result.isProfileCommentsPrivate = some(to(node["isProfileCommentsPrivate"], typeof(result.isProfileCommentsPrivate.get())))
+    if node.hasKey("isProfileActivityPrivate") and node["isProfileActivityPrivate"].kind != JNull:
+      result.isProfileActivityPrivate = some(to(node["isProfileActivityPrivate"], typeof(result.isProfileActivityPrivate.get())))
+    if node.hasKey("isCommentModeratorAdmin") and node["isCommentModeratorAdmin"].kind != JNull:
+      result.isCommentModeratorAdmin = some(to(node["isCommentModeratorAdmin"], typeof(result.isCommentModeratorAdmin.get())))
+    if node.hasKey("isAdminAdmin") and node["isAdminAdmin"].kind != JNull:
+      result.isAdminAdmin = some(to(node["isAdminAdmin"], typeof(result.isAdminAdmin.get())))
+    if node.hasKey("isAccountOwner") and node["isAccountOwner"].kind != JNull:
+      result.isAccountOwner = some(to(node["isAccountOwner"], typeof(result.isAccountOwner.get())))
+    if node.hasKey("displayName") and node["displayName"].kind != JNull:
+      result.displayName = some(to(node["displayName"], typeof(result.displayName.get())))
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+    if node.hasKey("optedInSubscriptionNotifications") and node["optedInSubscriptionNotifications"].kind != JNull:
+      result.optedInSubscriptionNotifications = some(to(node["optedInSubscriptionNotifications"], typeof(result.optedInSubscriptionNotifications.get())))
+    if node.hasKey("optedInNotifications") and node["optedInNotifications"].kind != JNull:
+      result.optedInNotifications = some(to(node["optedInNotifications"], typeof(result.optedInNotifications.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("loginCount") and node["loginCount"].kind != JNull:
+      result.loginCount = some(to(node["loginCount"], typeof(result.loginCount.get())))
+    if node.hasKey("createdFromUrlId") and node["createdFromUrlId"].kind != JNull:
+      result.createdFromUrlId = some(to(node["createdFromUrlId"], typeof(result.createdFromUrlId.get())))
+    if node.hasKey("signUpDate") and node["signUpDate"].kind != JNull:
+      result.signUpDate = some(to(node["signUpDate"], typeof(result.signUpDate.get())))
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("websiteUrl") and node["websiteUrl"].kind != JNull:
+      result.websiteUrl = some(to(node["websiteUrl"], typeof(result.websiteUrl.get())))
+    if node.hasKey("username") and node["username"].kind != JNull:
+      result.username = some(to(node["username"], typeof(result.username.get())))
+    if node.hasKey("id") and node["id"].kind != JNull:
+      result.id = some(to(node["id"], typeof(result.id.get())))
+
+# Custom JSON serialization for UpdateAPISSOUserData with custom field names
+proc `%`*(obj: UpdateAPISSOUserData): JsonNode =
+  result = newJObject()
+  if obj.groupIds.isSome():
+    result["groupIds"] = %obj.groupIds.get()
+  if obj.hasBlockedUsers.isSome():
+    result["hasBlockedUsers"] = %obj.hasBlockedUsers.get()
+  if obj.isProfileDMDisabled.isSome():
+    result["isProfileDMDisabled"] = %obj.isProfileDMDisabled.get()
+  if obj.isProfileCommentsPrivate.isSome():
+    result["isProfileCommentsPrivate"] = %obj.isProfileCommentsPrivate.get()
+  if obj.isProfileActivityPrivate.isSome():
+    result["isProfileActivityPrivate"] = %obj.isProfileActivityPrivate.get()
+  if obj.isCommentModeratorAdmin.isSome():
+    result["isCommentModeratorAdmin"] = %obj.isCommentModeratorAdmin.get()
+  if obj.isAdminAdmin.isSome():
+    result["isAdminAdmin"] = %obj.isAdminAdmin.get()
+  if obj.isAccountOwner.isSome():
+    result["isAccountOwner"] = %obj.isAccountOwner.get()
+  if obj.displayName.isSome():
+    result["displayName"] = %obj.displayName.get()
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+  if obj.optedInSubscriptionNotifications.isSome():
+    result["optedInSubscriptionNotifications"] = %obj.optedInSubscriptionNotifications.get()
+  if obj.optedInNotifications.isSome():
+    result["optedInNotifications"] = %obj.optedInNotifications.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.loginCount.isSome():
+    result["loginCount"] = %obj.loginCount.get()
+  if obj.createdFromUrlId.isSome():
+    result["createdFromUrlId"] = %obj.createdFromUrlId.get()
+  if obj.signUpDate.isSome():
+    result["signUpDate"] = %obj.signUpDate.get()
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  if obj.websiteUrl.isSome():
+    result["websiteUrl"] = %obj.websiteUrl.get()
+  if obj.username.isSome():
+    result["username"] = %obj.username.get()
+  if obj.id.isSome():
+    result["id"] = %obj.id.get()

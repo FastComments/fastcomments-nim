@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type VoteDir* {.pure.} = enum
@@ -17,10 +19,10 @@ type VoteDir* {.pure.} = enum
 
 type VoteBodyParams* = object
   ## 
-  commenterEmail*: string
-  commenterName*: string
+  commenterEmail*: Option[string]
+  commenterName*: Option[string]
   voteDir*: VoteDir
-  url*: string
+  url*: Option[string]
 
 func `%`*(v: VoteDir): JsonNode =
   result = case v:
@@ -32,3 +34,14 @@ func `$`*(v: VoteDir): string =
     of VoteDir.Up: $("up")
     of VoteDir.Down: $("down")
 
+proc to*(node: JsonNode, T: typedesc[VoteDir]): VoteDir =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum VoteDir, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("up"):
+    return VoteDir.Up
+  of $("down"):
+    return VoteDir.Down
+  else:
+    raise newException(ValueError, "Invalid enum value for VoteDir: " & strVal)

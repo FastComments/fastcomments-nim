@@ -9,15 +9,51 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type APIUserSubscription* = object
   ## 
   createdAt*: string
-  pageTitle*: string
-  url*: string
+  pageTitle*: Option[string]
+  url*: Option[string]
   urlId*: string
-  anonUserId*: string
-  userId*: string
+  anonUserId*: Option[string]
+  userId*: Option[string]
   id*: string
 
+
+# Custom JSON deserialization for APIUserSubscription with custom field names
+proc to*(node: JsonNode, T: typedesc[APIUserSubscription]): APIUserSubscription =
+  result = APIUserSubscription()
+  if node.kind == JObject:
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
+      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+
+# Custom JSON serialization for APIUserSubscription with custom field names
+proc `%`*(obj: APIUserSubscription): JsonNode =
+  result = newJObject()
+  result["createdAt"] = %obj.createdAt
+  if obj.pageTitle.isSome():
+    result["pageTitle"] = %obj.pageTitle.get()
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  result["urlId"] = %obj.urlId
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  result["id"] = %obj.id

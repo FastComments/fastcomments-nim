@@ -9,9 +9,24 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type PublicBlockFromCommentParams* = object
   ## 
-  commentIds*: seq[string] ## A list of comment ids to check if are blocked after performing the update.
+  commentIds*: Option[seq[string]] ## A list of comment ids to check if are blocked after performing the update.
 
+
+# Custom JSON deserialization for PublicBlockFromCommentParams with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicBlockFromCommentParams]): PublicBlockFromCommentParams =
+  result = PublicBlockFromCommentParams()
+  if node.kind == JObject:
+    if node.hasKey("commentIds") and node["commentIds"].kind != JNull:
+      result.commentIds = some(to(node["commentIds"], typeof(result.commentIds.get())))
+
+# Custom JSON serialization for PublicBlockFromCommentParams with custom field names
+proc `%`*(obj: PublicBlockFromCommentParams): JsonNode =
+  result = newJObject()
+  if obj.commentIds.isSome():
+    result["commentIds"] = %obj.commentIds.get()

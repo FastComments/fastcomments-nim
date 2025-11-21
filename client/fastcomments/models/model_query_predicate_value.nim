@@ -9,8 +9,41 @@
 
 import json
 import tables
+import marshal
+import options
 
+
+# AnyOf type
+type QueryPredicateValueKind* {.pure.} = enum
+  StringVariant
+  NumberVariant
+  BooleanVariant
 
 type QueryPredicateValue* = object
   ## 
+  case kind*: QueryPredicateValueKind
+  of QueryPredicateValueKind.StringVariant:
+    stringValue*: string
+  of QueryPredicateValueKind.NumberVariant:
+    numberValue*: float64
+  of QueryPredicateValueKind.BooleanVariant:
+    booleanValue*: bool
 
+proc to*(node: JsonNode, T: typedesc[QueryPredicateValue]): QueryPredicateValue =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return QueryPredicateValue(kind: QueryPredicateValueKind.StringVariant, stringValue: to(node, string))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as string: ", e.msg
+  try:
+    return QueryPredicateValue(kind: QueryPredicateValueKind.NumberVariant, numberValue: to(node, float64))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as float64: ", e.msg
+  try:
+    return QueryPredicateValue(kind: QueryPredicateValueKind.BooleanVariant, booleanValue: to(node, bool))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as bool: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of QueryPredicateValue. JSON: " & $node)

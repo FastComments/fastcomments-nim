@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_feed_post_link
 import model_feed_post_media_item
@@ -17,18 +19,88 @@ type FeedPost* = object
   ## 
   id*: string
   tenantId*: string
-  title*: string
-  fromUserId*: string
-  fromUserDisplayName*: string
-  fromUserAvatar*: string
-  fromIpHash*: string
-  tags*: seq[string]
-  weight*: float64
-  meta*: Table[string, string] ## Construct a type with a set of properties K of type T
-  contentHTML*: string
-  media*: seq[FeedPostMediaItem]
-  links*: seq[FeedPostLink]
+  title*: Option[string]
+  fromUserId*: Option[string]
+  fromUserDisplayName*: Option[string]
+  fromUserAvatar*: Option[string]
+  fromIpHash*: Option[string]
+  tags*: Option[seq[string]]
+  weight*: Option[float64]
+  meta*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
+  contentHTML*: Option[string]
+  media*: Option[seq[FeedPostMediaItem]]
+  links*: Option[seq[FeedPostLink]]
   createdAt*: string
-  reacts*: Table[string, int]
-  commentCount*: int
+  reacts*: Option[Table[string, int]]
+  commentCount*: Option[int]
 
+
+# Custom JSON deserialization for FeedPost with custom field names
+proc to*(node: JsonNode, T: typedesc[FeedPost]): FeedPost =
+  result = FeedPost()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("title") and node["title"].kind != JNull:
+      result.title = some(to(node["title"], typeof(result.title.get())))
+    if node.hasKey("fromUserId") and node["fromUserId"].kind != JNull:
+      result.fromUserId = some(to(node["fromUserId"], typeof(result.fromUserId.get())))
+    if node.hasKey("fromUserDisplayName") and node["fromUserDisplayName"].kind != JNull:
+      result.fromUserDisplayName = some(to(node["fromUserDisplayName"], typeof(result.fromUserDisplayName.get())))
+    if node.hasKey("fromUserAvatar") and node["fromUserAvatar"].kind != JNull:
+      result.fromUserAvatar = some(to(node["fromUserAvatar"], typeof(result.fromUserAvatar.get())))
+    if node.hasKey("fromIpHash") and node["fromIpHash"].kind != JNull:
+      result.fromIpHash = some(to(node["fromIpHash"], typeof(result.fromIpHash.get())))
+    if node.hasKey("tags") and node["tags"].kind != JNull:
+      result.tags = some(to(node["tags"], typeof(result.tags.get())))
+    if node.hasKey("weight") and node["weight"].kind != JNull:
+      result.weight = some(to(node["weight"], typeof(result.weight.get())))
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+    if node.hasKey("contentHTML") and node["contentHTML"].kind != JNull:
+      result.contentHTML = some(to(node["contentHTML"], typeof(result.contentHTML.get())))
+    if node.hasKey("media") and node["media"].kind != JNull:
+      result.media = some(to(node["media"], typeof(result.media.get())))
+    if node.hasKey("links") and node["links"].kind != JNull:
+      result.links = some(to(node["links"], typeof(result.links.get())))
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("reacts") and node["reacts"].kind != JNull:
+      result.reacts = some(to(node["reacts"], typeof(result.reacts.get())))
+    if node.hasKey("commentCount") and node["commentCount"].kind != JNull:
+      result.commentCount = some(to(node["commentCount"], typeof(result.commentCount.get())))
+
+# Custom JSON serialization for FeedPost with custom field names
+proc `%`*(obj: FeedPost): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  if obj.title.isSome():
+    result["title"] = %obj.title.get()
+  if obj.fromUserId.isSome():
+    result["fromUserId"] = %obj.fromUserId.get()
+  if obj.fromUserDisplayName.isSome():
+    result["fromUserDisplayName"] = %obj.fromUserDisplayName.get()
+  if obj.fromUserAvatar.isSome():
+    result["fromUserAvatar"] = %obj.fromUserAvatar.get()
+  if obj.fromIpHash.isSome():
+    result["fromIpHash"] = %obj.fromIpHash.get()
+  if obj.tags.isSome():
+    result["tags"] = %obj.tags.get()
+  if obj.weight.isSome():
+    result["weight"] = %obj.weight.get()
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+  if obj.contentHTML.isSome():
+    result["contentHTML"] = %obj.contentHTML.get()
+  if obj.media.isSome():
+    result["media"] = %obj.media.get()
+  if obj.links.isSome():
+    result["links"] = %obj.links.get()
+  result["createdAt"] = %obj.createdAt
+  if obj.reacts.isSome():
+    result["reacts"] = %obj.reacts.get()
+  if obj.commentCount.isSome():
+    result["commentCount"] = %obj.commentCount.get()

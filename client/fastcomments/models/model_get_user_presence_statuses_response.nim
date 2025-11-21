@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -17,3 +19,18 @@ type GetUserPresenceStatusesResponse* = object
   status*: APIStatus
   userIdsOnline*: Table[string, bool] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for GetUserPresenceStatusesResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetUserPresenceStatusesResponse]): GetUserPresenceStatusesResponse =
+  result = GetUserPresenceStatusesResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("userIdsOnline"):
+      result.userIdsOnline = to(node["userIdsOnline"], Table[string, bool])
+
+# Custom JSON serialization for GetUserPresenceStatusesResponse with custom field names
+proc `%`*(obj: GetUserPresenceStatusesResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["userIdsOnline"] = %obj.userIdsOnline

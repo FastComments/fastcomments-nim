@@ -9,10 +9,11 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type MetaItem* = object
   ## 
   name*: string
   values*: seq[string]
-

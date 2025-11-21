@@ -9,9 +9,10 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type ReactBodyParams* = object
   ## 
-  reactType*: string
-
+  reactType*: Option[string]

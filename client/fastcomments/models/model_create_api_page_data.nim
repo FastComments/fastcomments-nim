@@ -9,14 +9,15 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CreateAPIPageData* = object
   ## 
-  accessibleByGroupIds*: seq[string]
-  rootCommentCount*: int64
-  commentCount*: int64
+  accessibleByGroupIds*: Option[seq[string]]
+  rootCommentCount*: Option[int64]
+  commentCount*: Option[int64]
   title*: string
   url*: string
   urlId*: string
-

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_error
 import model_api_status
@@ -16,31 +18,37 @@ import model_custom_config_parameters
 import model_ignored_response
 import model_user_notification_write_response
 
-type Note* {.pure.} = enum
-  IgnoredSinceImpersonated
-  DemoNoop
+# AnyOf type
+type UpdateUserNotificationStatus200responseKind* {.pure.} = enum
+  UserNotificationWriteResponseVariant
+  IgnoredResponseVariant
+  APIErrorVariant
 
 type UpdateUserNotificationStatus200response* = object
   ## 
-  status*: APIStatus
-  matchedCount*: int64
-  modifiedCount*: int64
-  note*: Note
-  reason*: string
-  code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
+  case kind*: UpdateUserNotificationStatus200responseKind
+  of UpdateUserNotificationStatus200responseKind.UserNotificationWriteResponseVariant:
+    UserNotificationWriteResponseValue*: UserNotificationWriteResponse
+  of UpdateUserNotificationStatus200responseKind.IgnoredResponseVariant:
+    IgnoredResponseValue*: IgnoredResponse
+  of UpdateUserNotificationStatus200responseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
-func `%`*(v: Note): JsonNode =
-  result = case v:
-    of Note.IgnoredSinceImpersonated: %"ignored-since-impersonated"
-    of Note.DemoNoop: %"demo-noop"
-
-func `$`*(v: Note): string =
-  result = case v:
-    of Note.IgnoredSinceImpersonated: $("ignored-since-impersonated")
-    of Note.DemoNoop: $("demo-noop")
-
+proc to*(node: JsonNode, T: typedesc[UpdateUserNotificationStatus200response]): UpdateUserNotificationStatus200response =
+  ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return UpdateUserNotificationStatus200response(kind: UpdateUserNotificationStatus200responseKind.UserNotificationWriteResponseVariant, UserNotificationWriteResponseValue: to(node, UserNotificationWriteResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as UserNotificationWriteResponse: ", e.msg
+  try:
+    return UpdateUserNotificationStatus200response(kind: UpdateUserNotificationStatus200responseKind.IgnoredResponseVariant, IgnoredResponseValue: to(node, IgnoredResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as IgnoredResponse: ", e.msg
+  try:
+    return UpdateUserNotificationStatus200response(kind: UpdateUserNotificationStatus200responseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
+  raise newException(ValueError, "Unable to deserialize into any variant of UpdateUserNotificationStatus200response. JSON: " & $node)

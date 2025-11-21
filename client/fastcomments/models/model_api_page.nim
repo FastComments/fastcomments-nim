@@ -9,17 +9,18 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type APIPage* = object
   ## 
-  isClosed*: bool
-  accessibleByGroupIds*: seq[string]
+  isClosed*: Option[bool]
+  accessibleByGroupIds*: Option[seq[string]]
   rootCommentCount*: int64
   commentCount*: int64
   createdAt*: string
   title*: string
-  url*: string
+  url*: Option[string]
   urlId*: string
   id*: string
-

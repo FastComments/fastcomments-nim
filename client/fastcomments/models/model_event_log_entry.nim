@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type EventLogEntry* = object
@@ -20,3 +22,30 @@ type EventLogEntry* = object
   broadcastId*: string
   data*: string
 
+
+# Custom JSON deserialization for EventLogEntry with custom field names
+proc to*(node: JsonNode, T: typedesc[EventLogEntry]): EventLogEntry =
+  result = EventLogEntry()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("broadcastId"):
+      result.broadcastId = to(node["broadcastId"], string)
+    if node.hasKey("data"):
+      result.data = to(node["data"], string)
+
+# Custom JSON serialization for EventLogEntry with custom field names
+proc `%`*(obj: EventLogEntry): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  result["createdAt"] = %obj.createdAt
+  result["tenantId"] = %obj.tenantId
+  result["urlId"] = %obj.urlId
+  result["broadcastId"] = %obj.broadcastId
+  result["data"] = %obj.data

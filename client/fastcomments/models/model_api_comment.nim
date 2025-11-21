@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_comment_user_badge_info
 import model_comment_user_hash_tag_info
@@ -18,56 +20,268 @@ import model_f_comment_meta
 type APIComment* = object
   ## 
   id*: string
-  aiDeterminedSpam*: bool
-  anonUserId*: string
+  aiDeterminedSpam*: Option[bool]
+  anonUserId*: Option[string]
   approved*: bool
-  avatarSrc*: string
-  badges*: seq[CommentUserBadgeInfo]
+  avatarSrc*: Option[string]
+  badges*: Option[seq[CommentUserBadgeInfo]]
   comment*: string
   commentHTML*: string
-  commenterEmail*: string
-  commenterLink*: string
+  commenterEmail*: Option[string]
+  commenterLink*: Option[string]
   commenterName*: string
-  date*: float64
-  displayLabel*: string
-  domain*: string
-  externalId*: string
-  externalParentId*: string
-  expireAt*: string
-  feedbackIds*: seq[string]
-  flagCount*: int
-  fromProductId*: int
-  hasCode*: bool
-  hasImages*: bool
-  hasLinks*: bool
-  hashTags*: seq[CommentUserHashTagInfo]
-  isByAdmin*: bool
-  isByModerator*: bool
-  isDeleted*: bool
-  isDeletedUser*: bool
-  isPinned*: bool
-  isLocked*: bool
-  isSpam*: bool
-  localDateHours*: int
-  localDateString*: string
-  locale*: string
-  mentions*: seq[CommentUserMentionInfo]
-  meta*: FComment_meta
-  moderationGroupIds*: seq[string]
-  notificationSentForParent*: bool
-  notificationSentForParentTenant*: bool
-  pageTitle*: string
-  parentId*: string
-  rating*: float64
-  reviewed*: bool
+  date*: Option[float64]
+  displayLabel*: Option[string]
+  domain*: Option[string]
+  externalId*: Option[string]
+  externalParentId*: Option[string]
+  expireAt*: Option[string]
+  feedbackIds*: Option[seq[string]]
+  flagCount*: Option[int]
+  fromProductId*: Option[int]
+  hasCode*: Option[bool]
+  hasImages*: Option[bool]
+  hasLinks*: Option[bool]
+  hashTags*: Option[seq[CommentUserHashTagInfo]]
+  isByAdmin*: Option[bool]
+  isByModerator*: Option[bool]
+  isDeleted*: Option[bool]
+  isDeletedUser*: Option[bool]
+  isPinned*: Option[bool]
+  isLocked*: Option[bool]
+  isSpam*: Option[bool]
+  localDateHours*: Option[int]
+  localDateString*: Option[string]
+  locale*: Option[string]
+  mentions*: Option[seq[CommentUserMentionInfo]]
+  meta*: Option[FComment_meta]
+  moderationGroupIds*: Option[seq[string]]
+  notificationSentForParent*: Option[bool]
+  notificationSentForParentTenant*: Option[bool]
+  pageTitle*: Option[string]
+  parentId*: Option[string]
+  rating*: Option[float64]
+  reviewed*: Option[bool]
   tenantId*: string
   url*: string
   urlId*: string
-  urlIdRaw*: string
-  userId*: string
+  urlIdRaw*: Option[string]
+  userId*: Option[string]
   verified*: bool
-  verifiedDate*: string
-  votes*: int
-  votesDown*: int
-  votesUp*: int
+  verifiedDate*: Option[string]
+  votes*: Option[int]
+  votesDown*: Option[int]
+  votesUp*: Option[int]
 
+
+# Custom JSON deserialization for APIComment with custom field names
+proc to*(node: JsonNode, T: typedesc[APIComment]): APIComment =
+  result = APIComment()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("aiDeterminedSpam") and node["aiDeterminedSpam"].kind != JNull:
+      result.aiDeterminedSpam = some(to(node["aiDeterminedSpam"], typeof(result.aiDeterminedSpam.get())))
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("approved"):
+      result.approved = to(node["approved"], bool)
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], string)
+    if node.hasKey("commentHTML"):
+      result.commentHTML = to(node["commentHTML"], string)
+    if node.hasKey("commenterEmail") and node["commenterEmail"].kind != JNull:
+      result.commenterEmail = some(to(node["commenterEmail"], typeof(result.commenterEmail.get())))
+    if node.hasKey("commenterLink") and node["commenterLink"].kind != JNull:
+      result.commenterLink = some(to(node["commenterLink"], typeof(result.commenterLink.get())))
+    if node.hasKey("commenterName"):
+      result.commenterName = to(node["commenterName"], string)
+    if node.hasKey("date") and node["date"].kind != JNull:
+      result.date = some(to(node["date"], typeof(result.date.get())))
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+    if node.hasKey("domain") and node["domain"].kind != JNull:
+      result.domain = some(to(node["domain"], typeof(result.domain.get())))
+    if node.hasKey("externalId") and node["externalId"].kind != JNull:
+      result.externalId = some(to(node["externalId"], typeof(result.externalId.get())))
+    if node.hasKey("externalParentId") and node["externalParentId"].kind != JNull:
+      result.externalParentId = some(to(node["externalParentId"], typeof(result.externalParentId.get())))
+    if node.hasKey("expireAt") and node["expireAt"].kind != JNull:
+      result.expireAt = some(to(node["expireAt"], typeof(result.expireAt.get())))
+    if node.hasKey("feedbackIds") and node["feedbackIds"].kind != JNull:
+      result.feedbackIds = some(to(node["feedbackIds"], typeof(result.feedbackIds.get())))
+    if node.hasKey("flagCount") and node["flagCount"].kind != JNull:
+      result.flagCount = some(to(node["flagCount"], typeof(result.flagCount.get())))
+    if node.hasKey("fromProductId") and node["fromProductId"].kind != JNull:
+      result.fromProductId = some(to(node["fromProductId"], typeof(result.fromProductId.get())))
+    if node.hasKey("hasCode") and node["hasCode"].kind != JNull:
+      result.hasCode = some(to(node["hasCode"], typeof(result.hasCode.get())))
+    if node.hasKey("hasImages") and node["hasImages"].kind != JNull:
+      result.hasImages = some(to(node["hasImages"], typeof(result.hasImages.get())))
+    if node.hasKey("hasLinks") and node["hasLinks"].kind != JNull:
+      result.hasLinks = some(to(node["hasLinks"], typeof(result.hasLinks.get())))
+    if node.hasKey("hashTags") and node["hashTags"].kind != JNull:
+      result.hashTags = some(to(node["hashTags"], typeof(result.hashTags.get())))
+    if node.hasKey("isByAdmin") and node["isByAdmin"].kind != JNull:
+      result.isByAdmin = some(to(node["isByAdmin"], typeof(result.isByAdmin.get())))
+    if node.hasKey("isByModerator") and node["isByModerator"].kind != JNull:
+      result.isByModerator = some(to(node["isByModerator"], typeof(result.isByModerator.get())))
+    if node.hasKey("isDeleted") and node["isDeleted"].kind != JNull:
+      result.isDeleted = some(to(node["isDeleted"], typeof(result.isDeleted.get())))
+    if node.hasKey("isDeletedUser") and node["isDeletedUser"].kind != JNull:
+      result.isDeletedUser = some(to(node["isDeletedUser"], typeof(result.isDeletedUser.get())))
+    if node.hasKey("isPinned") and node["isPinned"].kind != JNull:
+      result.isPinned = some(to(node["isPinned"], typeof(result.isPinned.get())))
+    if node.hasKey("isLocked") and node["isLocked"].kind != JNull:
+      result.isLocked = some(to(node["isLocked"], typeof(result.isLocked.get())))
+    if node.hasKey("isSpam") and node["isSpam"].kind != JNull:
+      result.isSpam = some(to(node["isSpam"], typeof(result.isSpam.get())))
+    if node.hasKey("localDateHours") and node["localDateHours"].kind != JNull:
+      result.localDateHours = some(to(node["localDateHours"], typeof(result.localDateHours.get())))
+    if node.hasKey("localDateString") and node["localDateString"].kind != JNull:
+      result.localDateString = some(to(node["localDateString"], typeof(result.localDateString.get())))
+    if node.hasKey("locale") and node["locale"].kind != JNull:
+      result.locale = some(to(node["locale"], typeof(result.locale.get())))
+    if node.hasKey("mentions") and node["mentions"].kind != JNull:
+      result.mentions = some(to(node["mentions"], typeof(result.mentions.get())))
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+    if node.hasKey("moderationGroupIds") and node["moderationGroupIds"].kind != JNull:
+      result.moderationGroupIds = some(to(node["moderationGroupIds"], typeof(result.moderationGroupIds.get())))
+    if node.hasKey("notificationSentForParent") and node["notificationSentForParent"].kind != JNull:
+      result.notificationSentForParent = some(to(node["notificationSentForParent"], typeof(result.notificationSentForParent.get())))
+    if node.hasKey("notificationSentForParentTenant") and node["notificationSentForParentTenant"].kind != JNull:
+      result.notificationSentForParentTenant = some(to(node["notificationSentForParentTenant"], typeof(result.notificationSentForParentTenant.get())))
+    if node.hasKey("pageTitle") and node["pageTitle"].kind != JNull:
+      result.pageTitle = some(to(node["pageTitle"], typeof(result.pageTitle.get())))
+    if node.hasKey("parentId") and node["parentId"].kind != JNull:
+      result.parentId = some(to(node["parentId"], typeof(result.parentId.get())))
+    if node.hasKey("rating") and node["rating"].kind != JNull:
+      result.rating = some(to(node["rating"], typeof(result.rating.get())))
+    if node.hasKey("reviewed") and node["reviewed"].kind != JNull:
+      result.reviewed = some(to(node["reviewed"], typeof(result.reviewed.get())))
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("urlIdRaw") and node["urlIdRaw"].kind != JNull:
+      result.urlIdRaw = some(to(node["urlIdRaw"], typeof(result.urlIdRaw.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("verified"):
+      result.verified = to(node["verified"], bool)
+    if node.hasKey("verifiedDate") and node["verifiedDate"].kind != JNull:
+      result.verifiedDate = some(to(node["verifiedDate"], typeof(result.verifiedDate.get())))
+    if node.hasKey("votes") and node["votes"].kind != JNull:
+      result.votes = some(to(node["votes"], typeof(result.votes.get())))
+    if node.hasKey("votesDown") and node["votesDown"].kind != JNull:
+      result.votesDown = some(to(node["votesDown"], typeof(result.votesDown.get())))
+    if node.hasKey("votesUp") and node["votesUp"].kind != JNull:
+      result.votesUp = some(to(node["votesUp"], typeof(result.votesUp.get())))
+
+# Custom JSON serialization for APIComment with custom field names
+proc `%`*(obj: APIComment): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  if obj.aiDeterminedSpam.isSome():
+    result["aiDeterminedSpam"] = %obj.aiDeterminedSpam.get()
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  result["approved"] = %obj.approved
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  result["comment"] = %obj.comment
+  result["commentHTML"] = %obj.commentHTML
+  if obj.commenterEmail.isSome():
+    result["commenterEmail"] = %obj.commenterEmail.get()
+  if obj.commenterLink.isSome():
+    result["commenterLink"] = %obj.commenterLink.get()
+  result["commenterName"] = %obj.commenterName
+  if obj.date.isSome():
+    result["date"] = %obj.date.get()
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+  if obj.domain.isSome():
+    result["domain"] = %obj.domain.get()
+  if obj.externalId.isSome():
+    result["externalId"] = %obj.externalId.get()
+  if obj.externalParentId.isSome():
+    result["externalParentId"] = %obj.externalParentId.get()
+  if obj.expireAt.isSome():
+    result["expireAt"] = %obj.expireAt.get()
+  if obj.feedbackIds.isSome():
+    result["feedbackIds"] = %obj.feedbackIds.get()
+  if obj.flagCount.isSome():
+    result["flagCount"] = %obj.flagCount.get()
+  if obj.fromProductId.isSome():
+    result["fromProductId"] = %obj.fromProductId.get()
+  if obj.hasCode.isSome():
+    result["hasCode"] = %obj.hasCode.get()
+  if obj.hasImages.isSome():
+    result["hasImages"] = %obj.hasImages.get()
+  if obj.hasLinks.isSome():
+    result["hasLinks"] = %obj.hasLinks.get()
+  if obj.hashTags.isSome():
+    result["hashTags"] = %obj.hashTags.get()
+  if obj.isByAdmin.isSome():
+    result["isByAdmin"] = %obj.isByAdmin.get()
+  if obj.isByModerator.isSome():
+    result["isByModerator"] = %obj.isByModerator.get()
+  if obj.isDeleted.isSome():
+    result["isDeleted"] = %obj.isDeleted.get()
+  if obj.isDeletedUser.isSome():
+    result["isDeletedUser"] = %obj.isDeletedUser.get()
+  if obj.isPinned.isSome():
+    result["isPinned"] = %obj.isPinned.get()
+  if obj.isLocked.isSome():
+    result["isLocked"] = %obj.isLocked.get()
+  if obj.isSpam.isSome():
+    result["isSpam"] = %obj.isSpam.get()
+  if obj.localDateHours.isSome():
+    result["localDateHours"] = %obj.localDateHours.get()
+  if obj.localDateString.isSome():
+    result["localDateString"] = %obj.localDateString.get()
+  if obj.locale.isSome():
+    result["locale"] = %obj.locale.get()
+  if obj.mentions.isSome():
+    result["mentions"] = %obj.mentions.get()
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+  if obj.moderationGroupIds.isSome():
+    result["moderationGroupIds"] = %obj.moderationGroupIds.get()
+  if obj.notificationSentForParent.isSome():
+    result["notificationSentForParent"] = %obj.notificationSentForParent.get()
+  if obj.notificationSentForParentTenant.isSome():
+    result["notificationSentForParentTenant"] = %obj.notificationSentForParentTenant.get()
+  if obj.pageTitle.isSome():
+    result["pageTitle"] = %obj.pageTitle.get()
+  if obj.parentId.isSome():
+    result["parentId"] = %obj.parentId.get()
+  if obj.rating.isSome():
+    result["rating"] = %obj.rating.get()
+  if obj.reviewed.isSome():
+    result["reviewed"] = %obj.reviewed.get()
+  result["tenantId"] = %obj.tenantId
+  result["url"] = %obj.url
+  result["urlId"] = %obj.urlId
+  if obj.urlIdRaw.isSome():
+    result["urlIdRaw"] = %obj.urlIdRaw.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  result["verified"] = %obj.verified
+  if obj.verifiedDate.isSome():
+    result["verifiedDate"] = %obj.verifiedDate.get()
+  if obj.votes.isSome():
+    result["votes"] = %obj.votes.get()
+  if obj.votesDown.isSome():
+    result["votesDown"] = %obj.votesDown.get()
+  if obj.votesUp.isSome():
+    result["votesUp"] = %obj.votesUp.get()

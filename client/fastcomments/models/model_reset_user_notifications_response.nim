@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 
@@ -18,7 +20,7 @@ type Code* {.pure.} = enum
 type ResetUserNotificationsResponse* = object
   ## 
   status*: APIStatus
-  code*: Code
+  code*: Option[Code]
 
 func `%`*(v: Code): JsonNode =
   result = case v:
@@ -28,3 +30,29 @@ func `$`*(v: Code): string =
   result = case v:
     of Code.IgnoredSinceImpersonated: $("ignored-since-impersonated")
 
+proc to*(node: JsonNode, T: typedesc[Code]): Code =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum Code, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("ignored-since-impersonated"):
+    return Code.IgnoredSinceImpersonated
+  else:
+    raise newException(ValueError, "Invalid enum value for Code: " & strVal)
+
+
+# Custom JSON deserialization for ResetUserNotificationsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ResetUserNotificationsResponse]): ResetUserNotificationsResponse =
+  result = ResetUserNotificationsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], Code))
+
+# Custom JSON serialization for ResetUserNotificationsResponse with custom field names
+proc `%`*(obj: ResetUserNotificationsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()

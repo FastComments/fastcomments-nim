@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type CommentUserBadgeInfo* = object
@@ -16,10 +18,52 @@ type CommentUserBadgeInfo* = object
   id*: string
   `type`*: int
   description*: string
-  displayLabel*: string
-  displaySrc*: string
-  backgroundColor*: string
-  borderColor*: string
-  textColor*: string
-  cssClass*: string
+  displayLabel*: Option[string]
+  displaySrc*: Option[string]
+  backgroundColor*: Option[string]
+  borderColor*: Option[string]
+  textColor*: Option[string]
+  cssClass*: Option[string]
 
+
+# Custom JSON deserialization for CommentUserBadgeInfo with custom field names
+proc to*(node: JsonNode, T: typedesc[CommentUserBadgeInfo]): CommentUserBadgeInfo =
+  result = CommentUserBadgeInfo()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], int)
+    if node.hasKey("description"):
+      result.description = to(node["description"], string)
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+    if node.hasKey("displaySrc") and node["displaySrc"].kind != JNull:
+      result.displaySrc = some(to(node["displaySrc"], typeof(result.displaySrc.get())))
+    if node.hasKey("backgroundColor") and node["backgroundColor"].kind != JNull:
+      result.backgroundColor = some(to(node["backgroundColor"], typeof(result.backgroundColor.get())))
+    if node.hasKey("borderColor") and node["borderColor"].kind != JNull:
+      result.borderColor = some(to(node["borderColor"], typeof(result.borderColor.get())))
+    if node.hasKey("textColor") and node["textColor"].kind != JNull:
+      result.textColor = some(to(node["textColor"], typeof(result.textColor.get())))
+    if node.hasKey("cssClass") and node["cssClass"].kind != JNull:
+      result.cssClass = some(to(node["cssClass"], typeof(result.cssClass.get())))
+
+# Custom JSON serialization for CommentUserBadgeInfo with custom field names
+proc `%`*(obj: CommentUserBadgeInfo): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["type"] = %obj.`type`
+  result["description"] = %obj.description
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+  if obj.displaySrc.isSome():
+    result["displaySrc"] = %obj.displaySrc.get()
+  if obj.backgroundColor.isSome():
+    result["backgroundColor"] = %obj.backgroundColor.get()
+  if obj.borderColor.isSome():
+    result["borderColor"] = %obj.borderColor.get()
+  if obj.textColor.isSome():
+    result["textColor"] = %obj.textColor.get()
+  if obj.cssClass.isSome():
+    result["cssClass"] = %obj.cssClass.get()

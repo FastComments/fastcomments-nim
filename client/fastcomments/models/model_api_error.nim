@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_custom_config_parameters
@@ -18,9 +20,8 @@ type APIError* = object
   status*: APIStatus
   reason*: string
   code*: string
-  secondaryCode*: string
-  bannedUntil*: int64
-  maxCharacterLength*: int
-  translatedError*: string
-  customConfig*: CustomConfigParameters
-
+  secondaryCode*: Option[string]
+  bannedUntil*: Option[int64]
+  maxCharacterLength*: Option[int]
+  translatedError*: Option[string]
+  customConfig*: Option[CustomConfigParameters]

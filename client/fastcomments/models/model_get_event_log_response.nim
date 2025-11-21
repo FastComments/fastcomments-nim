@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_event_log_entry
@@ -18,3 +20,18 @@ type GetEventLogResponse* = object
   events*: seq[EventLogEntry]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetEventLogResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetEventLogResponse]): GetEventLogResponse =
+  result = GetEventLogResponse()
+  if node.kind == JObject:
+    if node.hasKey("events"):
+      result.events = to(node["events"], seq[EventLogEntry])
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetEventLogResponse with custom field names
+proc `%`*(obj: GetEventLogResponse): JsonNode =
+  result = newJObject()
+  result["events"] = %obj.events
+  result["status"] = %obj.status

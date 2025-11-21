@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type RepeatCommentCheckIgnoredReason* {.pure.} = enum
@@ -40,3 +42,24 @@ func `$`*(v: RepeatCommentCheckIgnoredReason): string =
     of RepeatCommentCheckIgnoredReason.`5`: $(5)
     of RepeatCommentCheckIgnoredReason.`6`: $(6)
 
+proc to*(node: JsonNode, T: typedesc[RepeatCommentCheckIgnoredReason]): RepeatCommentCheckIgnoredReason =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum RepeatCommentCheckIgnoredReason, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $(0):
+    return RepeatCommentCheckIgnoredReason.`0`
+  of $(1):
+    return RepeatCommentCheckIgnoredReason.`1`
+  of $(2):
+    return RepeatCommentCheckIgnoredReason.`2`
+  of $(3):
+    return RepeatCommentCheckIgnoredReason.`3`
+  of $(4):
+    return RepeatCommentCheckIgnoredReason.`4`
+  of $(5):
+    return RepeatCommentCheckIgnoredReason.`5`
+  of $(6):
+    return RepeatCommentCheckIgnoredReason.`6`
+  else:
+    raise newException(ValueError, "Invalid enum value for RepeatCommentCheckIgnoredReason: " & strVal)

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 
 type LiveEventType* {.pure.} = enum
@@ -70,3 +72,44 @@ func `$`*(v: LiveEventType): string =
     of LiveEventType.UpdatedFeedPost: $("updated-feed-post")
     of LiveEventType.DeletedFeedPost: $("deleted-feed-post")
 
+proc to*(node: JsonNode, T: typedesc[LiveEventType]): LiveEventType =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum LiveEventType, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("update-badges"):
+    return LiveEventType.UpdateBadges
+  of $("notification"):
+    return LiveEventType.Notification
+  of $("notification-update"):
+    return LiveEventType.NotificationUpdate
+  of $("p-u"):
+    return LiveEventType.PU
+  of $("new-vote"):
+    return LiveEventType.NewVote
+  of $("deleted-vote"):
+    return LiveEventType.DeletedVote
+  of $("new-comment"):
+    return LiveEventType.NewComment
+  of $("updated-comment"):
+    return LiveEventType.UpdatedComment
+  of $("deleted-comment"):
+    return LiveEventType.DeletedComment
+  of $("cvc"):
+    return LiveEventType.Cvc
+  of $("new-config"):
+    return LiveEventType.NewConfig
+  of $("thread-state-change"):
+    return LiveEventType.ThreadStateChange
+  of $("fr"):
+    return LiveEventType.Fr
+  of $("dfr"):
+    return LiveEventType.Dfr
+  of $("new-feed-post"):
+    return LiveEventType.NewFeedPost
+  of $("updated-feed-post"):
+    return LiveEventType.UpdatedFeedPost
+  of $("deleted-feed-post"):
+    return LiveEventType.DeletedFeedPost
+  else:
+    raise newException(ValueError, "Invalid enum value for LiveEventType: " & strVal)

@@ -9,6 +9,8 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_any_type
 
@@ -27,17 +29,17 @@ type `From`* {.pure.} = enum
 type APIAuditLog* = object
   ## 
   id*: string
-  userId*: string
-  username*: string
+  userId*: Option[string]
+  username*: Option[string]
   resourceName*: string
   crudType*: CrudType
-  `from`*: `From`
-  url*: string
-  ip*: string
-  `when`*: string
-  description*: string
-  serverStartDate*: string
-  objectDetails*: Table[string, JsonNode] ## Construct a type with a set of properties K of type T
+  `from`*: Option[`From`]
+  url*: Option[string]
+  ip*: Option[string]
+  `when`*: Option[string]
+  description*: Option[string]
+  serverStartDate*: Option[string]
+  objectDetails*: Option[Table[string, JsonNode]] ## Construct a type with a set of properties K of type T
 
 func `%`*(v: CrudType): JsonNode =
   result = case v:
@@ -55,6 +57,24 @@ func `$`*(v: CrudType): string =
     of CrudType.D: $("d")
     of CrudType.Login: $("login")
 
+proc to*(node: JsonNode, T: typedesc[CrudType]): CrudType =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum CrudType, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("c"):
+    return CrudType.C
+  of $("r"):
+    return CrudType.R
+  of $("u"):
+    return CrudType.U
+  of $("d"):
+    return CrudType.D
+  of $("login"):
+    return CrudType.Login
+  else:
+    raise newException(ValueError, "Invalid enum value for CrudType: " & strVal)
+
 func `%`*(v: `From`): JsonNode =
   result = case v:
     of `From`.Ui: %"ui"
@@ -67,3 +87,71 @@ func `$`*(v: `From`): string =
     of `From`.Api: $("api")
     of `From`.Cron: $("cron")
 
+proc to*(node: JsonNode, T: typedesc[`From`]): `From` =
+  if node.kind != JString:
+    raise newException(ValueError, "Expected string for enum `From`, got " & $node.kind)
+  let strVal = node.getStr()
+  case strVal:
+  of $("ui"):
+    return `From`.Ui
+  of $("api"):
+    return `From`.Api
+  of $("cron"):
+    return `From`.Cron
+  else:
+    raise newException(ValueError, "Invalid enum value for `From`: " & strVal)
+
+
+# Custom JSON deserialization for APIAuditLog with custom field names
+proc to*(node: JsonNode, T: typedesc[APIAuditLog]): APIAuditLog =
+  result = APIAuditLog()
+  if node.kind == JObject:
+    if node.hasKey("_id"):
+      result.id = to(node["_id"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("username") and node["username"].kind != JNull:
+      result.username = some(to(node["username"], typeof(result.username.get())))
+    if node.hasKey("resourceName"):
+      result.resourceName = to(node["resourceName"], string)
+    if node.hasKey("crudType"):
+      result.crudType = to(node["crudType"], CrudType)
+    if node.hasKey("from") and node["from"].kind != JNull:
+      result.`from` = some(to(node["from"], `From`))
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("ip") and node["ip"].kind != JNull:
+      result.ip = some(to(node["ip"], typeof(result.ip.get())))
+    if node.hasKey("when") and node["when"].kind != JNull:
+      result.`when` = some(to(node["when"], typeof(result.`when`.get())))
+    if node.hasKey("description") and node["description"].kind != JNull:
+      result.description = some(to(node["description"], typeof(result.description.get())))
+    if node.hasKey("serverStartDate") and node["serverStartDate"].kind != JNull:
+      result.serverStartDate = some(to(node["serverStartDate"], typeof(result.serverStartDate.get())))
+    if node.hasKey("objectDetails") and node["objectDetails"].kind != JNull:
+      result.objectDetails = some(to(node["objectDetails"], typeof(result.objectDetails.get())))
+
+# Custom JSON serialization for APIAuditLog with custom field names
+proc `%`*(obj: APIAuditLog): JsonNode =
+  result = newJObject()
+  result["_id"] = %obj.id
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.username.isSome():
+    result["username"] = %obj.username.get()
+  result["resourceName"] = %obj.resourceName
+  result["crudType"] = %obj.crudType
+  if obj.`from`.isSome():
+    result["from"] = %obj.`from`.get()
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  if obj.ip.isSome():
+    result["ip"] = %obj.ip.get()
+  if obj.`when`.isSome():
+    result["when"] = %obj.`when`.get()
+  if obj.description.isSome():
+    result["description"] = %obj.description.get()
+  if obj.serverStartDate.isSome():
+    result["serverStartDate"] = %obj.serverStartDate.get()
+  if obj.objectDetails.isSome():
+    result["objectDetails"] = %obj.objectDetails.get()

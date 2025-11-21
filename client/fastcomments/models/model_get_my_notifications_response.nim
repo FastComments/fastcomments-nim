@@ -9,15 +9,47 @@
 
 import json
 import tables
+import marshal
+import options
 
 import model_api_status
 import model_renderable_user_notification
 
 type GetMyNotificationsResponse* = object
   ## 
-  translations*: Table[string, string] ## Construct a type with a set of properties K of type T
+  translations*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
   isSubscribed*: bool
   hasMore*: bool
   notifications*: seq[RenderableUserNotification]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetMyNotificationsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetMyNotificationsResponse]): GetMyNotificationsResponse =
+  result = GetMyNotificationsResponse()
+  if node.kind == JObject:
+    if node.hasKey("translations") and node["translations"].kind != JNull:
+      result.translations = some(to(node["translations"], typeof(result.translations.get())))
+    if node.hasKey("isSubscribed"):
+      result.isSubscribed = to(node["isSubscribed"], bool)
+    if node.hasKey("hasMore"):
+      result.hasMore = to(node["hasMore"], bool)
+    if node.hasKey("notifications"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["notifications"]
+      if arrayNode.kind == JArray:
+        result.notifications = @[]
+        for item in arrayNode.items:
+          result.notifications.add(to(item, RenderableUserNotification))
+    if node.hasKey("status"):
+      result.status = model_api_status.to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetMyNotificationsResponse with custom field names
+proc `%`*(obj: GetMyNotificationsResponse): JsonNode =
+  result = newJObject()
+  if obj.translations.isSome():
+    result["translations"] = %obj.translations.get()
+  result["isSubscribed"] = %obj.isSubscribed
+  result["hasMore"] = %obj.hasMore
+  result["notifications"] = %obj.notifications
+  result["status"] = %obj.status
