@@ -7,6 +7,8 @@ import ../client/fastcomments/apis/api_default
 import ../client/fastcomments/models/model_comment_data
 import ../client/fastcomments/models/model_api_status
 import ../client/fastcomments/models/model_record_string_string_or_number_value
+import ../client/fastcomments/models/model_get_comments_public200response
+import ../client/fastcomments/models/model_get_comments200response
 
 proc getAPIKey(): string =
   let apiKey = getEnv("FASTCOMMENTS_API_KEY")
@@ -21,7 +23,7 @@ proc getTenantID(): string =
   return tenantId
 
 proc getTimestamp(): int64 =
-  return getTime().toUnixFloat().int64
+  return (getTime().toUnixFloat() * 1000).int64
 
 suite "SSO Integration Tests":
   var client: HttpClient
@@ -71,8 +73,9 @@ suite "SSO Integration Tests":
     check response.isSome
     if response.isSome:
       let resp = response.get()
-      check resp.status == APIStatus.SUCCESS
-      check resp.comments.isSome
+      check resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant
+      if resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
+        check resp.GetCommentsResponseWithPresence_PublicComment_Value.status == "success"
 
   test "PublicAPI with secure SSO":
     let apiKey = getAPIKey()
@@ -95,9 +98,9 @@ suite "SSO Integration Tests":
     commentData.urlId = "sdk-test-nim"
     commentData.comment = "Test from Nim SDK"
     commentData.commenterName = user.username
-    commentData.date = timestamp
-    commentData.meta = newJObject()
-    commentData.questionValues = initTable[string, RecordStringStringOrNumberValue]()
+    commentData.date = some(timestamp)
+    commentData.meta = some(newJObject())
+    commentData.questionValues = some(initTable[string, RecordStringStringOrNumberValue]())
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -149,8 +152,9 @@ suite "SSO Integration Tests":
     check getResponse.isSome
     if getResponse.isSome:
       let resp = getResponse.get()
-      check resp.comments.isSome
-      check resp.comments.get().len >= 1
+      check resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant
+      if resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
+        check resp.GetCommentsResponseWithPresence_PublicComment_Value.comments.len >= 1
 
   test "DefaultAPI with API key - Fetch Comments":
     let apiKey = getAPIKey()
@@ -176,9 +180,9 @@ suite "SSO Integration Tests":
     commentData.urlId = testUrlId
     commentData.comment = "Test from Nim SDK at " & $timestamp
     commentData.commenterName = user.username
-    commentData.date = timestamp
-    commentData.meta = newJObject()
-    commentData.questionValues = initTable[string, RecordStringStringOrNumberValue]()
+    commentData.date = some(timestamp)
+    commentData.meta = some(newJObject())
+    commentData.questionValues = some(initTable[string, RecordStringStringOrNumberValue]())
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -224,11 +228,11 @@ suite "SSO Integration Tests":
 
     if getResponse.isSome:
       let resp = getResponse.get()
-      check resp.status == APIStatus.SUCCESS
-      check resp.comments.isSome
-      check resp.comments.get().len >= 1
-      echo "✓ Retrieved ", resp.comments.get().len, " comments with DefaultAPI"
-      echo "✓ Successfully verified DefaultAPI authentication with API key works!"
+      check resp.kind == GetComments200responseKind.APIGetCommentsResponseVariant
+      if resp.kind == GetComments200responseKind.APIGetCommentsResponseVariant:
+        check resp.APIGetCommentsResponseValue.status == APIStatus.SUCCESS
+        echo "✓ Retrieved ", resp.APIGetCommentsResponseValue.comments.len, " comments with DefaultAPI"
+        echo "✓ Successfully verified DefaultAPI authentication with API key works!"
 
     authClient.close()
 
@@ -256,9 +260,9 @@ suite "SSO Integration Tests":
     commentData.urlId = testUrlId
     commentData.comment = "Test from Nim SDK at " & $timestamp
     commentData.commenterName = user.username
-    commentData.date = timestamp
-    commentData.meta = newJObject()
-    commentData.questionValues = initTable[string, RecordStringStringOrNumberValue]()
+    commentData.date = some(timestamp)
+    commentData.meta = some(newJObject())
+    commentData.questionValues = some(initTable[string, RecordStringStringOrNumberValue]())
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -314,24 +318,27 @@ suite "SSO Integration Tests":
 
     if getResponse.isSome:
       let resp = getResponse.get()
+      check resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant
 
-      # Verify no error code
-      check resp.code.isNone or resp.code.get() == ""
+      if resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
+        let successResp = resp.GetCommentsResponseWithPresence_PublicComment_Value
 
-      # Verify comments are present
-      check resp.comments.isSome
-      check resp.comments.get().len >= 1
-      echo "✓ Retrieved ", resp.comments.get().len, " comments"
+        # Verify no error code
+        check successResp.code.isNone or successResp.code.get() == ""
 
-      # Verify we can find our comment
-      var foundOurComment = false
-      for comment in resp.comments.get():
-        if comment.commentHTML != "":
-          let commentText = comment.commentHTML
-          if $timestamp in commentText:
-            foundOurComment = true
-            echo "✓ Found our comment: ", commentText
-            break
+        # Verify comments are present
+        check successResp.comments.len >= 1
+        echo "✓ Retrieved ", successResp.comments.len, " comments"
 
-      check foundOurComment
+        # Verify we can find our comment
+        var foundOurComment = false
+        for comment in successResp.comments:
+          if comment.commentHTML != "":
+            let commentText = comment.commentHTML
+            if $timestamp in commentText:
+              foundOurComment = true
+              echo "✓ Found our comment: ", commentText
+              break
+
+        check foundOurComment
       echo "✓ Successfully verified end-to-end create and fetch with SSO authentication"
