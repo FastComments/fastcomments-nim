@@ -19,23 +19,22 @@ type SSOSecurityLevel* {.pure.} = enum
 
 func `%`*(v: SSOSecurityLevel): JsonNode =
   result = case v:
-    of SSOSecurityLevel.`0`: %0
-    of SSOSecurityLevel.`1`: %1
+    of SSOSecurityLevel.`0`: %(0)
+    of SSOSecurityLevel.`1`: %(1)
 
 func `$`*(v: SSOSecurityLevel): string =
   result = case v:
     of SSOSecurityLevel.`0`: $(0)
     of SSOSecurityLevel.`1`: $(1)
-
 proc to*(node: JsonNode, T: typedesc[SSOSecurityLevel]): SSOSecurityLevel =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum SSOSecurityLevel, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum SSOSecurityLevel, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return SSOSecurityLevel.`0`
-  of $(1):
+  of 1:
     return SSOSecurityLevel.`1`
   else:
-    raise newException(ValueError, "Invalid enum value for SSOSecurityLevel: " & strVal)
+    raise newException(ValueError, "Invalid enum value for SSOSecurityLevel: " & $intVal)
 

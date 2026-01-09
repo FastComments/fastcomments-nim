@@ -22,11 +22,11 @@ type CommenterNameFormats* {.pure.} = enum
 
 func `%`*(v: CommenterNameFormats): JsonNode =
   result = case v:
-    of CommenterNameFormats.`0`: %0
-    of CommenterNameFormats.`1`: %1
-    of CommenterNameFormats.`2`: %2
-    of CommenterNameFormats.`3`: %3
-    of CommenterNameFormats.`4`: %4
+    of CommenterNameFormats.`0`: %(0)
+    of CommenterNameFormats.`1`: %(1)
+    of CommenterNameFormats.`2`: %(2)
+    of CommenterNameFormats.`3`: %(3)
+    of CommenterNameFormats.`4`: %(4)
 
 func `$`*(v: CommenterNameFormats): string =
   result = case v:
@@ -35,22 +35,21 @@ func `$`*(v: CommenterNameFormats): string =
     of CommenterNameFormats.`2`: $(2)
     of CommenterNameFormats.`3`: $(3)
     of CommenterNameFormats.`4`: $(4)
-
 proc to*(node: JsonNode, T: typedesc[CommenterNameFormats]): CommenterNameFormats =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum CommenterNameFormats, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum CommenterNameFormats, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return CommenterNameFormats.`0`
-  of $(1):
+  of 1:
     return CommenterNameFormats.`1`
-  of $(2):
+  of 2:
     return CommenterNameFormats.`2`
-  of $(3):
+  of 3:
     return CommenterNameFormats.`3`
-  of $(4):
+  of 4:
     return CommenterNameFormats.`4`
   else:
-    raise newException(ValueError, "Invalid enum value for CommenterNameFormats: " & strVal)
+    raise newException(ValueError, "Invalid enum value for CommenterNameFormats: " & $intVal)
 

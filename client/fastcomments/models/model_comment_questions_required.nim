@@ -19,23 +19,22 @@ type CommentQuestionsRequired* {.pure.} = enum
 
 func `%`*(v: CommentQuestionsRequired): JsonNode =
   result = case v:
-    of CommentQuestionsRequired.`0`: %0
-    of CommentQuestionsRequired.`1`: %1
+    of CommentQuestionsRequired.`0`: %(0)
+    of CommentQuestionsRequired.`1`: %(1)
 
 func `$`*(v: CommentQuestionsRequired): string =
   result = case v:
     of CommentQuestionsRequired.`0`: $(0)
     of CommentQuestionsRequired.`1`: $(1)
-
 proc to*(node: JsonNode, T: typedesc[CommentQuestionsRequired]): CommentQuestionsRequired =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum CommentQuestionsRequired, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum CommentQuestionsRequired, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return CommentQuestionsRequired.`0`
-  of $(1):
+  of 1:
     return CommentQuestionsRequired.`1`
   else:
-    raise newException(ValueError, "Invalid enum value for CommentQuestionsRequired: " & strVal)
+    raise newException(ValueError, "Invalid enum value for CommentQuestionsRequired: " & $intVal)
 

@@ -73,7 +73,7 @@ type FComment* = object
   rating*: Option[float64]
   displayLabel*: Option[string]
   fromProductId*: Option[int]
-  meta*: Option[FComment_meta]
+  meta*: Option[Table[string, JsonNode]]
   ipHash*: Option[string]
   mentions*: Option[seq[CommentUserMentionInfo]]
   hashTags*: Option[seq[CommentUserHashTagInfo]]

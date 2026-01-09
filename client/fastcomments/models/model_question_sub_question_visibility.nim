@@ -19,23 +19,22 @@ type QuestionSubQuestionVisibility* {.pure.} = enum
 
 func `%`*(v: QuestionSubQuestionVisibility): JsonNode =
   result = case v:
-    of QuestionSubQuestionVisibility.`0`: %0
-    of QuestionSubQuestionVisibility.`1`: %1
+    of QuestionSubQuestionVisibility.`0`: %(0)
+    of QuestionSubQuestionVisibility.`1`: %(1)
 
 func `$`*(v: QuestionSubQuestionVisibility): string =
   result = case v:
     of QuestionSubQuestionVisibility.`0`: $(0)
     of QuestionSubQuestionVisibility.`1`: $(1)
-
 proc to*(node: JsonNode, T: typedesc[QuestionSubQuestionVisibility]): QuestionSubQuestionVisibility =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum QuestionSubQuestionVisibility, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum QuestionSubQuestionVisibility, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return QuestionSubQuestionVisibility.`0`
-  of $(1):
+  of 1:
     return QuestionSubQuestionVisibility.`1`
   else:
-    raise newException(ValueError, "Invalid enum value for QuestionSubQuestionVisibility: " & strVal)
+    raise newException(ValueError, "Invalid enum value for QuestionSubQuestionVisibility: " & $intVal)
 

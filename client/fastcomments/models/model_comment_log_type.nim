@@ -69,64 +69,66 @@ type CommentLogType* {.pure.} = enum
   `52`
   `53`
   `54`
+  `55`
 
 func `%`*(v: CommentLogType): JsonNode =
   result = case v:
-    of CommentLogType.`0`: %0
-    of CommentLogType.`1`: %1
-    of CommentLogType.`2`: %2
-    of CommentLogType.`3`: %3
-    of CommentLogType.`4`: %4
-    of CommentLogType.`5`: %5
-    of CommentLogType.`6`: %6
-    of CommentLogType.`7`: %7
-    of CommentLogType.`8`: %8
-    of CommentLogType.`9`: %9
-    of CommentLogType.`10`: %10
-    of CommentLogType.`11`: %11
-    of CommentLogType.`12`: %12
-    of CommentLogType.`13`: %13
-    of CommentLogType.`14`: %14
-    of CommentLogType.`15`: %15
-    of CommentLogType.`16`: %16
-    of CommentLogType.`17`: %17
-    of CommentLogType.`18`: %18
-    of CommentLogType.`19`: %19
-    of CommentLogType.`20`: %20
-    of CommentLogType.`21`: %21
-    of CommentLogType.`22`: %22
-    of CommentLogType.`23`: %23
-    of CommentLogType.`24`: %24
-    of CommentLogType.`25`: %25
-    of CommentLogType.`26`: %26
-    of CommentLogType.`27`: %27
-    of CommentLogType.`28`: %28
-    of CommentLogType.`29`: %29
-    of CommentLogType.`30`: %30
-    of CommentLogType.`31`: %31
-    of CommentLogType.`32`: %32
-    of CommentLogType.`33`: %33
-    of CommentLogType.`34`: %34
-    of CommentLogType.`35`: %35
-    of CommentLogType.`36`: %36
-    of CommentLogType.`37`: %37
-    of CommentLogType.`38`: %38
-    of CommentLogType.`39`: %39
-    of CommentLogType.`40`: %40
-    of CommentLogType.`41`: %41
-    of CommentLogType.`42`: %42
-    of CommentLogType.`43`: %43
-    of CommentLogType.`44`: %44
-    of CommentLogType.`45`: %45
-    of CommentLogType.`46`: %46
-    of CommentLogType.`47`: %47
-    of CommentLogType.`48`: %48
-    of CommentLogType.`49`: %49
-    of CommentLogType.`50`: %50
-    of CommentLogType.`51`: %51
-    of CommentLogType.`52`: %52
-    of CommentLogType.`53`: %53
-    of CommentLogType.`54`: %54
+    of CommentLogType.`0`: %(0)
+    of CommentLogType.`1`: %(1)
+    of CommentLogType.`2`: %(2)
+    of CommentLogType.`3`: %(3)
+    of CommentLogType.`4`: %(4)
+    of CommentLogType.`5`: %(5)
+    of CommentLogType.`6`: %(6)
+    of CommentLogType.`7`: %(7)
+    of CommentLogType.`8`: %(8)
+    of CommentLogType.`9`: %(9)
+    of CommentLogType.`10`: %(10)
+    of CommentLogType.`11`: %(11)
+    of CommentLogType.`12`: %(12)
+    of CommentLogType.`13`: %(13)
+    of CommentLogType.`14`: %(14)
+    of CommentLogType.`15`: %(15)
+    of CommentLogType.`16`: %(16)
+    of CommentLogType.`17`: %(17)
+    of CommentLogType.`18`: %(18)
+    of CommentLogType.`19`: %(19)
+    of CommentLogType.`20`: %(20)
+    of CommentLogType.`21`: %(21)
+    of CommentLogType.`22`: %(22)
+    of CommentLogType.`23`: %(23)
+    of CommentLogType.`24`: %(24)
+    of CommentLogType.`25`: %(25)
+    of CommentLogType.`26`: %(26)
+    of CommentLogType.`27`: %(27)
+    of CommentLogType.`28`: %(28)
+    of CommentLogType.`29`: %(29)
+    of CommentLogType.`30`: %(30)
+    of CommentLogType.`31`: %(31)
+    of CommentLogType.`32`: %(32)
+    of CommentLogType.`33`: %(33)
+    of CommentLogType.`34`: %(34)
+    of CommentLogType.`35`: %(35)
+    of CommentLogType.`36`: %(36)
+    of CommentLogType.`37`: %(37)
+    of CommentLogType.`38`: %(38)
+    of CommentLogType.`39`: %(39)
+    of CommentLogType.`40`: %(40)
+    of CommentLogType.`41`: %(41)
+    of CommentLogType.`42`: %(42)
+    of CommentLogType.`43`: %(43)
+    of CommentLogType.`44`: %(44)
+    of CommentLogType.`45`: %(45)
+    of CommentLogType.`46`: %(46)
+    of CommentLogType.`47`: %(47)
+    of CommentLogType.`48`: %(48)
+    of CommentLogType.`49`: %(49)
+    of CommentLogType.`50`: %(50)
+    of CommentLogType.`51`: %(51)
+    of CommentLogType.`52`: %(52)
+    of CommentLogType.`53`: %(53)
+    of CommentLogType.`54`: %(54)
+    of CommentLogType.`55`: %(55)
 
 func `$`*(v: CommentLogType): string =
   result = case v:
@@ -185,122 +187,124 @@ func `$`*(v: CommentLogType): string =
     of CommentLogType.`52`: $(52)
     of CommentLogType.`53`: $(53)
     of CommentLogType.`54`: $(54)
-
+    of CommentLogType.`55`: $(55)
 proc to*(node: JsonNode, T: typedesc[CommentLogType]): CommentLogType =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum CommentLogType, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum CommentLogType, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return CommentLogType.`0`
-  of $(1):
+  of 1:
     return CommentLogType.`1`
-  of $(2):
+  of 2:
     return CommentLogType.`2`
-  of $(3):
+  of 3:
     return CommentLogType.`3`
-  of $(4):
+  of 4:
     return CommentLogType.`4`
-  of $(5):
+  of 5:
     return CommentLogType.`5`
-  of $(6):
+  of 6:
     return CommentLogType.`6`
-  of $(7):
+  of 7:
     return CommentLogType.`7`
-  of $(8):
+  of 8:
     return CommentLogType.`8`
-  of $(9):
+  of 9:
     return CommentLogType.`9`
-  of $(10):
+  of 10:
     return CommentLogType.`10`
-  of $(11):
+  of 11:
     return CommentLogType.`11`
-  of $(12):
+  of 12:
     return CommentLogType.`12`
-  of $(13):
+  of 13:
     return CommentLogType.`13`
-  of $(14):
+  of 14:
     return CommentLogType.`14`
-  of $(15):
+  of 15:
     return CommentLogType.`15`
-  of $(16):
+  of 16:
     return CommentLogType.`16`
-  of $(17):
+  of 17:
     return CommentLogType.`17`
-  of $(18):
+  of 18:
     return CommentLogType.`18`
-  of $(19):
+  of 19:
     return CommentLogType.`19`
-  of $(20):
+  of 20:
     return CommentLogType.`20`
-  of $(21):
+  of 21:
     return CommentLogType.`21`
-  of $(22):
+  of 22:
     return CommentLogType.`22`
-  of $(23):
+  of 23:
     return CommentLogType.`23`
-  of $(24):
+  of 24:
     return CommentLogType.`24`
-  of $(25):
+  of 25:
     return CommentLogType.`25`
-  of $(26):
+  of 26:
     return CommentLogType.`26`
-  of $(27):
+  of 27:
     return CommentLogType.`27`
-  of $(28):
+  of 28:
     return CommentLogType.`28`
-  of $(29):
+  of 29:
     return CommentLogType.`29`
-  of $(30):
+  of 30:
     return CommentLogType.`30`
-  of $(31):
+  of 31:
     return CommentLogType.`31`
-  of $(32):
+  of 32:
     return CommentLogType.`32`
-  of $(33):
+  of 33:
     return CommentLogType.`33`
-  of $(34):
+  of 34:
     return CommentLogType.`34`
-  of $(35):
+  of 35:
     return CommentLogType.`35`
-  of $(36):
+  of 36:
     return CommentLogType.`36`
-  of $(37):
+  of 37:
     return CommentLogType.`37`
-  of $(38):
+  of 38:
     return CommentLogType.`38`
-  of $(39):
+  of 39:
     return CommentLogType.`39`
-  of $(40):
+  of 40:
     return CommentLogType.`40`
-  of $(41):
+  of 41:
     return CommentLogType.`41`
-  of $(42):
+  of 42:
     return CommentLogType.`42`
-  of $(43):
+  of 43:
     return CommentLogType.`43`
-  of $(44):
+  of 44:
     return CommentLogType.`44`
-  of $(45):
+  of 45:
     return CommentLogType.`45`
-  of $(46):
+  of 46:
     return CommentLogType.`46`
-  of $(47):
+  of 47:
     return CommentLogType.`47`
-  of $(48):
+  of 48:
     return CommentLogType.`48`
-  of $(49):
+  of 49:
     return CommentLogType.`49`
-  of $(50):
+  of 50:
     return CommentLogType.`50`
-  of $(51):
+  of 51:
     return CommentLogType.`51`
-  of $(52):
+  of 52:
     return CommentLogType.`52`
-  of $(53):
+  of 53:
     return CommentLogType.`53`
-  of $(54):
+  of 54:
     return CommentLogType.`54`
+  of 55:
+    return CommentLogType.`55`
   else:
-    raise newException(ValueError, "Invalid enum value for CommentLogType: " & strVal)
+    raise newException(ValueError, "Invalid enum value for CommentLogType: " & $intVal)
 

@@ -30,19 +30,19 @@ type NotificationType* {.pure.} = enum
 
 func `%`*(v: NotificationType): JsonNode =
   result = case v:
-    of NotificationType.`0`: %0
-    of NotificationType.`1`: %1
-    of NotificationType.`2`: %2
-    of NotificationType.`3`: %3
-    of NotificationType.`4`: %4
-    of NotificationType.`5`: %5
-    of NotificationType.`6`: %6
-    of NotificationType.`7`: %7
-    of NotificationType.`8`: %8
-    of NotificationType.`81`: %81
-    of NotificationType.`82`: %82
-    of NotificationType.`9`: %9
-    of NotificationType.`10`: %10
+    of NotificationType.`0`: %(0)
+    of NotificationType.`1`: %(1)
+    of NotificationType.`2`: %(2)
+    of NotificationType.`3`: %(3)
+    of NotificationType.`4`: %(4)
+    of NotificationType.`5`: %(5)
+    of NotificationType.`6`: %(6)
+    of NotificationType.`7`: %(7)
+    of NotificationType.`8`: %(8)
+    of NotificationType.`81`: %(81)
+    of NotificationType.`82`: %(82)
+    of NotificationType.`9`: %(9)
+    of NotificationType.`10`: %(10)
 
 func `$`*(v: NotificationType): string =
   result = case v:
@@ -59,38 +59,37 @@ func `$`*(v: NotificationType): string =
     of NotificationType.`82`: $(82)
     of NotificationType.`9`: $(9)
     of NotificationType.`10`: $(10)
-
 proc to*(node: JsonNode, T: typedesc[NotificationType]): NotificationType =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum NotificationType, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum NotificationType, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return NotificationType.`0`
-  of $(1):
+  of 1:
     return NotificationType.`1`
-  of $(2):
+  of 2:
     return NotificationType.`2`
-  of $(3):
+  of 3:
     return NotificationType.`3`
-  of $(4):
+  of 4:
     return NotificationType.`4`
-  of $(5):
+  of 5:
     return NotificationType.`5`
-  of $(6):
+  of 6:
     return NotificationType.`6`
-  of $(7):
+  of 7:
     return NotificationType.`7`
-  of $(8):
+  of 8:
     return NotificationType.`8`
-  of $(81):
+  of 81:
     return NotificationType.`81`
-  of $(82):
+  of 82:
     return NotificationType.`82`
-  of $(9):
+  of 9:
     return NotificationType.`9`
-  of $(10):
+  of 10:
     return NotificationType.`10`
   else:
-    raise newException(ValueError, "Invalid enum value for NotificationType: " & strVal)
+    raise newException(ValueError, "Invalid enum value for NotificationType: " & $intVal)
 

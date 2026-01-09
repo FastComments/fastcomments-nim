@@ -54,7 +54,7 @@ type APICommentBase* = object
   localDateString*: Option[string]
   locale*: Option[string]
   mentions*: Option[seq[CommentUserMentionInfo]]
-  meta*: Option[FComment_meta]
+  meta*: Option[Table[string, JsonNode]]
   moderationGroupIds*: Option[seq[string]]
   notificationSentForParent*: Option[bool]
   notificationSentForParentTenant*: Option[bool]

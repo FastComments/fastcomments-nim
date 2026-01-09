@@ -19,23 +19,22 @@ type QuestionWhenSave* {.pure.} = enum
 
 func `%`*(v: QuestionWhenSave): JsonNode =
   result = case v:
-    of QuestionWhenSave.`0`: %0
-    of QuestionWhenSave.`1`: %1
+    of QuestionWhenSave.`0`: %(0)
+    of QuestionWhenSave.`1`: %(1)
 
 func `$`*(v: QuestionWhenSave): string =
   result = case v:
     of QuestionWhenSave.`0`: $(0)
     of QuestionWhenSave.`1`: $(1)
-
 proc to*(node: JsonNode, T: typedesc[QuestionWhenSave]): QuestionWhenSave =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum QuestionWhenSave, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum QuestionWhenSave, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return QuestionWhenSave.`0`
-  of $(1):
+  of 1:
     return QuestionWhenSave.`1`
   else:
-    raise newException(ValueError, "Invalid enum value for QuestionWhenSave: " & strVal)
+    raise newException(ValueError, "Invalid enum value for QuestionWhenSave: " & $intVal)
 

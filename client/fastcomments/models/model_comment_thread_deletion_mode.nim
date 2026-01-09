@@ -21,10 +21,10 @@ type CommentThreadDeletionMode* {.pure.} = enum
 
 func `%`*(v: CommentThreadDeletionMode): JsonNode =
   result = case v:
-    of CommentThreadDeletionMode.`0`: %0
-    of CommentThreadDeletionMode.`1`: %1
-    of CommentThreadDeletionMode.`2`: %2
-    of CommentThreadDeletionMode.`3`: %3
+    of CommentThreadDeletionMode.`0`: %(0)
+    of CommentThreadDeletionMode.`1`: %(1)
+    of CommentThreadDeletionMode.`2`: %(2)
+    of CommentThreadDeletionMode.`3`: %(3)
 
 func `$`*(v: CommentThreadDeletionMode): string =
   result = case v:
@@ -32,20 +32,19 @@ func `$`*(v: CommentThreadDeletionMode): string =
     of CommentThreadDeletionMode.`1`: $(1)
     of CommentThreadDeletionMode.`2`: $(2)
     of CommentThreadDeletionMode.`3`: $(3)
-
 proc to*(node: JsonNode, T: typedesc[CommentThreadDeletionMode]): CommentThreadDeletionMode =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum CommentThreadDeletionMode, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum CommentThreadDeletionMode, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return CommentThreadDeletionMode.`0`
-  of $(1):
+  of 1:
     return CommentThreadDeletionMode.`1`
-  of $(2):
+  of 2:
     return CommentThreadDeletionMode.`2`
-  of $(3):
+  of 3:
     return CommentThreadDeletionMode.`3`
   else:
-    raise newException(ValueError, "Invalid enum value for CommentThreadDeletionMode: " & strVal)
+    raise newException(ValueError, "Invalid enum value for CommentThreadDeletionMode: " & $intVal)
 

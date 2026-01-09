@@ -24,13 +24,13 @@ type RepeatCommentCheckIgnoredReason* {.pure.} = enum
 
 func `%`*(v: RepeatCommentCheckIgnoredReason): JsonNode =
   result = case v:
-    of RepeatCommentCheckIgnoredReason.`0`: %0
-    of RepeatCommentCheckIgnoredReason.`1`: %1
-    of RepeatCommentCheckIgnoredReason.`2`: %2
-    of RepeatCommentCheckIgnoredReason.`3`: %3
-    of RepeatCommentCheckIgnoredReason.`4`: %4
-    of RepeatCommentCheckIgnoredReason.`5`: %5
-    of RepeatCommentCheckIgnoredReason.`6`: %6
+    of RepeatCommentCheckIgnoredReason.`0`: %(0)
+    of RepeatCommentCheckIgnoredReason.`1`: %(1)
+    of RepeatCommentCheckIgnoredReason.`2`: %(2)
+    of RepeatCommentCheckIgnoredReason.`3`: %(3)
+    of RepeatCommentCheckIgnoredReason.`4`: %(4)
+    of RepeatCommentCheckIgnoredReason.`5`: %(5)
+    of RepeatCommentCheckIgnoredReason.`6`: %(6)
 
 func `$`*(v: RepeatCommentCheckIgnoredReason): string =
   result = case v:
@@ -41,26 +41,25 @@ func `$`*(v: RepeatCommentCheckIgnoredReason): string =
     of RepeatCommentCheckIgnoredReason.`4`: $(4)
     of RepeatCommentCheckIgnoredReason.`5`: $(5)
     of RepeatCommentCheckIgnoredReason.`6`: $(6)
-
 proc to*(node: JsonNode, T: typedesc[RepeatCommentCheckIgnoredReason]): RepeatCommentCheckIgnoredReason =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum RepeatCommentCheckIgnoredReason, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum RepeatCommentCheckIgnoredReason, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return RepeatCommentCheckIgnoredReason.`0`
-  of $(1):
+  of 1:
     return RepeatCommentCheckIgnoredReason.`1`
-  of $(2):
+  of 2:
     return RepeatCommentCheckIgnoredReason.`2`
-  of $(3):
+  of 3:
     return RepeatCommentCheckIgnoredReason.`3`
-  of $(4):
+  of 4:
     return RepeatCommentCheckIgnoredReason.`4`
-  of $(5):
+  of 5:
     return RepeatCommentCheckIgnoredReason.`5`
-  of $(6):
+  of 6:
     return RepeatCommentCheckIgnoredReason.`6`
   else:
-    raise newException(ValueError, "Invalid enum value for RepeatCommentCheckIgnoredReason: " & strVal)
+    raise newException(ValueError, "Invalid enum value for RepeatCommentCheckIgnoredReason: " & $intVal)
 

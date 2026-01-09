@@ -19,23 +19,22 @@ type QuestionRenderingType* {.pure.} = enum
 
 func `%`*(v: QuestionRenderingType): JsonNode =
   result = case v:
-    of QuestionRenderingType.`0`: %0
-    of QuestionRenderingType.`1`: %1
+    of QuestionRenderingType.`0`: %(0)
+    of QuestionRenderingType.`1`: %(1)
 
 func `$`*(v: QuestionRenderingType): string =
   result = case v:
     of QuestionRenderingType.`0`: $(0)
     of QuestionRenderingType.`1`: $(1)
-
 proc to*(node: JsonNode, T: typedesc[QuestionRenderingType]): QuestionRenderingType =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum QuestionRenderingType, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum QuestionRenderingType, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return QuestionRenderingType.`0`
-  of $(1):
+  of 1:
     return QuestionRenderingType.`1`
   else:
-    raise newException(ValueError, "Invalid enum value for QuestionRenderingType: " & strVal)
+    raise newException(ValueError, "Invalid enum value for QuestionRenderingType: " & $intVal)
 

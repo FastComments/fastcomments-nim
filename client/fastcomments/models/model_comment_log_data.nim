@@ -65,6 +65,9 @@ type CommentLogData* = object
   trustFactorBefore*: Option[float64]
   trustFactorAfter*: Option[float64]
   referencedCommentId*: Option[string]
+  invalidLocale*: Option[string]
+  detectedLocale*: Option[string]
+  detectedLanguage*: Option[string]
 
 func `%`*(v: PermanentFlag): JsonNode =
   result = case v:
