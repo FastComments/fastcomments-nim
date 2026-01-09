@@ -20,27 +20,26 @@ type CommentQuestionResultsRenderingType* {.pure.} = enum
 
 func `%`*(v: CommentQuestionResultsRenderingType): JsonNode =
   result = case v:
-    of CommentQuestionResultsRenderingType.`0`: %0
-    of CommentQuestionResultsRenderingType.`1`: %1
-    of CommentQuestionResultsRenderingType.`2`: %2
+    of CommentQuestionResultsRenderingType.`0`: %(0)
+    of CommentQuestionResultsRenderingType.`1`: %(1)
+    of CommentQuestionResultsRenderingType.`2`: %(2)
 
 func `$`*(v: CommentQuestionResultsRenderingType): string =
   result = case v:
     of CommentQuestionResultsRenderingType.`0`: $(0)
     of CommentQuestionResultsRenderingType.`1`: $(1)
     of CommentQuestionResultsRenderingType.`2`: $(2)
-
 proc to*(node: JsonNode, T: typedesc[CommentQuestionResultsRenderingType]): CommentQuestionResultsRenderingType =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum CommentQuestionResultsRenderingType, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum CommentQuestionResultsRenderingType, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return CommentQuestionResultsRenderingType.`0`
-  of $(1):
+  of 1:
     return CommentQuestionResultsRenderingType.`1`
-  of $(2):
+  of 2:
     return CommentQuestionResultsRenderingType.`2`
   else:
-    raise newException(ValueError, "Invalid enum value for CommentQuestionResultsRenderingType: " & strVal)
+    raise newException(ValueError, "Invalid enum value for CommentQuestionResultsRenderingType: " & $intVal)
 

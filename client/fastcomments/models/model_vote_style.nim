@@ -19,23 +19,22 @@ type VoteStyle* {.pure.} = enum
 
 func `%`*(v: VoteStyle): JsonNode =
   result = case v:
-    of VoteStyle.`0`: %0
-    of VoteStyle.`1`: %1
+    of VoteStyle.`0`: %(0)
+    of VoteStyle.`1`: %(1)
 
 func `$`*(v: VoteStyle): string =
   result = case v:
     of VoteStyle.`0`: $(0)
     of VoteStyle.`1`: $(1)
-
 proc to*(node: JsonNode, T: typedesc[VoteStyle]): VoteStyle =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum VoteStyle, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum VoteStyle, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return VoteStyle.`0`
-  of $(1):
+  of 1:
     return VoteStyle.`1`
   else:
-    raise newException(ValueError, "Invalid enum value for VoteStyle: " & strVal)
+    raise newException(ValueError, "Invalid enum value for VoteStyle: " & $intVal)
 

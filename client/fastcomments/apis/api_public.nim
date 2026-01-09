@@ -472,7 +472,8 @@ proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usern
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
-  query_params_list.add(("usernameStartsWith", $usernameStartsWith))
+  if $usernameStartsWith != "":
+    query_params_list.add(("usernameStartsWith", $usernameStartsWith))
   if mentionGroupIds.len > 0:
     query_params_list.add(("mentionGroupIds", $mentionGroupIds.join(",")))
   if $sso != "":

@@ -52,7 +52,7 @@ type UpdatableCommentParams* = object
   isLocked*: Option[bool]
   flagCount*: Option[int]
   displayLabel*: Option[string]
-  meta*: Option[FComment_meta]
+  meta*: Option[Table[string, JsonNode]]
   moderationGroupIds*: Option[seq[string]]
   feedbackIds*: Option[seq[string]]
 

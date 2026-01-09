@@ -20,27 +20,26 @@ type RepeatCommentHandlingAction* {.pure.} = enum
 
 func `%`*(v: RepeatCommentHandlingAction): JsonNode =
   result = case v:
-    of RepeatCommentHandlingAction.`0`: %0
-    of RepeatCommentHandlingAction.`1`: %1
-    of RepeatCommentHandlingAction.`2`: %2
+    of RepeatCommentHandlingAction.`0`: %(0)
+    of RepeatCommentHandlingAction.`1`: %(1)
+    of RepeatCommentHandlingAction.`2`: %(2)
 
 func `$`*(v: RepeatCommentHandlingAction): string =
   result = case v:
     of RepeatCommentHandlingAction.`0`: $(0)
     of RepeatCommentHandlingAction.`1`: $(1)
     of RepeatCommentHandlingAction.`2`: $(2)
-
 proc to*(node: JsonNode, T: typedesc[RepeatCommentHandlingAction]): RepeatCommentHandlingAction =
-  if node.kind != JString:
-    raise newException(ValueError, "Expected string for enum RepeatCommentHandlingAction, got " & $node.kind)
-  let strVal = node.getStr()
-  case strVal:
-  of $(0):
+  if node.kind != JInt:
+    raise newException(ValueError, "Expected integer for enum RepeatCommentHandlingAction, got " & $node.kind)
+  let intVal = node.getInt()
+  case intVal:
+  of 0:
     return RepeatCommentHandlingAction.`0`
-  of $(1):
+  of 1:
     return RepeatCommentHandlingAction.`1`
-  of $(2):
+  of 2:
     return RepeatCommentHandlingAction.`2`
   else:
-    raise newException(ValueError, "Invalid enum value for RepeatCommentHandlingAction: " & strVal)
+    raise newException(ValueError, "Invalid enum value for RepeatCommentHandlingAction: " & $intVal)
 
