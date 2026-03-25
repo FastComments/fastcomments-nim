@@ -33,6 +33,7 @@ type Moderator* = object
   verificationId*: Option[string]
   createdAt*: string
   moderationGroupIds*: Option[seq[string]]
+  isEmailSuppressed*: Option[bool]
 
 
 # Custom JSON deserialization for Moderator with custom field names
@@ -75,6 +76,8 @@ proc to*(node: JsonNode, T: typedesc[Moderator]): Moderator =
       result.createdAt = to(node["createdAt"], string)
     if node.hasKey("moderationGroupIds") and node["moderationGroupIds"].kind != JNull:
       result.moderationGroupIds = some(to(node["moderationGroupIds"], typeof(result.moderationGroupIds.get())))
+    if node.hasKey("isEmailSuppressed") and node["isEmailSuppressed"].kind != JNull:
+      result.isEmailSuppressed = some(to(node["isEmailSuppressed"], typeof(result.isEmailSuppressed.get())))
 
 # Custom JSON serialization for Moderator with custom field names
 proc `%`*(obj: Moderator): JsonNode =
@@ -102,4 +105,6 @@ proc `%`*(obj: Moderator): JsonNode =
   result["createdAt"] = %obj.createdAt
   if obj.moderationGroupIds.isSome():
     result["moderationGroupIds"] = %obj.moderationGroupIds.get()
+  if obj.isEmailSuppressed.isSome():
+    result["isEmailSuppressed"] = %obj.isEmailSuppressed.get()
 

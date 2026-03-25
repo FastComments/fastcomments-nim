@@ -15,6 +15,7 @@ import options
 
 type APIUserSubscription* = object
   ## 
+  notificationFrequency*: Option[float64]
   createdAt*: string
   pageTitle*: Option[string]
   url*: Option[string]

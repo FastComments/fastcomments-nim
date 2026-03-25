@@ -33,6 +33,7 @@ type UserBadge* = object
   displayedOnComments*: bool
   receivedAt*: string
   order*: Option[int]
+  urlId*: Option[string]
 
 
 # Custom JSON deserialization for UserBadge with custom field names
@@ -75,6 +76,8 @@ proc to*(node: JsonNode, T: typedesc[UserBadge]): UserBadge =
       result.receivedAt = to(node["receivedAt"], string)
     if node.hasKey("order") and node["order"].kind != JNull:
       result.order = some(to(node["order"], typeof(result.order.get())))
+    if node.hasKey("urlId") and node["urlId"].kind != JNull:
+      result.urlId = some(to(node["urlId"], typeof(result.urlId.get())))
 
 # Custom JSON serialization for UserBadge with custom field names
 proc `%`*(obj: UserBadge): JsonNode =
@@ -103,4 +106,6 @@ proc `%`*(obj: UserBadge): JsonNode =
   result["receivedAt"] = %obj.receivedAt
   if obj.order.isSome():
     result["order"] = %obj.order.get()
+  if obj.urlId.isSome():
+    result["urlId"] = %obj.urlId.get()
 

@@ -43,4 +43,5 @@ type CommentData* = object
   autoplayDelayMS*: Option[int64]
   feedbackIds*: Option[seq[string]]
   questionValues*: Option[Table[string, RecordStringStringOrNumberValue]] ## Construct a type with a set of properties K of type T
+  tos*: Option[bool]
 

@@ -23,6 +23,7 @@ type UserBadgeProgress* = object
   autoTrustFactor*: Option[float64]
   manualTrustFactor*: Option[float64]
   progress*: Table[string, float64] ## Construct a type with a set of properties K of type T
+  tosAcceptedAt*: Option[string]
 
 
 # Custom JSON deserialization for UserBadgeProgress with custom field names
@@ -45,6 +46,8 @@ proc to*(node: JsonNode, T: typedesc[UserBadgeProgress]): UserBadgeProgress =
       result.manualTrustFactor = some(to(node["manualTrustFactor"], typeof(result.manualTrustFactor.get())))
     if node.hasKey("progress"):
       result.progress = to(node["progress"], Table[string, float64])
+    if node.hasKey("tosAcceptedAt") and node["tosAcceptedAt"].kind != JNull:
+      result.tosAcceptedAt = some(to(node["tosAcceptedAt"], typeof(result.tosAcceptedAt.get())))
 
 # Custom JSON serialization for UserBadgeProgress with custom field names
 proc `%`*(obj: UserBadgeProgress): JsonNode =
@@ -59,4 +62,6 @@ proc `%`*(obj: UserBadgeProgress): JsonNode =
   if obj.manualTrustFactor.isSome():
     result["manualTrustFactor"] = %obj.manualTrustFactor.get()
   result["progress"] = %obj.progress
+  if obj.tosAcceptedAt.isSome():
+    result["tosAcceptedAt"] = %obj.tosAcceptedAt.get()
 

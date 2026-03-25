@@ -16,16 +16,21 @@ import model_api_error
 import model_api_status
 import model_custom_config_parameters
 import model_search_users_response
+import model_search_users_sectioned_response
 import model_user_search_result
+import model_user_search_section_result
 
 # AnyOf type
 type SearchUsers200responseKind* {.pure.} = enum
+  SearchUsersSectionedResponseVariant
   SearchUsersResponseVariant
   APIErrorVariant
 
 type SearchUsers200response* = object
   ## 
   case kind*: SearchUsers200responseKind
+  of SearchUsers200responseKind.SearchUsersSectionedResponseVariant:
+    SearchUsersSectionedResponseValue*: SearchUsersSectionedResponse
   of SearchUsers200responseKind.SearchUsersResponseVariant:
     SearchUsersResponseValue*: SearchUsersResponse
   of SearchUsers200responseKind.APIErrorVariant:
@@ -33,6 +38,11 @@ type SearchUsers200response* = object
 
 proc to*(node: JsonNode, T: typedesc[SearchUsers200response]): SearchUsers200response =
   ## Custom deserializer for anyOf type - tries each variant
+  try:
+    return SearchUsers200response(kind: SearchUsers200responseKind.SearchUsersSectionedResponseVariant, SearchUsersSectionedResponseValue: to(node, SearchUsersSectionedResponse))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as SearchUsersSectionedResponse: ", e.msg
   try:
     return SearchUsers200response(kind: SearchUsers200responseKind.SearchUsersResponseVariant, SearchUsersResponseValue: to(node, SearchUsersResponse))
   except Exception as e:

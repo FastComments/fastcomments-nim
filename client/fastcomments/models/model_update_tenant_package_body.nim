@@ -26,6 +26,7 @@ type UpdateTenantPackageBody* = object
   maxSSOUsers*: Option[float64]
   maxModerators*: Option[float64]
   maxDomains*: Option[float64]
+  maxCustomCollectionSize*: Option[float64]
   hasDebranding*: Option[bool]
   hasWhiteLabeling*: Option[bool]
   forWhoText*: Option[string]

@@ -13,6 +13,7 @@ import marshal
 import options
 
 import model_api_status
+import model_header_account_notification
 import model_notification_and_count
 import model_object
 
@@ -23,6 +24,7 @@ type HeaderState* = object
   userId*: string
   userIdWS*: string
   notificationCounts*: seq[NotificationAndCount]
+  accountNotifications*: seq[HeaderAccountNotification]
 
 
 # Custom JSON deserialization for HeaderState with custom field names
@@ -39,6 +41,13 @@ proc to*(node: JsonNode, T: typedesc[HeaderState]): HeaderState =
       result.userIdWS = to(node["userIdWS"], string)
     if node.hasKey("notificationCounts"):
       result.notificationCounts = to(node["notificationCounts"], seq[NotificationAndCount])
+    if node.hasKey("accountNotifications"):
+      # Array of types with custom JSON - manually iterate and deserialize
+      let arrayNode = node["accountNotifications"]
+      if arrayNode.kind == JArray:
+        result.accountNotifications = @[]
+        for item in arrayNode.items:
+          result.accountNotifications.add(to(item, HeaderAccountNotification))
 
 # Custom JSON serialization for HeaderState with custom field names
 proc `%`*(obj: HeaderState): JsonNode =
@@ -48,4 +57,5 @@ proc `%`*(obj: HeaderState): JsonNode =
   result["userId"] = %obj.userId
   result["userIdWS"] = %obj.userIdWS
   result["notificationCounts"] = %obj.notificationCounts
+  result["accountNotifications"] = %obj.accountNotifications
 

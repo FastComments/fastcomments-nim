@@ -468,7 +468,7 @@ proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, afterId: 
   constructResult[ResetUserNotifications_200_response](response)
 
 
-proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usernameStartsWith: string, mentionGroupIds: seq[string], sso: string): (Option[SearchUsers_200_response], Response) =
+proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usernameStartsWith: string, mentionGroupIds: seq[string], sso: string, searchSection: string): (Option[SearchUsers_200_response], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -478,6 +478,8 @@ proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usern
     query_params_list.add(("mentionGroupIds", $mentionGroupIds.join(",")))
   if $sso != "":
     query_params_list.add(("sso", $sso))
+  if $searchSection != "":
+    query_params_list.add(("searchSection", $searchSection))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/user-search/{tenantId}" & "?" & url_encoded_query_params)

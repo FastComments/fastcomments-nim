@@ -15,6 +15,7 @@ import options
 
 type CreateAPIUserSubscriptionData* = object
   ## 
+  notificationFrequency*: Option[float64]
   pageTitle*: Option[string]
   url*: Option[string]
   urlId*: string

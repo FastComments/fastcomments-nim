@@ -12,10 +12,10 @@ import tables
 import marshal
 import options
 
+import model_api_comment_base_meta
 import model_comment_user_badge_info
 import model_comment_user_hash_tag_info
 import model_comment_user_mention_info
-import model_f_comment_meta
 
 type APIComment* = object
   ## 

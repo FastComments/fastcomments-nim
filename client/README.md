@@ -34,6 +34,7 @@ api_default | aggregate | **POST** /api/v1/aggregate |
 api_default | aggregateQuestionResults | **GET** /api/v1/question-results-aggregation | 
 api_default | blockUserFromComment | **POST** /api/v1/comments/{id}/block | 
 api_default | bulkAggregateQuestionResults | **POST** /api/v1/question-results-aggregation/bulk | 
+api_default | changeTicketState | **PATCH** /api/v1/tickets/{id}/state | 
 api_default | combineCommentsWithQuestionResults | **GET** /api/v1/question-results-aggregation/combine/comments | 
 api_default | createEmailTemplate | **POST** /api/v1/email-templates | 
 api_default | createFeedPost | **POST** /api/v1/feed-posts | 
@@ -44,6 +45,7 @@ api_default | createSubscription | **POST** /api/v1/subscriptions |
 api_default | createTenant | **POST** /api/v1/tenants | 
 api_default | createTenantPackage | **POST** /api/v1/tenant-packages | 
 api_default | createTenantUser | **POST** /api/v1/tenant-users | 
+api_default | createTicket | **POST** /api/v1/tickets | 
 api_default | createUserBadge | **POST** /api/v1/user-badges | 
 api_default | createVote | **POST** /api/v1/votes | 
 api_default | deleteComment | **DELETE** /api/v1/comments/{id} | 
@@ -100,6 +102,8 @@ api_default | getTenantPackages | **GET** /api/v1/tenant-packages |
 api_default | getTenantUser | **GET** /api/v1/tenant-users/{id} | 
 api_default | getTenantUsers | **GET** /api/v1/tenant-users | 
 api_default | getTenants | **GET** /api/v1/tenants | 
+api_default | getTicket | **GET** /api/v1/tickets/{id} | 
+api_default | getTickets | **GET** /api/v1/tickets | 
 api_default | getUser | **GET** /api/v1/users/{id} | 
 api_default | getUserBadge | **GET** /api/v1/user-badges/{id} | 
 api_default | getUserBadgeProgressById | **GET** /api/v1/user-badge-progress/{id} | 
@@ -130,6 +134,7 @@ api_default | updateModerator | **PATCH** /api/v1/moderators/{id} |
 api_default | updateNotification | **PATCH** /api/v1/notifications/{id} | 
 api_default | updateQuestionConfig | **PATCH** /api/v1/question-configs/{id} | 
 api_default | updateQuestionResult | **PATCH** /api/v1/question-results/{id} | 
+api_default | updateSubscription | **PATCH** /api/v1/subscriptions/{id} | 
 api_default | updateTenant | **PATCH** /api/v1/tenants/{id} | 
 api_default | updateTenantPackage | **PATCH** /api/v1/tenant-packages/{id} | 
 api_default | updateTenantUser | **PATCH** /api/v1/tenant-users/{id} | 

@@ -33,6 +33,8 @@ import ../models/model_block_from_comment_public200response
 import ../models/model_bulk_aggregate_question_results_request
 import ../models/model_bulk_aggregate_question_results200response
 import ../models/model_bulk_create_hash_tags_body
+import ../models/model_change_ticket_state_body
+import ../models/model_change_ticket_state200response
 import ../models/model_combine_comments_with_question_results200response
 import ../models/model_create_api_page_data
 import ../models/model_create_apisso_user_data
@@ -56,6 +58,8 @@ import ../models/model_create_tenant_package200response
 import ../models/model_create_tenant_user_body
 import ../models/model_create_tenant_user200response
 import ../models/model_create_tenant200response
+import ../models/model_create_ticket_body
+import ../models/model_create_ticket200response
 import ../models/model_create_user_badge_params
 import ../models/model_create_user_badge200response
 import ../models/model_delete_comment_vote200response
@@ -103,6 +107,8 @@ import ../models/model_get_tenant_user200response
 import ../models/model_get_tenant_users200response
 import ../models/model_get_tenant200response
 import ../models/model_get_tenants200response
+import ../models/model_get_ticket200response
+import ../models/model_get_tickets200response
 import ../models/model_get_user_badge_progress_by_id200response
 import ../models/model_get_user_badge_progress_list200response
 import ../models/model_get_user_badge200response
@@ -127,6 +133,7 @@ import ../models/model_un_block_from_comment_params
 import ../models/model_updatable_comment_params
 import ../models/model_update_api_page_data
 import ../models/model_update_apisso_user_data
+import ../models/model_update_api_user_subscription_data
 import ../models/model_update_domain_config_params
 import ../models/model_update_email_template_body
 import ../models/model_update_hash_tag_body
@@ -134,6 +141,7 @@ import ../models/model_update_moderator_body
 import ../models/model_update_notification_body
 import ../models/model_update_question_config_body
 import ../models/model_update_question_result_body
+import ../models/model_update_subscription_api_response
 import ../models/model_update_tenant_body
 import ../models/model_update_tenant_package_body
 import ../models/model_update_tenant_user_body
@@ -278,6 +286,18 @@ proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bul
   constructResult[BulkAggregateQuestionResults_200_response](response)
 
 
+proc changeTicketState*(httpClient: HttpClient, tenantId: string, userId: string, id: string, changeTicketStateBody: ChangeTicketStateBody): (Option[ChangeTicketState_200_response], Response) =
+  ## 
+  httpClient.headers["Content-Type"] = "application/json"
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("userId", $userId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
+
+  let response = httpClient.patch(basepath & fmt"/api/v1/tickets/{id}/state" & "?" & url_encoded_query_params, $(%changeTicketStateBody))
+  constructResult[ChangeTicketState_200_response](response)
+
+
 proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, startDate: string, forceRecalculate: bool, minValue: float64, maxValue: float64, limit: float64): (Option[CombineCommentsWithQuestionResults_200_response], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
@@ -409,6 +429,18 @@ proc createTenantUser*(httpClient: HttpClient, tenantId: string, createTenantUse
 
   let response = httpClient.post(basepath & "/api/v1/tenant-users" & "?" & url_encoded_query_params, $(%createTenantUserBody))
   constructResult[CreateTenantUser_200_response](response)
+
+
+proc createTicket*(httpClient: HttpClient, tenantId: string, userId: string, createTicketBody: CreateTicketBody): (Option[CreateTicket_200_response], Response) =
+  ## 
+  httpClient.headers["Content-Type"] = "application/json"
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  query_params_list.add(("userId", $userId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
+
+  let response = httpClient.post(basepath & "/api/v1/tickets" & "?" & url_encoded_query_params, $(%createTicketBody))
+  constructResult[CreateTicket_200_response](response)
 
 
 proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeParams: CreateUserBadgeParams): (Option[CreateUserBadge_200_response], Response) =
@@ -1138,6 +1170,36 @@ proc getTenants*(httpClient: HttpClient, tenantId: string, meta: string, skip: f
   constructResult[GetTenants_200_response](response)
 
 
+proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: string): (Option[GetTicket_200_response], Response) =
+  ## 
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
+
+  let response = httpClient.get(basepath & fmt"/api/v1/tickets/{id}" & "?" & url_encoded_query_params)
+  constructResult[GetTicket_200_response](response)
+
+
+proc getTickets*(httpClient: HttpClient, tenantId: string, userId: string, state: float64, skip: float64, limit: float64): (Option[GetTickets_200_response], Response) =
+  ## 
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  if $state != "":
+    query_params_list.add(("state", $state))
+  if $skip != "":
+    query_params_list.add(("skip", $skip))
+  if $limit != "":
+    query_params_list.add(("limit", $limit))
+  let url_encoded_query_params = encodeQuery(query_params_list)
+
+  let response = httpClient.get(basepath & "/api/v1/tickets" & "?" & url_encoded_query_params)
+  constructResult[GetTickets_200_response](response)
+
+
 proc getUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUser_200_response], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
@@ -1523,6 +1585,19 @@ proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string,
 
   let response = httpClient.patch(basepath & fmt"/api/v1/question-results/{id}" & "?" & url_encoded_query_params, $(%updateQuestionResultBody))
   constructResult[FlagCommentPublic_200_response](response)
+
+
+proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, updateAPIUserSubscriptionData: UpdateAPIUserSubscriptionData, userId: string): (Option[UpdateSubscriptionAPIResponse], Response) =
+  ## 
+  httpClient.headers["Content-Type"] = "application/json"
+  var query_params_list: seq[(string, string)] = @[]
+  query_params_list.add(("tenantId", $tenantId))
+  if $userId != "":
+    query_params_list.add(("userId", $userId))
+  let url_encoded_query_params = encodeQuery(query_params_list)
+
+  let response = httpClient.patch(basepath & fmt"/api/v1/subscriptions/{id}" & "?" & url_encoded_query_params, $(%updateAPIUserSubscriptionData))
+  constructResult[UpdateSubscriptionAPIResponse](response)
 
 
 proc updateTenant*(httpClient: HttpClient, tenantId: string, id: string, updateTenantBody: UpdateTenantBody): (Option[FlagCommentPublic_200_response], Response) =

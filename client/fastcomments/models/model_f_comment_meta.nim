@@ -16,6 +16,7 @@ import model_any_type
 
 type FCommentMeta* = object
   ## 
+  wpId*: Option[string]
   wpUserId*: Option[string]
   wpPostId*: Option[string]
 

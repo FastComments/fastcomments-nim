@@ -26,6 +26,7 @@ type ReplaceTenantPackageBody* = object
   maxSSOUsers*: float64
   maxModerators*: float64
   maxDomains*: float64
+  maxCustomCollectionSize*: Option[float64]
   hasDebranding*: bool
   forWhoText*: string
   featureTaglines*: seq[string]

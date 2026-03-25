@@ -23,6 +23,8 @@ type User* = object
   websiteUrl*: Option[string]
   email*: Option[string]
   pendingEmail*: Option[string]
+  backupEmail*: Option[string]
+  pendingBackupEmail*: Option[string]
   signUpDate*: int64
   createdFromUrlId*: Option[string]
   createdFromTenantId*: Option[string]
@@ -45,11 +47,16 @@ type User* = object
   isManageDataAdmin*: Option[bool]
   isCommentModeratorAdmin*: Option[bool]
   isAPIAdmin*: Option[bool]
+  isSiteAdmin*: Option[bool]
   moderatorIds*: Option[seq[string]]
   isImpersonator*: Option[bool]
   isCouponManager*: Option[bool]
   locale*: Option[string]
   digestEmailFrequency*: Option[DigestEmailFrequency]
+  notificationFrequency*: Option[float64]
+  adminNotificationFrequency*: Option[float64]
+  lastTenantNotificationSentDate*: Option[string]
+  lastReplyNotificationSentDate*: Option[string]
   ignoredAddToMySiteMessages*: Option[bool]
   lastLoginDate*: Option[string]
   displayLabel*: Option[string]
@@ -67,6 +74,7 @@ type User* = object
   countryFlag*: Option[string]
   socialLinks*: Option[seq[string]]
   hasTwoFactor*: Option[bool]
+  isEmailSuppressed*: Option[bool]
 
 
 # Custom JSON deserialization for User with custom field names
@@ -87,6 +95,10 @@ proc to*(node: JsonNode, T: typedesc[User]): User =
       result.email = some(to(node["email"], typeof(result.email.get())))
     if node.hasKey("pendingEmail") and node["pendingEmail"].kind != JNull:
       result.pendingEmail = some(to(node["pendingEmail"], typeof(result.pendingEmail.get())))
+    if node.hasKey("backupEmail") and node["backupEmail"].kind != JNull:
+      result.backupEmail = some(to(node["backupEmail"], typeof(result.backupEmail.get())))
+    if node.hasKey("pendingBackupEmail") and node["pendingBackupEmail"].kind != JNull:
+      result.pendingBackupEmail = some(to(node["pendingBackupEmail"], typeof(result.pendingBackupEmail.get())))
     if node.hasKey("signUpDate"):
       result.signUpDate = to(node["signUpDate"], int64)
     if node.hasKey("createdFromUrlId") and node["createdFromUrlId"].kind != JNull:
@@ -131,6 +143,8 @@ proc to*(node: JsonNode, T: typedesc[User]): User =
       result.isCommentModeratorAdmin = some(to(node["isCommentModeratorAdmin"], typeof(result.isCommentModeratorAdmin.get())))
     if node.hasKey("isAPIAdmin") and node["isAPIAdmin"].kind != JNull:
       result.isAPIAdmin = some(to(node["isAPIAdmin"], typeof(result.isAPIAdmin.get())))
+    if node.hasKey("isSiteAdmin") and node["isSiteAdmin"].kind != JNull:
+      result.isSiteAdmin = some(to(node["isSiteAdmin"], typeof(result.isSiteAdmin.get())))
     if node.hasKey("moderatorIds") and node["moderatorIds"].kind != JNull:
       result.moderatorIds = some(to(node["moderatorIds"], typeof(result.moderatorIds.get())))
     if node.hasKey("isImpersonator") and node["isImpersonator"].kind != JNull:
@@ -141,6 +155,14 @@ proc to*(node: JsonNode, T: typedesc[User]): User =
       result.locale = some(to(node["locale"], typeof(result.locale.get())))
     if node.hasKey("digestEmailFrequency") and node["digestEmailFrequency"].kind != JNull:
       result.digestEmailFrequency = some(to(node["digestEmailFrequency"], typeof(result.digestEmailFrequency.get())))
+    if node.hasKey("notificationFrequency") and node["notificationFrequency"].kind != JNull:
+      result.notificationFrequency = some(to(node["notificationFrequency"], typeof(result.notificationFrequency.get())))
+    if node.hasKey("adminNotificationFrequency") and node["adminNotificationFrequency"].kind != JNull:
+      result.adminNotificationFrequency = some(to(node["adminNotificationFrequency"], typeof(result.adminNotificationFrequency.get())))
+    if node.hasKey("lastTenantNotificationSentDate") and node["lastTenantNotificationSentDate"].kind != JNull:
+      result.lastTenantNotificationSentDate = some(to(node["lastTenantNotificationSentDate"], typeof(result.lastTenantNotificationSentDate.get())))
+    if node.hasKey("lastReplyNotificationSentDate") and node["lastReplyNotificationSentDate"].kind != JNull:
+      result.lastReplyNotificationSentDate = some(to(node["lastReplyNotificationSentDate"], typeof(result.lastReplyNotificationSentDate.get())))
     if node.hasKey("ignoredAddToMySiteMessages") and node["ignoredAddToMySiteMessages"].kind != JNull:
       result.ignoredAddToMySiteMessages = some(to(node["ignoredAddToMySiteMessages"], typeof(result.ignoredAddToMySiteMessages.get())))
     if node.hasKey("lastLoginDate") and node["lastLoginDate"].kind != JNull:
@@ -175,6 +197,8 @@ proc to*(node: JsonNode, T: typedesc[User]): User =
       result.socialLinks = some(to(node["socialLinks"], typeof(result.socialLinks.get())))
     if node.hasKey("hasTwoFactor") and node["hasTwoFactor"].kind != JNull:
       result.hasTwoFactor = some(to(node["hasTwoFactor"], typeof(result.hasTwoFactor.get())))
+    if node.hasKey("isEmailSuppressed") and node["isEmailSuppressed"].kind != JNull:
+      result.isEmailSuppressed = some(to(node["isEmailSuppressed"], typeof(result.isEmailSuppressed.get())))
 
 # Custom JSON serialization for User with custom field names
 proc `%`*(obj: User): JsonNode =
@@ -191,6 +215,10 @@ proc `%`*(obj: User): JsonNode =
     result["email"] = %obj.email.get()
   if obj.pendingEmail.isSome():
     result["pendingEmail"] = %obj.pendingEmail.get()
+  if obj.backupEmail.isSome():
+    result["backupEmail"] = %obj.backupEmail.get()
+  if obj.pendingBackupEmail.isSome():
+    result["pendingBackupEmail"] = %obj.pendingBackupEmail.get()
   result["signUpDate"] = %obj.signUpDate
   if obj.createdFromUrlId.isSome():
     result["createdFromUrlId"] = %obj.createdFromUrlId.get()
@@ -230,6 +258,8 @@ proc `%`*(obj: User): JsonNode =
     result["isCommentModeratorAdmin"] = %obj.isCommentModeratorAdmin.get()
   if obj.isAPIAdmin.isSome():
     result["isAPIAdmin"] = %obj.isAPIAdmin.get()
+  if obj.isSiteAdmin.isSome():
+    result["isSiteAdmin"] = %obj.isSiteAdmin.get()
   if obj.moderatorIds.isSome():
     result["moderatorIds"] = %obj.moderatorIds.get()
   if obj.isImpersonator.isSome():
@@ -240,6 +270,14 @@ proc `%`*(obj: User): JsonNode =
     result["locale"] = %obj.locale.get()
   if obj.digestEmailFrequency.isSome():
     result["digestEmailFrequency"] = %obj.digestEmailFrequency.get()
+  if obj.notificationFrequency.isSome():
+    result["notificationFrequency"] = %obj.notificationFrequency.get()
+  if obj.adminNotificationFrequency.isSome():
+    result["adminNotificationFrequency"] = %obj.adminNotificationFrequency.get()
+  if obj.lastTenantNotificationSentDate.isSome():
+    result["lastTenantNotificationSentDate"] = %obj.lastTenantNotificationSentDate.get()
+  if obj.lastReplyNotificationSentDate.isSome():
+    result["lastReplyNotificationSentDate"] = %obj.lastReplyNotificationSentDate.get()
   if obj.ignoredAddToMySiteMessages.isSome():
     result["ignoredAddToMySiteMessages"] = %obj.ignoredAddToMySiteMessages.get()
   if obj.lastLoginDate.isSome():
@@ -274,4 +312,6 @@ proc `%`*(obj: User): JsonNode =
     result["socialLinks"] = %obj.socialLinks.get()
   if obj.hasTwoFactor.isSome():
     result["hasTwoFactor"] = %obj.hasTwoFactor.get()
+  if obj.isEmailSuppressed.isSome():
+    result["isEmailSuppressed"] = %obj.isEmailSuppressed.get()
 

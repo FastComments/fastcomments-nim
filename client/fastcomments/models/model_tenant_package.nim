@@ -34,6 +34,7 @@ type TenantPackage* = object
   maxDomains*: float64
   maxWhiteLabeledTenants*: float64
   maxMonthlyEventLogRequests*: float64
+  maxCustomCollectionSize*: float64
   hasWhiteLabeling*: bool
   hasDebranding*: bool
   hasLLMSpamDetection*: bool
@@ -42,6 +43,7 @@ type TenantPackage* = object
   hasAuditing*: bool
   hasFlexPricing*: bool
   enableSAML*: Option[bool]
+  enableCanvasLTI*: Option[bool]
   flexPageLoadCostCents*: Option[float64]
   flexPageLoadUnit*: Option[float64]
   flexCommentCostCents*: Option[float64]
@@ -111,6 +113,8 @@ proc to*(node: JsonNode, T: typedesc[TenantPackage]): TenantPackage =
       result.maxWhiteLabeledTenants = to(node["maxWhiteLabeledTenants"], float64)
     if node.hasKey("maxMonthlyEventLogRequests"):
       result.maxMonthlyEventLogRequests = to(node["maxMonthlyEventLogRequests"], float64)
+    if node.hasKey("maxCustomCollectionSize"):
+      result.maxCustomCollectionSize = to(node["maxCustomCollectionSize"], float64)
     if node.hasKey("hasWhiteLabeling"):
       result.hasWhiteLabeling = to(node["hasWhiteLabeling"], bool)
     if node.hasKey("hasDebranding"):
@@ -127,6 +131,8 @@ proc to*(node: JsonNode, T: typedesc[TenantPackage]): TenantPackage =
       result.hasFlexPricing = to(node["hasFlexPricing"], bool)
     if node.hasKey("enableSAML") and node["enableSAML"].kind != JNull:
       result.enableSAML = some(to(node["enableSAML"], typeof(result.enableSAML.get())))
+    if node.hasKey("enableCanvasLTI") and node["enableCanvasLTI"].kind != JNull:
+      result.enableCanvasLTI = some(to(node["enableCanvasLTI"], typeof(result.enableCanvasLTI.get())))
     if node.hasKey("flexPageLoadCostCents") and node["flexPageLoadCostCents"].kind != JNull:
       result.flexPageLoadCostCents = some(to(node["flexPageLoadCostCents"], typeof(result.flexPageLoadCostCents.get())))
     if node.hasKey("flexPageLoadUnit") and node["flexPageLoadUnit"].kind != JNull:
@@ -204,6 +210,7 @@ proc `%`*(obj: TenantPackage): JsonNode =
   result["maxDomains"] = %obj.maxDomains
   result["maxWhiteLabeledTenants"] = %obj.maxWhiteLabeledTenants
   result["maxMonthlyEventLogRequests"] = %obj.maxMonthlyEventLogRequests
+  result["maxCustomCollectionSize"] = %obj.maxCustomCollectionSize
   result["hasWhiteLabeling"] = %obj.hasWhiteLabeling
   result["hasDebranding"] = %obj.hasDebranding
   result["hasLLMSpamDetection"] = %obj.hasLLMSpamDetection
@@ -213,6 +220,8 @@ proc `%`*(obj: TenantPackage): JsonNode =
   result["hasFlexPricing"] = %obj.hasFlexPricing
   if obj.enableSAML.isSome():
     result["enableSAML"] = %obj.enableSAML.get()
+  if obj.enableCanvasLTI.isSome():
+    result["enableCanvasLTI"] = %obj.enableCanvasLTI.get()
   if obj.flexPageLoadCostCents.isSome():
     result["flexPageLoadCostCents"] = %obj.flexPageLoadCostCents.get()
   if obj.flexPageLoadUnit.isSome():

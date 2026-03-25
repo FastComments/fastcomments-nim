@@ -26,6 +26,7 @@ type UserSessionInfo* = object
   groupIds*: Option[seq[string]]
   hasBlockedUsers*: Option[bool]
   isAnonSession*: Option[bool]
+  needsTOS*: Option[bool]
   sessionId*: Option[string]
   username*: Option[string]
   websiteUrl*: Option[string]

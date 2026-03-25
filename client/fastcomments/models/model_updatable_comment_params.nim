@@ -12,7 +12,7 @@ import tables
 import marshal
 import options
 
-import model_f_comment_meta
+import model_api_comment_base_meta
 
 type UpdatableCommentParams* = object
   ## 

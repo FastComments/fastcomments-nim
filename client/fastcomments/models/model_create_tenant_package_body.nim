@@ -31,6 +31,7 @@ type CreateTenantPackageBody* = object
   maxDomains*: float64
   maxWhiteLabeledTenants*: Option[float64]
   maxMonthlyEventLogRequests*: Option[float64]
+  maxCustomCollectionSize*: Option[float64]
   hasWhiteLabeling*: Option[bool]
   hasDebranding*: bool
   hasLLMSpamDetection*: Option[bool]

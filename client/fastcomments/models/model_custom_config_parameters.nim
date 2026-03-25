@@ -19,12 +19,14 @@ import model_comment_thread_deletion_mode
 import model_commenter_name_formats
 import model_gif_rating
 import model_image_content_profanity_level
+import model_mention_auto_complete_mode
 import model_question_rendering_type
 import model_question_sub_question_visibility
 import model_question_when_save
 import model_sort_directions
 import model_spam_rule
 import model_sso_security_level
+import model_tos_config
 import model_vote_style
 
 type CustomConfigParameters* = object
@@ -53,6 +55,8 @@ type CustomConfigParameters* = object
   disableEmailInputs*: Option[bool]
   disableLiveCommenting*: Option[bool]
   disableNotificationBell*: Option[bool]
+  disableProfileComments*: Option[bool]
+  disableProfileDirectMessages*: Option[bool]
   disableProfiles*: Option[bool]
   disableSuccessMessage*: Option[bool]
   disableToolbar*: Option[bool]
@@ -77,6 +81,7 @@ type CustomConfigParameters* = object
   maxCommentCharacterLength*: Option[int]
   maxCommentCreatedCountPUPM*: Option[int]
   noCustomConfig*: Option[bool]
+  mentionAutoCompleteMode*: Option[MentionAutoCompleteMode]
   noImageUploads*: Option[bool]
   noStyles*: Option[bool]
   pageSize*: Option[int]
@@ -97,9 +102,16 @@ type CustomConfigParameters* = object
   voteStyle*: Option[VoteStyle]
   widgetQuestionId*: Option[string]
   widgetQuestionResultsStyle*: Option[CommentQuestionResultsRenderingType]
+  widgetQuestionShowBreakdown*: Option[bool]
   widgetQuestionStyle*: Option[QuestionRenderingType]
   widgetQuestionWhenToSave*: Option[QuestionWhenSave]
   widgetQuestionsRequired*: Option[CommentQuestionsRequired]
   widgetSubQuestionVisibility*: Option[QuestionSubQuestionVisibility]
   wrap*: Option[bool]
+  ticketBaseUrl*: Option[string]
+  ticketKBSearchEndpoint*: Option[string]
+  ticketFileUploadsEnabled*: Option[bool]
+  ticketMaxFileSize*: Option[int]
+  ticketAutoAssignUserIds*: Option[seq[string]]
+  tos*: Option[TOSConfig]
 
