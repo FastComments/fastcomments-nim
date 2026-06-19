@@ -27,7 +27,7 @@ type CreateQuestionConfigBody* = object
   defaultValue*: Option[float64]
   labelNegative*: Option[string]
   labelPositive*: Option[string]
-  customOptions*: Option[seq[QuestionConfig_customOptions_inner]]
+  customOptions*: Option[seq[QuestionConfigCustomOptionsInner]]
   subQuestionIds*: Option[seq[string]]
   alwaysShowSubQuestions*: Option[bool]
   reportingOrder*: float64

@@ -18,5 +18,5 @@ import model_banned_user_match_type
 type BannedUserMatch* = object
   ## 
   matchedOn*: BannedUserMatchType
-  matchedOnValue*: Option[BannedUserMatch_matchedOnValue]
+  matchedOnValue*: Option[BannedUserMatchMatchedOnValue]
 

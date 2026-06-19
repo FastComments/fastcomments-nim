@@ -17,5 +17,5 @@ import model_bulk_create_hash_tags_body_tags_inner
 type BulkCreateHashTagsBody* = object
   ## 
   tenantId*: Option[string]
-  tags*: seq[BulkCreateHashTagsBody_tags_inner]
+  tags*: seq[BulkCreateHashTagsBodyTagsInner]
 

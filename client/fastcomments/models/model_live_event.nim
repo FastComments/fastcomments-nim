@@ -33,7 +33,7 @@ type LiveEvent* = object
   vote*: Option[PubSubVote]
   comment*: Option[PubSubComment]
   feedPost*: Option[FeedPost]
-  extraInfo*: Option[LiveEvent_extraInfo]
+  extraInfo*: Option[LiveEventExtraInfo]
   config*: Option[JsonNode]
   isClosed*: Option[bool]
   uj*: Option[seq[string]]

@@ -18,5 +18,5 @@ import model_bulk_create_hash_tags_response_results_inner
 type BulkCreateHashTagsResponse* = object
   ## 
   status*: APIStatus
-  results*: seq[BulkCreateHashTagsResponse_results_inner]
+  results*: seq[BulkCreateHashTagsResponseResultsInner]
 

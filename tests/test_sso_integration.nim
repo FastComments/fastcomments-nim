@@ -6,9 +6,8 @@ import ../client/fastcomments/apis/api_public
 import ../client/fastcomments/apis/api_default
 import ../client/fastcomments/models/model_comment_data
 import ../client/fastcomments/models/model_api_status
-import ../client/fastcomments/models/model_record_string_string_or_number_value
-import ../client/fastcomments/models/model_get_comments_public200response
-import ../client/fastcomments/models/model_get_comments200response
+import ../client/fastcomments/models/model_get_comments_response_with_presence_public_comment
+import ../client/fastcomments/models/model_api_get_comments_response
 
 proc getAPIKey(): string =
   let apiKey = getEnv("FASTCOMMENTS_API_KEY")
@@ -73,9 +72,7 @@ suite "SSO Integration Tests":
     check response.isSome
     if response.isSome:
       let resp = response.get()
-      check resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant
-      if resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
-        check resp.GetCommentsResponseWithPresence_PublicComment_Value.status == "success"
+      check resp.status == "success"
 
   test "PublicAPI with secure SSO":
     let apiKey = getAPIKey()
@@ -100,7 +97,6 @@ suite "SSO Integration Tests":
     commentData.commenterName = user.username
     commentData.date = some(timestamp)
     commentData.meta = some(newJObject())
-    commentData.questionValues = some(initTable[string, RecordStringStringOrNumberValue]())
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -152,9 +148,7 @@ suite "SSO Integration Tests":
     check getResponse.isSome
     if getResponse.isSome:
       let resp = getResponse.get()
-      check resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant
-      if resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
-        check resp.GetCommentsResponseWithPresence_PublicComment_Value.comments.len >= 1
+      check resp.comments.len >= 1
 
   test "DefaultAPI with API key - Fetch Comments":
     let apiKey = getAPIKey()
@@ -182,7 +176,6 @@ suite "SSO Integration Tests":
     commentData.commenterName = user.username
     commentData.date = some(timestamp)
     commentData.meta = some(newJObject())
-    commentData.questionValues = some(initTable[string, RecordStringStringOrNumberValue]())
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -220,7 +213,9 @@ suite "SSO Integration Tests":
       contextUserId = "",
       hashTag = "",
       parentId = "",
-      direction = SortDirections.NF
+      direction = SortDirections.NF,
+      fromDate = 0,
+      toDate = 0
     )
 
     check getHttpResponse.code == Http200
@@ -228,11 +223,9 @@ suite "SSO Integration Tests":
 
     if getResponse.isSome:
       let resp = getResponse.get()
-      check resp.kind == GetComments200responseKind.APIGetCommentsResponseVariant
-      if resp.kind == GetComments200responseKind.APIGetCommentsResponseVariant:
-        check resp.APIGetCommentsResponseValue.status == APIStatus.SUCCESS
-        echo "✓ Retrieved ", resp.APIGetCommentsResponseValue.comments.len, " comments with DefaultAPI"
-        echo "✓ Successfully verified DefaultAPI authentication with API key works!"
+      check resp.status == APIStatus.SUCCESS
+      echo "✓ Retrieved ", resp.comments.len, " comments with DefaultAPI"
+      echo "✓ Successfully verified DefaultAPI authentication with API key works!"
 
     authClient.close()
 
@@ -262,7 +255,6 @@ suite "SSO Integration Tests":
     commentData.commenterName = user.username
     commentData.date = some(timestamp)
     commentData.meta = some(newJObject())
-    commentData.questionValues = some(initTable[string, RecordStringStringOrNumberValue]())
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
@@ -318,10 +310,9 @@ suite "SSO Integration Tests":
 
     if getResponse.isSome:
       let resp = getResponse.get()
-      check resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant
 
-      if resp.kind == GetCommentsPublic200responseKind.GetCommentsResponseWithPresencePublicCommentVariant:
-        let successResp = resp.GetCommentsResponseWithPresence_PublicComment_Value
+      block:
+        let successResp = resp
 
         # Verify no error code
         check successResp.code.isNone or successResp.code.get() == ""

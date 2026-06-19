@@ -17,6 +17,6 @@ import model_get_user_internal_profile_response_profile
 
 type GetUserInternalProfileResponse* = object
   ## 
-  profile*: GetUserInternalProfileResponse_profile
+  profile*: GetUserInternalProfileResponseProfile
   status*: APIStatus
 

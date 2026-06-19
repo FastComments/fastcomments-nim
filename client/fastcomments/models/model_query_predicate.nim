@@ -24,7 +24,7 @@ type Operator* {.pure.} = enum
 type QueryPredicate* = object
   ## 
   key*: string
-  value*: QueryPredicate_value
+  value*: QueryPredicateValue
   operator*: Operator
 
 func `%`*(v: Operator): JsonNode =

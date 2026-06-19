@@ -22,3 +22,4 @@ tests/test_sso_integration
 # OpenAPI Generator metadata
 .openapi-generator/
 .openapi-generator-ignore
+openapi-generator-cli.jar

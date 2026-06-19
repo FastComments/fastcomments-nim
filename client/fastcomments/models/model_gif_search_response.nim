@@ -17,6 +17,6 @@ import model_gif_search_response_images_inner_inner
 
 type GifSearchResponse* = object
   ## 
-  images*: seq[seq[GifSearchResponse_images_inner_inner]]
+  images*: seq[seq[GifSearchResponseImagesInnerInner]]
   status*: APIStatus
 

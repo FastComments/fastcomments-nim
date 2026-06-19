@@ -22,5 +22,5 @@ type AggregationRequest* = object
   resourceName*: string
   groupBy*: Option[seq[string]]
   operations*: seq[AggregationOperation]
-  sort*: Option[AggregationRequest_sort]
+  sort*: Option[AggregationRequestSort]
 

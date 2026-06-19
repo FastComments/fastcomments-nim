@@ -42,7 +42,7 @@ type CreateCommentParams* = object
   fromOfflineRestore*: Option[bool]
   autoplayDelayMS*: Option[int64]
   feedbackIds*: Option[seq[string]]
-  questionValues*: Option[Table[string, GifSearchResponse_images_inner_inner]] ## Construct a type with a set of properties K of type T
+  questionValues*: Option[Table[string, GifSearchResponseImagesInnerInner]] ## Construct a type with a set of properties K of type T
   tos*: Option[bool]
   botId*: Option[string]
   approved*: Option[bool]

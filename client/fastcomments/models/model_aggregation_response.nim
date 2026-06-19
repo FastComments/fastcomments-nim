@@ -20,5 +20,5 @@ type AggregationResponse* = object
   ## The API response returns the aggregated data along with simple stats
   status*: APIStatus
   data*: seq[AggregationItem]
-  stats*: Option[AggregationResponse_stats]
+  stats*: Option[AggregationResponseStats]
 
