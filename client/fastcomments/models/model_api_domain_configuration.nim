@@ -32,3 +32,70 @@ type APIDomainConfiguration* = object
   footerUnsubscribeURL*: Option[string]
   disableUnsubscribeLinks*: Option[bool]
 
+
+# Custom JSON deserialization for APIDomainConfiguration with custom field names
+proc to*(node: JsonNode, T: typedesc[APIDomainConfiguration]): APIDomainConfiguration =
+  result = APIDomainConfiguration()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("domain"):
+      result.domain = to(node["domain"], string)
+    if node.hasKey("emailFromName") and node["emailFromName"].kind != JNull:
+      result.emailFromName = some(to(node["emailFromName"], typeof(result.emailFromName.get())))
+    if node.hasKey("emailFromEmail") and node["emailFromEmail"].kind != JNull:
+      result.emailFromEmail = some(to(node["emailFromEmail"], typeof(result.emailFromEmail.get())))
+    if node.hasKey("emailHeaders") and node["emailHeaders"].kind != JNull:
+      result.emailHeaders = some(to(node["emailHeaders"], typeof(result.emailHeaders.get())))
+    if node.hasKey("wpSyncToken") and node["wpSyncToken"].kind != JNull:
+      result.wpSyncToken = some(to(node["wpSyncToken"], typeof(result.wpSyncToken.get())))
+    if node.hasKey("wpSynced") and node["wpSynced"].kind != JNull:
+      result.wpSynced = some(to(node["wpSynced"], typeof(result.wpSynced.get())))
+    if node.hasKey("wpURL") and node["wpURL"].kind != JNull:
+      result.wpURL = some(to(node["wpURL"], typeof(result.wpURL.get())))
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("autoAddedDate") and node["autoAddedDate"].kind != JNull:
+      result.autoAddedDate = some(to(node["autoAddedDate"], typeof(result.autoAddedDate.get())))
+    if node.hasKey("siteType") and node["siteType"].kind != JNull:
+      result.siteType = some(to(node["siteType"], typeof(result.siteType.get())))
+    if node.hasKey("logoSrc") and node["logoSrc"].kind != JNull:
+      result.logoSrc = some(to(node["logoSrc"], typeof(result.logoSrc.get())))
+    if node.hasKey("logoSrc100px") and node["logoSrc100px"].kind != JNull:
+      result.logoSrc100px = some(to(node["logoSrc100px"], typeof(result.logoSrc100px.get())))
+    if node.hasKey("footerUnsubscribeURL") and node["footerUnsubscribeURL"].kind != JNull:
+      result.footerUnsubscribeURL = some(to(node["footerUnsubscribeURL"], typeof(result.footerUnsubscribeURL.get())))
+    if node.hasKey("disableUnsubscribeLinks") and node["disableUnsubscribeLinks"].kind != JNull:
+      result.disableUnsubscribeLinks = some(to(node["disableUnsubscribeLinks"], typeof(result.disableUnsubscribeLinks.get())))
+
+# Custom JSON serialization for APIDomainConfiguration with custom field names
+proc `%`*(obj: APIDomainConfiguration): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["domain"] = %obj.domain
+  if obj.emailFromName.isSome():
+    result["emailFromName"] = %obj.emailFromName.get()
+  if obj.emailFromEmail.isSome():
+    result["emailFromEmail"] = %obj.emailFromEmail.get()
+  if obj.emailHeaders.isSome():
+    result["emailHeaders"] = %obj.emailHeaders.get()
+  if obj.wpSyncToken.isSome():
+    result["wpSyncToken"] = %obj.wpSyncToken.get()
+  if obj.wpSynced.isSome():
+    result["wpSynced"] = %obj.wpSynced.get()
+  if obj.wpURL.isSome():
+    result["wpURL"] = %obj.wpURL.get()
+  result["createdAt"] = %obj.createdAt
+  if obj.autoAddedDate.isSome():
+    result["autoAddedDate"] = %obj.autoAddedDate.get()
+  if obj.siteType.isSome():
+    result["siteType"] = %obj.siteType.get()
+  if obj.logoSrc.isSome():
+    result["logoSrc"] = %obj.logoSrc.get()
+  if obj.logoSrc100px.isSome():
+    result["logoSrc100px"] = %obj.logoSrc100px.get()
+  if obj.footerUnsubscribeURL.isSome():
+    result["footerUnsubscribeURL"] = %obj.footerUnsubscribeURL.get()
+  if obj.disableUnsubscribeLinks.isSome():
+    result["disableUnsubscribeLinks"] = %obj.disableUnsubscribeLinks.get()
+

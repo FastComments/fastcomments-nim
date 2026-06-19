@@ -18,3 +18,21 @@ type FeedPostStats* = object
   reacts*: Option[Table[string, int]]
   commentCount*: Option[int]
 
+
+# Custom JSON deserialization for FeedPostStats with custom field names
+proc to*(node: JsonNode, T: typedesc[FeedPostStats]): FeedPostStats =
+  result = FeedPostStats()
+  if node.kind == JObject:
+    if node.hasKey("reacts") and node["reacts"].kind != JNull:
+      result.reacts = some(to(node["reacts"], typeof(result.reacts.get())))
+    if node.hasKey("commentCount") and node["commentCount"].kind != JNull:
+      result.commentCount = some(to(node["commentCount"], typeof(result.commentCount.get())))
+
+# Custom JSON serialization for FeedPostStats with custom field names
+proc `%`*(obj: FeedPostStats): JsonNode =
+  result = newJObject()
+  if obj.reacts.isSome():
+    result["reacts"] = %obj.reacts.get()
+  if obj.commentCount.isSome():
+    result["commentCount"] = %obj.commentCount.get()
+

@@ -26,3 +26,44 @@ type APITicketFile* = object
   expiresAt*: string
   expired*: Option[bool]
 
+
+# Custom JSON deserialization for APITicketFile with custom field names
+proc to*(node: JsonNode, T: typedesc[APITicketFile]): APITicketFile =
+  result = APITicketFile()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("s3Key"):
+      result.s3Key = to(node["s3Key"], string)
+    if node.hasKey("originalFileName"):
+      result.originalFileName = to(node["originalFileName"], string)
+    if node.hasKey("sizeBytes"):
+      result.sizeBytes = to(node["sizeBytes"], int)
+    if node.hasKey("contentType"):
+      result.contentType = to(node["contentType"], string)
+    if node.hasKey("uploadedByUserId"):
+      result.uploadedByUserId = to(node["uploadedByUserId"], string)
+    if node.hasKey("uploadedAt"):
+      result.uploadedAt = to(node["uploadedAt"], string)
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("expiresAt"):
+      result.expiresAt = to(node["expiresAt"], string)
+    if node.hasKey("expired") and node["expired"].kind != JNull:
+      result.expired = some(to(node["expired"], typeof(result.expired.get())))
+
+# Custom JSON serialization for APITicketFile with custom field names
+proc `%`*(obj: APITicketFile): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["s3Key"] = %obj.s3Key
+  result["originalFileName"] = %obj.originalFileName
+  result["sizeBytes"] = %obj.sizeBytes
+  result["contentType"] = %obj.contentType
+  result["uploadedByUserId"] = %obj.uploadedByUserId
+  result["uploadedAt"] = %obj.uploadedAt
+  result["url"] = %obj.url
+  result["expiresAt"] = %obj.expiresAt
+  if obj.expired.isSome():
+    result["expired"] = %obj.expired.get()
+

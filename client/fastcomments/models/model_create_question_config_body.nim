@@ -27,8 +27,70 @@ type CreateQuestionConfigBody* = object
   defaultValue*: Option[float64]
   labelNegative*: Option[string]
   labelPositive*: Option[string]
-  customOptions*: Option[seq[QuestionConfig_customOptions_inner]]
+  customOptions*: Option[seq[QuestionConfigCustomOptionsInner]]
   subQuestionIds*: Option[seq[string]]
   alwaysShowSubQuestions*: Option[bool]
   reportingOrder*: float64
+
+
+# Custom JSON deserialization for CreateQuestionConfigBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateQuestionConfigBody]): CreateQuestionConfigBody =
+  result = CreateQuestionConfigBody()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("question"):
+      result.question = to(node["question"], string)
+    if node.hasKey("helpText") and node["helpText"].kind != JNull:
+      result.helpText = some(to(node["helpText"], typeof(result.helpText.get())))
+    if node.hasKey("type"):
+      result.`type` = to(node["type"], string)
+    if node.hasKey("numStars") and node["numStars"].kind != JNull:
+      result.numStars = some(to(node["numStars"], typeof(result.numStars.get())))
+    if node.hasKey("min") and node["min"].kind != JNull:
+      result.min = some(to(node["min"], typeof(result.min.get())))
+    if node.hasKey("max") and node["max"].kind != JNull:
+      result.max = some(to(node["max"], typeof(result.max.get())))
+    if node.hasKey("defaultValue") and node["defaultValue"].kind != JNull:
+      result.defaultValue = some(to(node["defaultValue"], typeof(result.defaultValue.get())))
+    if node.hasKey("labelNegative") and node["labelNegative"].kind != JNull:
+      result.labelNegative = some(to(node["labelNegative"], typeof(result.labelNegative.get())))
+    if node.hasKey("labelPositive") and node["labelPositive"].kind != JNull:
+      result.labelPositive = some(to(node["labelPositive"], typeof(result.labelPositive.get())))
+    if node.hasKey("customOptions") and node["customOptions"].kind != JNull:
+      result.customOptions = some(to(node["customOptions"], typeof(result.customOptions.get())))
+    if node.hasKey("subQuestionIds") and node["subQuestionIds"].kind != JNull:
+      result.subQuestionIds = some(to(node["subQuestionIds"], typeof(result.subQuestionIds.get())))
+    if node.hasKey("alwaysShowSubQuestions") and node["alwaysShowSubQuestions"].kind != JNull:
+      result.alwaysShowSubQuestions = some(to(node["alwaysShowSubQuestions"], typeof(result.alwaysShowSubQuestions.get())))
+    if node.hasKey("reportingOrder"):
+      result.reportingOrder = to(node["reportingOrder"], float64)
+
+# Custom JSON serialization for CreateQuestionConfigBody with custom field names
+proc `%`*(obj: CreateQuestionConfigBody): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  result["question"] = %obj.question
+  if obj.helpText.isSome():
+    result["helpText"] = %obj.helpText.get()
+  result["type"] = %obj.`type`
+  if obj.numStars.isSome():
+    result["numStars"] = %obj.numStars.get()
+  if obj.min.isSome():
+    result["min"] = %obj.min.get()
+  if obj.max.isSome():
+    result["max"] = %obj.max.get()
+  if obj.defaultValue.isSome():
+    result["defaultValue"] = %obj.defaultValue.get()
+  if obj.labelNegative.isSome():
+    result["labelNegative"] = %obj.labelNegative.get()
+  if obj.labelPositive.isSome():
+    result["labelPositive"] = %obj.labelPositive.get()
+  if obj.customOptions.isSome():
+    result["customOptions"] = %obj.customOptions.get()
+  if obj.subQuestionIds.isSome():
+    result["subQuestionIds"] = %obj.subQuestionIds.get()
+  if obj.alwaysShowSubQuestions.isSome():
+    result["alwaysShowSubQuestions"] = %obj.alwaysShowSubQuestions.get()
+  result["reportingOrder"] = %obj.reportingOrder
 

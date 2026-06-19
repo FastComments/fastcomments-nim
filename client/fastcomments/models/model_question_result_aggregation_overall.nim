@@ -23,3 +23,35 @@ type QuestionResultAggregationOverall* = object
   average*: Option[float64]
   createdAt*: string
 
+
+# Custom JSON deserialization for QuestionResultAggregationOverall with custom field names
+proc to*(node: JsonNode, T: typedesc[QuestionResultAggregationOverall]): QuestionResultAggregationOverall =
+  result = QuestionResultAggregationOverall()
+  if node.kind == JObject:
+    if node.hasKey("dataByDateBucket") and node["dataByDateBucket"].kind != JNull:
+      result.dataByDateBucket = some(to(node["dataByDateBucket"], typeof(result.dataByDateBucket.get())))
+    if node.hasKey("dataByUrlId") and node["dataByUrlId"].kind != JNull:
+      result.dataByUrlId = some(to(node["dataByUrlId"], typeof(result.dataByUrlId.get())))
+    if node.hasKey("countsByValue") and node["countsByValue"].kind != JNull:
+      result.countsByValue = some(to(node["countsByValue"], typeof(result.countsByValue.get())))
+    if node.hasKey("total"):
+      result.total = to(node["total"], int64)
+    if node.hasKey("average") and node["average"].kind != JNull:
+      result.average = some(to(node["average"], typeof(result.average.get())))
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+
+# Custom JSON serialization for QuestionResultAggregationOverall with custom field names
+proc `%`*(obj: QuestionResultAggregationOverall): JsonNode =
+  result = newJObject()
+  if obj.dataByDateBucket.isSome():
+    result["dataByDateBucket"] = %obj.dataByDateBucket.get()
+  if obj.dataByUrlId.isSome():
+    result["dataByUrlId"] = %obj.dataByUrlId.get()
+  if obj.countsByValue.isSome():
+    result["countsByValue"] = %obj.countsByValue.get()
+  result["total"] = %obj.total
+  if obj.average.isSome():
+    result["average"] = %obj.average.get()
+  result["createdAt"] = %obj.createdAt
+

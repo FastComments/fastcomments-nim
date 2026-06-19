@@ -20,3 +20,19 @@ type SearchUsersSectionedResponse* = object
   status*: APIStatus
   sections*: seq[UserSearchSectionResult]
 
+
+# Custom JSON deserialization for SearchUsersSectionedResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[SearchUsersSectionedResponse]): SearchUsersSectionedResponse =
+  result = SearchUsersSectionedResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("sections"):
+      result.sections = to(node["sections"], seq[UserSearchSectionResult])
+
+# Custom JSON serialization for SearchUsersSectionedResponse with custom field names
+proc `%`*(obj: SearchUsersSectionedResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["sections"] = %obj.sections
+

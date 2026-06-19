@@ -23,3 +23,34 @@ type EmailTemplateRenderErrorResponse* = object
   createdAt*: string
   lastOccurredAt*: string
 
+
+# Custom JSON deserialization for EmailTemplateRenderErrorResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[EmailTemplateRenderErrorResponse]): EmailTemplateRenderErrorResponse =
+  result = EmailTemplateRenderErrorResponse()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("customTemplateId"):
+      result.customTemplateId = to(node["customTemplateId"], string)
+    if node.hasKey("error"):
+      result.error = to(node["error"], string)
+    if node.hasKey("count"):
+      result.count = to(node["count"], float64)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("lastOccurredAt"):
+      result.lastOccurredAt = to(node["lastOccurredAt"], string)
+
+# Custom JSON serialization for EmailTemplateRenderErrorResponse with custom field names
+proc `%`*(obj: EmailTemplateRenderErrorResponse): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  result["customTemplateId"] = %obj.customTemplateId
+  result["error"] = %obj.error
+  result["count"] = %obj.count
+  result["createdAt"] = %obj.createdAt
+  result["lastOccurredAt"] = %obj.lastOccurredAt
+

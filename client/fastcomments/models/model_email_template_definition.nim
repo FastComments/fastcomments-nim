@@ -21,3 +21,25 @@ type EmailTemplateDefinition* = object
   defaultTranslationsByLocale*: Table[string, Table[string, string]] ## Construct a type with a set of properties K of type T
   defaultEJS*: string
 
+
+# Custom JSON deserialization for EmailTemplateDefinition with custom field names
+proc to*(node: JsonNode, T: typedesc[EmailTemplateDefinition]): EmailTemplateDefinition =
+  result = EmailTemplateDefinition()
+  if node.kind == JObject:
+    if node.hasKey("emailTemplateId"):
+      result.emailTemplateId = to(node["emailTemplateId"], string)
+    if node.hasKey("defaultTestData"):
+      result.defaultTestData = to(node["defaultTestData"], Table[string, JsonNode])
+    if node.hasKey("defaultTranslationsByLocale"):
+      result.defaultTranslationsByLocale = to(node["defaultTranslationsByLocale"], Table[string, Table[string, string]])
+    if node.hasKey("defaultEJS"):
+      result.defaultEJS = to(node["defaultEJS"], string)
+
+# Custom JSON serialization for EmailTemplateDefinition with custom field names
+proc `%`*(obj: EmailTemplateDefinition): JsonNode =
+  result = newJObject()
+  result["emailTemplateId"] = %obj.emailTemplateId
+  result["defaultTestData"] = %obj.defaultTestData
+  result["defaultTranslationsByLocale"] = %obj.defaultTranslationsByLocale
+  result["defaultEJS"] = %obj.defaultEJS
+

@@ -27,6 +27,7 @@ import model_sort_directions
 import model_spam_rule
 import model_sso_security_level
 import model_tos_config
+import model_users_list_location
 import model_vote_style
 
 type CustomConfigParameters* = object
@@ -83,11 +84,14 @@ type CustomConfigParameters* = object
   noCustomConfig*: Option[bool]
   mentionAutoCompleteMode*: Option[MentionAutoCompleteMode]
   noImageUploads*: Option[bool]
+  allowEmbeds*: Option[bool]
+  allowedEmbedDomains*: Option[seq[string]]
   noStyles*: Option[bool]
   pageSize*: Option[int]
   readonly*: Option[bool]
   noNewRootComments*: Option[bool]
   requireSSO*: Option[bool]
+  enableFChat*: Option[bool]
   enableResizeHandle*: Option[bool]
   restrictedLinkDomains*: Option[seq[string]]
   showBadgesInTopBar*: Option[bool]
@@ -108,10 +112,374 @@ type CustomConfigParameters* = object
   widgetQuestionsRequired*: Option[CommentQuestionsRequired]
   widgetSubQuestionVisibility*: Option[QuestionSubQuestionVisibility]
   wrap*: Option[bool]
+  usersListLocation*: Option[UsersListLocation]
+  usersListIncludeOffline*: Option[bool]
   ticketBaseUrl*: Option[string]
   ticketKBSearchEndpoint*: Option[string]
   ticketFileUploadsEnabled*: Option[bool]
   ticketMaxFileSize*: Option[int]
   ticketAutoAssignUserIds*: Option[seq[string]]
   tos*: Option[TOSConfig]
+
+
+# Custom JSON deserialization for CustomConfigParameters with custom field names
+proc to*(node: JsonNode, T: typedesc[CustomConfigParameters]): CustomConfigParameters =
+  result = CustomConfigParameters()
+  if node.kind == JObject:
+    if node.hasKey("absoluteAndRelativeDates") and node["absoluteAndRelativeDates"].kind != JNull:
+      result.absoluteAndRelativeDates = some(to(node["absoluteAndRelativeDates"], typeof(result.absoluteAndRelativeDates.get())))
+    if node.hasKey("absoluteDates") and node["absoluteDates"].kind != JNull:
+      result.absoluteDates = some(to(node["absoluteDates"], typeof(result.absoluteDates.get())))
+    if node.hasKey("allowAnon") and node["allowAnon"].kind != JNull:
+      result.allowAnon = some(to(node["allowAnon"], typeof(result.allowAnon.get())))
+    if node.hasKey("allowAnonFlag") and node["allowAnonFlag"].kind != JNull:
+      result.allowAnonFlag = some(to(node["allowAnonFlag"], typeof(result.allowAnonFlag.get())))
+    if node.hasKey("allowAnonVotes") and node["allowAnonVotes"].kind != JNull:
+      result.allowAnonVotes = some(to(node["allowAnonVotes"], typeof(result.allowAnonVotes.get())))
+    if node.hasKey("allowedLanguages") and node["allowedLanguages"].kind != JNull:
+      result.allowedLanguages = some(to(node["allowedLanguages"], typeof(result.allowedLanguages.get())))
+    if node.hasKey("collapseReplies") and node["collapseReplies"].kind != JNull:
+      result.collapseReplies = some(to(node["collapseReplies"], typeof(result.collapseReplies.get())))
+    if node.hasKey("commentCountFormat") and node["commentCountFormat"].kind != JNull:
+      result.commentCountFormat = some(to(node["commentCountFormat"], typeof(result.commentCountFormat.get())))
+    if node.hasKey("commentHTMLRenderingMode") and node["commentHTMLRenderingMode"].kind != JNull:
+      result.commentHTMLRenderingMode = some(to(node["commentHTMLRenderingMode"], typeof(result.commentHTMLRenderingMode.get())))
+    if node.hasKey("commentThreadDeleteMode") and node["commentThreadDeleteMode"].kind != JNull:
+      result.commentThreadDeleteMode = some(to(node["commentThreadDeleteMode"], typeof(result.commentThreadDeleteMode.get())))
+    if node.hasKey("commenterNameFormat") and node["commenterNameFormat"].kind != JNull:
+      result.commenterNameFormat = some(to(node["commenterNameFormat"], typeof(result.commenterNameFormat.get())))
+    if node.hasKey("countAboveToggle") and node["countAboveToggle"].kind != JNull:
+      result.countAboveToggle = some(to(node["countAboveToggle"], typeof(result.countAboveToggle.get())))
+    if node.hasKey("customCSS") and node["customCSS"].kind != JNull:
+      result.customCSS = some(to(node["customCSS"], typeof(result.customCSS.get())))
+    if node.hasKey("defaultAvatarSrc") and node["defaultAvatarSrc"].kind != JNull:
+      result.defaultAvatarSrc = some(to(node["defaultAvatarSrc"], typeof(result.defaultAvatarSrc.get())))
+    if node.hasKey("defaultSortDirection") and node["defaultSortDirection"].kind != JNull:
+      result.defaultSortDirection = some(to(node["defaultSortDirection"], typeof(result.defaultSortDirection.get())))
+    if node.hasKey("defaultUsername") and node["defaultUsername"].kind != JNull:
+      result.defaultUsername = some(to(node["defaultUsername"], typeof(result.defaultUsername.get())))
+    if node.hasKey("disableAutoAdminMigration") and node["disableAutoAdminMigration"].kind != JNull:
+      result.disableAutoAdminMigration = some(to(node["disableAutoAdminMigration"], typeof(result.disableAutoAdminMigration.get())))
+    if node.hasKey("disableAutoHashTagCreation") and node["disableAutoHashTagCreation"].kind != JNull:
+      result.disableAutoHashTagCreation = some(to(node["disableAutoHashTagCreation"], typeof(result.disableAutoHashTagCreation.get())))
+    if node.hasKey("disableBlocking") and node["disableBlocking"].kind != JNull:
+      result.disableBlocking = some(to(node["disableBlocking"], typeof(result.disableBlocking.get())))
+    if node.hasKey("disableCommenterCommentDelete") and node["disableCommenterCommentDelete"].kind != JNull:
+      result.disableCommenterCommentDelete = some(to(node["disableCommenterCommentDelete"], typeof(result.disableCommenterCommentDelete.get())))
+    if node.hasKey("disableCommenterCommentEdit") and node["disableCommenterCommentEdit"].kind != JNull:
+      result.disableCommenterCommentEdit = some(to(node["disableCommenterCommentEdit"], typeof(result.disableCommenterCommentEdit.get())))
+    if node.hasKey("disableEmailInputs") and node["disableEmailInputs"].kind != JNull:
+      result.disableEmailInputs = some(to(node["disableEmailInputs"], typeof(result.disableEmailInputs.get())))
+    if node.hasKey("disableLiveCommenting") and node["disableLiveCommenting"].kind != JNull:
+      result.disableLiveCommenting = some(to(node["disableLiveCommenting"], typeof(result.disableLiveCommenting.get())))
+    if node.hasKey("disableNotificationBell") and node["disableNotificationBell"].kind != JNull:
+      result.disableNotificationBell = some(to(node["disableNotificationBell"], typeof(result.disableNotificationBell.get())))
+    if node.hasKey("disableProfileComments") and node["disableProfileComments"].kind != JNull:
+      result.disableProfileComments = some(to(node["disableProfileComments"], typeof(result.disableProfileComments.get())))
+    if node.hasKey("disableProfileDirectMessages") and node["disableProfileDirectMessages"].kind != JNull:
+      result.disableProfileDirectMessages = some(to(node["disableProfileDirectMessages"], typeof(result.disableProfileDirectMessages.get())))
+    if node.hasKey("disableProfiles") and node["disableProfiles"].kind != JNull:
+      result.disableProfiles = some(to(node["disableProfiles"], typeof(result.disableProfiles.get())))
+    if node.hasKey("disableSuccessMessage") and node["disableSuccessMessage"].kind != JNull:
+      result.disableSuccessMessage = some(to(node["disableSuccessMessage"], typeof(result.disableSuccessMessage.get())))
+    if node.hasKey("disableToolbar") and node["disableToolbar"].kind != JNull:
+      result.disableToolbar = some(to(node["disableToolbar"], typeof(result.disableToolbar.get())))
+    if node.hasKey("disableUnverifiedLabel") and node["disableUnverifiedLabel"].kind != JNull:
+      result.disableUnverifiedLabel = some(to(node["disableUnverifiedLabel"], typeof(result.disableUnverifiedLabel.get())))
+    if node.hasKey("disableVoting") and node["disableVoting"].kind != JNull:
+      result.disableVoting = some(to(node["disableVoting"], typeof(result.disableVoting.get())))
+    if node.hasKey("enableCommenterLinks") and node["enableCommenterLinks"].kind != JNull:
+      result.enableCommenterLinks = some(to(node["enableCommenterLinks"], typeof(result.enableCommenterLinks.get())))
+    if node.hasKey("enableSearch") and node["enableSearch"].kind != JNull:
+      result.enableSearch = some(to(node["enableSearch"], typeof(result.enableSearch.get())))
+    if node.hasKey("enableSpoilers") and node["enableSpoilers"].kind != JNull:
+      result.enableSpoilers = some(to(node["enableSpoilers"], typeof(result.enableSpoilers.get())))
+    if node.hasKey("enableThirdPartyCookieBypass") and node["enableThirdPartyCookieBypass"].kind != JNull:
+      result.enableThirdPartyCookieBypass = some(to(node["enableThirdPartyCookieBypass"], typeof(result.enableThirdPartyCookieBypass.get())))
+    if node.hasKey("enableViewCounts") and node["enableViewCounts"].kind != JNull:
+      result.enableViewCounts = some(to(node["enableViewCounts"], typeof(result.enableViewCounts.get())))
+    if node.hasKey("enableVoteList") and node["enableVoteList"].kind != JNull:
+      result.enableVoteList = some(to(node["enableVoteList"], typeof(result.enableVoteList.get())))
+    if node.hasKey("enableWYSIWYG") and node["enableWYSIWYG"].kind != JNull:
+      result.enableWYSIWYG = some(to(node["enableWYSIWYG"], typeof(result.enableWYSIWYG.get())))
+    if node.hasKey("gifRating") and node["gifRating"].kind != JNull:
+      result.gifRating = some(to(node["gifRating"], typeof(result.gifRating.get())))
+    if node.hasKey("hasDarkBackground") and node["hasDarkBackground"].kind != JNull:
+      result.hasDarkBackground = some(to(node["hasDarkBackground"], typeof(result.hasDarkBackground.get())))
+    if node.hasKey("headerHTML") and node["headerHTML"].kind != JNull:
+      result.headerHTML = some(to(node["headerHTML"], typeof(result.headerHTML.get())))
+    if node.hasKey("hideAvatars") and node["hideAvatars"].kind != JNull:
+      result.hideAvatars = some(to(node["hideAvatars"], typeof(result.hideAvatars.get())))
+    if node.hasKey("hideCommentsUnderCountTextFormat") and node["hideCommentsUnderCountTextFormat"].kind != JNull:
+      result.hideCommentsUnderCountTextFormat = some(to(node["hideCommentsUnderCountTextFormat"], typeof(result.hideCommentsUnderCountTextFormat.get())))
+    if node.hasKey("imageContentProfanityLevel") and node["imageContentProfanityLevel"].kind != JNull:
+      result.imageContentProfanityLevel = some(to(node["imageContentProfanityLevel"], typeof(result.imageContentProfanityLevel.get())))
+    if node.hasKey("inputAfterComments") and node["inputAfterComments"].kind != JNull:
+      result.inputAfterComments = some(to(node["inputAfterComments"], typeof(result.inputAfterComments.get())))
+    if node.hasKey("limitCommentsByGroups") and node["limitCommentsByGroups"].kind != JNull:
+      result.limitCommentsByGroups = some(to(node["limitCommentsByGroups"], typeof(result.limitCommentsByGroups.get())))
+    if node.hasKey("locale") and node["locale"].kind != JNull:
+      result.locale = some(to(node["locale"], typeof(result.locale.get())))
+    if node.hasKey("maxCommentCharacterLength") and node["maxCommentCharacterLength"].kind != JNull:
+      result.maxCommentCharacterLength = some(to(node["maxCommentCharacterLength"], typeof(result.maxCommentCharacterLength.get())))
+    if node.hasKey("maxCommentCreatedCountPUPM") and node["maxCommentCreatedCountPUPM"].kind != JNull:
+      result.maxCommentCreatedCountPUPM = some(to(node["maxCommentCreatedCountPUPM"], typeof(result.maxCommentCreatedCountPUPM.get())))
+    if node.hasKey("noCustomConfig") and node["noCustomConfig"].kind != JNull:
+      result.noCustomConfig = some(to(node["noCustomConfig"], typeof(result.noCustomConfig.get())))
+    if node.hasKey("mentionAutoCompleteMode") and node["mentionAutoCompleteMode"].kind != JNull:
+      result.mentionAutoCompleteMode = some(to(node["mentionAutoCompleteMode"], typeof(result.mentionAutoCompleteMode.get())))
+    if node.hasKey("noImageUploads") and node["noImageUploads"].kind != JNull:
+      result.noImageUploads = some(to(node["noImageUploads"], typeof(result.noImageUploads.get())))
+    if node.hasKey("allowEmbeds") and node["allowEmbeds"].kind != JNull:
+      result.allowEmbeds = some(to(node["allowEmbeds"], typeof(result.allowEmbeds.get())))
+    if node.hasKey("allowedEmbedDomains") and node["allowedEmbedDomains"].kind != JNull:
+      result.allowedEmbedDomains = some(to(node["allowedEmbedDomains"], typeof(result.allowedEmbedDomains.get())))
+    if node.hasKey("noStyles") and node["noStyles"].kind != JNull:
+      result.noStyles = some(to(node["noStyles"], typeof(result.noStyles.get())))
+    if node.hasKey("pageSize") and node["pageSize"].kind != JNull:
+      result.pageSize = some(to(node["pageSize"], typeof(result.pageSize.get())))
+    if node.hasKey("readonly") and node["readonly"].kind != JNull:
+      result.readonly = some(to(node["readonly"], typeof(result.readonly.get())))
+    if node.hasKey("noNewRootComments") and node["noNewRootComments"].kind != JNull:
+      result.noNewRootComments = some(to(node["noNewRootComments"], typeof(result.noNewRootComments.get())))
+    if node.hasKey("requireSSO") and node["requireSSO"].kind != JNull:
+      result.requireSSO = some(to(node["requireSSO"], typeof(result.requireSSO.get())))
+    if node.hasKey("enableFChat") and node["enableFChat"].kind != JNull:
+      result.enableFChat = some(to(node["enableFChat"], typeof(result.enableFChat.get())))
+    if node.hasKey("enableResizeHandle") and node["enableResizeHandle"].kind != JNull:
+      result.enableResizeHandle = some(to(node["enableResizeHandle"], typeof(result.enableResizeHandle.get())))
+    if node.hasKey("restrictedLinkDomains") and node["restrictedLinkDomains"].kind != JNull:
+      result.restrictedLinkDomains = some(to(node["restrictedLinkDomains"], typeof(result.restrictedLinkDomains.get())))
+    if node.hasKey("showBadgesInTopBar") and node["showBadgesInTopBar"].kind != JNull:
+      result.showBadgesInTopBar = some(to(node["showBadgesInTopBar"], typeof(result.showBadgesInTopBar.get())))
+    if node.hasKey("showCommentSaveSuccess") and node["showCommentSaveSuccess"].kind != JNull:
+      result.showCommentSaveSuccess = some(to(node["showCommentSaveSuccess"], typeof(result.showCommentSaveSuccess.get())))
+    if node.hasKey("showLiveRightAway") and node["showLiveRightAway"].kind != JNull:
+      result.showLiveRightAway = some(to(node["showLiveRightAway"], typeof(result.showLiveRightAway.get())))
+    if node.hasKey("showQuestion") and node["showQuestion"].kind != JNull:
+      result.showQuestion = some(to(node["showQuestion"], typeof(result.showQuestion.get())))
+    if node.hasKey("spamRules") and node["spamRules"].kind != JNull:
+      result.spamRules = some(to(node["spamRules"], typeof(result.spamRules.get())))
+    if node.hasKey("ssoSecLvl") and node["ssoSecLvl"].kind != JNull:
+      result.ssoSecLvl = some(to(node["ssoSecLvl"], typeof(result.ssoSecLvl.get())))
+    if node.hasKey("translations") and node["translations"].kind != JNull:
+      result.translations = some(to(node["translations"], typeof(result.translations.get())))
+    if node.hasKey("useShowCommentsToggle") and node["useShowCommentsToggle"].kind != JNull:
+      result.useShowCommentsToggle = some(to(node["useShowCommentsToggle"], typeof(result.useShowCommentsToggle.get())))
+    if node.hasKey("useSingleLineCommentInput") and node["useSingleLineCommentInput"].kind != JNull:
+      result.useSingleLineCommentInput = some(to(node["useSingleLineCommentInput"], typeof(result.useSingleLineCommentInput.get())))
+    if node.hasKey("voteStyle") and node["voteStyle"].kind != JNull:
+      result.voteStyle = some(to(node["voteStyle"], typeof(result.voteStyle.get())))
+    if node.hasKey("widgetQuestionId") and node["widgetQuestionId"].kind != JNull:
+      result.widgetQuestionId = some(to(node["widgetQuestionId"], typeof(result.widgetQuestionId.get())))
+    if node.hasKey("widgetQuestionResultsStyle") and node["widgetQuestionResultsStyle"].kind != JNull:
+      result.widgetQuestionResultsStyle = some(to(node["widgetQuestionResultsStyle"], typeof(result.widgetQuestionResultsStyle.get())))
+    if node.hasKey("widgetQuestionShowBreakdown") and node["widgetQuestionShowBreakdown"].kind != JNull:
+      result.widgetQuestionShowBreakdown = some(to(node["widgetQuestionShowBreakdown"], typeof(result.widgetQuestionShowBreakdown.get())))
+    if node.hasKey("widgetQuestionStyle") and node["widgetQuestionStyle"].kind != JNull:
+      result.widgetQuestionStyle = some(to(node["widgetQuestionStyle"], typeof(result.widgetQuestionStyle.get())))
+    if node.hasKey("widgetQuestionWhenToSave") and node["widgetQuestionWhenToSave"].kind != JNull:
+      result.widgetQuestionWhenToSave = some(to(node["widgetQuestionWhenToSave"], typeof(result.widgetQuestionWhenToSave.get())))
+    if node.hasKey("widgetQuestionsRequired") and node["widgetQuestionsRequired"].kind != JNull:
+      result.widgetQuestionsRequired = some(to(node["widgetQuestionsRequired"], typeof(result.widgetQuestionsRequired.get())))
+    if node.hasKey("widgetSubQuestionVisibility") and node["widgetSubQuestionVisibility"].kind != JNull:
+      result.widgetSubQuestionVisibility = some(to(node["widgetSubQuestionVisibility"], typeof(result.widgetSubQuestionVisibility.get())))
+    if node.hasKey("wrap") and node["wrap"].kind != JNull:
+      result.wrap = some(to(node["wrap"], typeof(result.wrap.get())))
+    if node.hasKey("usersListLocation") and node["usersListLocation"].kind != JNull:
+      result.usersListLocation = some(to(node["usersListLocation"], typeof(result.usersListLocation.get())))
+    if node.hasKey("usersListIncludeOffline") and node["usersListIncludeOffline"].kind != JNull:
+      result.usersListIncludeOffline = some(to(node["usersListIncludeOffline"], typeof(result.usersListIncludeOffline.get())))
+    if node.hasKey("ticketBaseUrl") and node["ticketBaseUrl"].kind != JNull:
+      result.ticketBaseUrl = some(to(node["ticketBaseUrl"], typeof(result.ticketBaseUrl.get())))
+    if node.hasKey("ticketKBSearchEndpoint") and node["ticketKBSearchEndpoint"].kind != JNull:
+      result.ticketKBSearchEndpoint = some(to(node["ticketKBSearchEndpoint"], typeof(result.ticketKBSearchEndpoint.get())))
+    if node.hasKey("ticketFileUploadsEnabled") and node["ticketFileUploadsEnabled"].kind != JNull:
+      result.ticketFileUploadsEnabled = some(to(node["ticketFileUploadsEnabled"], typeof(result.ticketFileUploadsEnabled.get())))
+    if node.hasKey("ticketMaxFileSize") and node["ticketMaxFileSize"].kind != JNull:
+      result.ticketMaxFileSize = some(to(node["ticketMaxFileSize"], typeof(result.ticketMaxFileSize.get())))
+    if node.hasKey("ticketAutoAssignUserIds") and node["ticketAutoAssignUserIds"].kind != JNull:
+      result.ticketAutoAssignUserIds = some(to(node["ticketAutoAssignUserIds"], typeof(result.ticketAutoAssignUserIds.get())))
+    if node.hasKey("tos") and node["tos"].kind != JNull:
+      result.tos = some(to(node["tos"], typeof(result.tos.get())))
+
+# Custom JSON serialization for CustomConfigParameters with custom field names
+proc `%`*(obj: CustomConfigParameters): JsonNode =
+  result = newJObject()
+  if obj.absoluteAndRelativeDates.isSome():
+    result["absoluteAndRelativeDates"] = %obj.absoluteAndRelativeDates.get()
+  if obj.absoluteDates.isSome():
+    result["absoluteDates"] = %obj.absoluteDates.get()
+  if obj.allowAnon.isSome():
+    result["allowAnon"] = %obj.allowAnon.get()
+  if obj.allowAnonFlag.isSome():
+    result["allowAnonFlag"] = %obj.allowAnonFlag.get()
+  if obj.allowAnonVotes.isSome():
+    result["allowAnonVotes"] = %obj.allowAnonVotes.get()
+  if obj.allowedLanguages.isSome():
+    result["allowedLanguages"] = %obj.allowedLanguages.get()
+  if obj.collapseReplies.isSome():
+    result["collapseReplies"] = %obj.collapseReplies.get()
+  if obj.commentCountFormat.isSome():
+    result["commentCountFormat"] = %obj.commentCountFormat.get()
+  if obj.commentHTMLRenderingMode.isSome():
+    result["commentHTMLRenderingMode"] = %obj.commentHTMLRenderingMode.get()
+  if obj.commentThreadDeleteMode.isSome():
+    result["commentThreadDeleteMode"] = %obj.commentThreadDeleteMode.get()
+  if obj.commenterNameFormat.isSome():
+    result["commenterNameFormat"] = %obj.commenterNameFormat.get()
+  if obj.countAboveToggle.isSome():
+    result["countAboveToggle"] = %obj.countAboveToggle.get()
+  if obj.customCSS.isSome():
+    result["customCSS"] = %obj.customCSS.get()
+  if obj.defaultAvatarSrc.isSome():
+    result["defaultAvatarSrc"] = %obj.defaultAvatarSrc.get()
+  if obj.defaultSortDirection.isSome():
+    result["defaultSortDirection"] = %obj.defaultSortDirection.get()
+  if obj.defaultUsername.isSome():
+    result["defaultUsername"] = %obj.defaultUsername.get()
+  if obj.disableAutoAdminMigration.isSome():
+    result["disableAutoAdminMigration"] = %obj.disableAutoAdminMigration.get()
+  if obj.disableAutoHashTagCreation.isSome():
+    result["disableAutoHashTagCreation"] = %obj.disableAutoHashTagCreation.get()
+  if obj.disableBlocking.isSome():
+    result["disableBlocking"] = %obj.disableBlocking.get()
+  if obj.disableCommenterCommentDelete.isSome():
+    result["disableCommenterCommentDelete"] = %obj.disableCommenterCommentDelete.get()
+  if obj.disableCommenterCommentEdit.isSome():
+    result["disableCommenterCommentEdit"] = %obj.disableCommenterCommentEdit.get()
+  if obj.disableEmailInputs.isSome():
+    result["disableEmailInputs"] = %obj.disableEmailInputs.get()
+  if obj.disableLiveCommenting.isSome():
+    result["disableLiveCommenting"] = %obj.disableLiveCommenting.get()
+  if obj.disableNotificationBell.isSome():
+    result["disableNotificationBell"] = %obj.disableNotificationBell.get()
+  if obj.disableProfileComments.isSome():
+    result["disableProfileComments"] = %obj.disableProfileComments.get()
+  if obj.disableProfileDirectMessages.isSome():
+    result["disableProfileDirectMessages"] = %obj.disableProfileDirectMessages.get()
+  if obj.disableProfiles.isSome():
+    result["disableProfiles"] = %obj.disableProfiles.get()
+  if obj.disableSuccessMessage.isSome():
+    result["disableSuccessMessage"] = %obj.disableSuccessMessage.get()
+  if obj.disableToolbar.isSome():
+    result["disableToolbar"] = %obj.disableToolbar.get()
+  if obj.disableUnverifiedLabel.isSome():
+    result["disableUnverifiedLabel"] = %obj.disableUnverifiedLabel.get()
+  if obj.disableVoting.isSome():
+    result["disableVoting"] = %obj.disableVoting.get()
+  if obj.enableCommenterLinks.isSome():
+    result["enableCommenterLinks"] = %obj.enableCommenterLinks.get()
+  if obj.enableSearch.isSome():
+    result["enableSearch"] = %obj.enableSearch.get()
+  if obj.enableSpoilers.isSome():
+    result["enableSpoilers"] = %obj.enableSpoilers.get()
+  if obj.enableThirdPartyCookieBypass.isSome():
+    result["enableThirdPartyCookieBypass"] = %obj.enableThirdPartyCookieBypass.get()
+  if obj.enableViewCounts.isSome():
+    result["enableViewCounts"] = %obj.enableViewCounts.get()
+  if obj.enableVoteList.isSome():
+    result["enableVoteList"] = %obj.enableVoteList.get()
+  if obj.enableWYSIWYG.isSome():
+    result["enableWYSIWYG"] = %obj.enableWYSIWYG.get()
+  if obj.gifRating.isSome():
+    result["gifRating"] = %obj.gifRating.get()
+  if obj.hasDarkBackground.isSome():
+    result["hasDarkBackground"] = %obj.hasDarkBackground.get()
+  if obj.headerHTML.isSome():
+    result["headerHTML"] = %obj.headerHTML.get()
+  if obj.hideAvatars.isSome():
+    result["hideAvatars"] = %obj.hideAvatars.get()
+  if obj.hideCommentsUnderCountTextFormat.isSome():
+    result["hideCommentsUnderCountTextFormat"] = %obj.hideCommentsUnderCountTextFormat.get()
+  if obj.imageContentProfanityLevel.isSome():
+    result["imageContentProfanityLevel"] = %obj.imageContentProfanityLevel.get()
+  if obj.inputAfterComments.isSome():
+    result["inputAfterComments"] = %obj.inputAfterComments.get()
+  if obj.limitCommentsByGroups.isSome():
+    result["limitCommentsByGroups"] = %obj.limitCommentsByGroups.get()
+  if obj.locale.isSome():
+    result["locale"] = %obj.locale.get()
+  if obj.maxCommentCharacterLength.isSome():
+    result["maxCommentCharacterLength"] = %obj.maxCommentCharacterLength.get()
+  if obj.maxCommentCreatedCountPUPM.isSome():
+    result["maxCommentCreatedCountPUPM"] = %obj.maxCommentCreatedCountPUPM.get()
+  if obj.noCustomConfig.isSome():
+    result["noCustomConfig"] = %obj.noCustomConfig.get()
+  if obj.mentionAutoCompleteMode.isSome():
+    result["mentionAutoCompleteMode"] = %obj.mentionAutoCompleteMode.get()
+  if obj.noImageUploads.isSome():
+    result["noImageUploads"] = %obj.noImageUploads.get()
+  if obj.allowEmbeds.isSome():
+    result["allowEmbeds"] = %obj.allowEmbeds.get()
+  if obj.allowedEmbedDomains.isSome():
+    result["allowedEmbedDomains"] = %obj.allowedEmbedDomains.get()
+  if obj.noStyles.isSome():
+    result["noStyles"] = %obj.noStyles.get()
+  if obj.pageSize.isSome():
+    result["pageSize"] = %obj.pageSize.get()
+  if obj.readonly.isSome():
+    result["readonly"] = %obj.readonly.get()
+  if obj.noNewRootComments.isSome():
+    result["noNewRootComments"] = %obj.noNewRootComments.get()
+  if obj.requireSSO.isSome():
+    result["requireSSO"] = %obj.requireSSO.get()
+  if obj.enableFChat.isSome():
+    result["enableFChat"] = %obj.enableFChat.get()
+  if obj.enableResizeHandle.isSome():
+    result["enableResizeHandle"] = %obj.enableResizeHandle.get()
+  if obj.restrictedLinkDomains.isSome():
+    result["restrictedLinkDomains"] = %obj.restrictedLinkDomains.get()
+  if obj.showBadgesInTopBar.isSome():
+    result["showBadgesInTopBar"] = %obj.showBadgesInTopBar.get()
+  if obj.showCommentSaveSuccess.isSome():
+    result["showCommentSaveSuccess"] = %obj.showCommentSaveSuccess.get()
+  if obj.showLiveRightAway.isSome():
+    result["showLiveRightAway"] = %obj.showLiveRightAway.get()
+  if obj.showQuestion.isSome():
+    result["showQuestion"] = %obj.showQuestion.get()
+  if obj.spamRules.isSome():
+    result["spamRules"] = %obj.spamRules.get()
+  if obj.ssoSecLvl.isSome():
+    result["ssoSecLvl"] = %obj.ssoSecLvl.get()
+  if obj.translations.isSome():
+    result["translations"] = %obj.translations.get()
+  if obj.useShowCommentsToggle.isSome():
+    result["useShowCommentsToggle"] = %obj.useShowCommentsToggle.get()
+  if obj.useSingleLineCommentInput.isSome():
+    result["useSingleLineCommentInput"] = %obj.useSingleLineCommentInput.get()
+  if obj.voteStyle.isSome():
+    result["voteStyle"] = %obj.voteStyle.get()
+  if obj.widgetQuestionId.isSome():
+    result["widgetQuestionId"] = %obj.widgetQuestionId.get()
+  if obj.widgetQuestionResultsStyle.isSome():
+    result["widgetQuestionResultsStyle"] = %obj.widgetQuestionResultsStyle.get()
+  if obj.widgetQuestionShowBreakdown.isSome():
+    result["widgetQuestionShowBreakdown"] = %obj.widgetQuestionShowBreakdown.get()
+  if obj.widgetQuestionStyle.isSome():
+    result["widgetQuestionStyle"] = %obj.widgetQuestionStyle.get()
+  if obj.widgetQuestionWhenToSave.isSome():
+    result["widgetQuestionWhenToSave"] = %obj.widgetQuestionWhenToSave.get()
+  if obj.widgetQuestionsRequired.isSome():
+    result["widgetQuestionsRequired"] = %obj.widgetQuestionsRequired.get()
+  if obj.widgetSubQuestionVisibility.isSome():
+    result["widgetSubQuestionVisibility"] = %obj.widgetSubQuestionVisibility.get()
+  if obj.wrap.isSome():
+    result["wrap"] = %obj.wrap.get()
+  if obj.usersListLocation.isSome():
+    result["usersListLocation"] = %obj.usersListLocation.get()
+  if obj.usersListIncludeOffline.isSome():
+    result["usersListIncludeOffline"] = %obj.usersListIncludeOffline.get()
+  if obj.ticketBaseUrl.isSome():
+    result["ticketBaseUrl"] = %obj.ticketBaseUrl.get()
+  if obj.ticketKBSearchEndpoint.isSome():
+    result["ticketKBSearchEndpoint"] = %obj.ticketKBSearchEndpoint.get()
+  if obj.ticketFileUploadsEnabled.isSome():
+    result["ticketFileUploadsEnabled"] = %obj.ticketFileUploadsEnabled.get()
+  if obj.ticketMaxFileSize.isSome():
+    result["ticketMaxFileSize"] = %obj.ticketMaxFileSize.get()
+  if obj.ticketAutoAssignUserIds.isSome():
+    result["ticketAutoAssignUserIds"] = %obj.ticketAutoAssignUserIds.get()
+  if obj.tos.isSome():
+    result["tos"] = %obj.tos.get()
 

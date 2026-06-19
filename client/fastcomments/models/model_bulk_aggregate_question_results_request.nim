@@ -18,3 +18,16 @@ type BulkAggregateQuestionResultsRequest* = object
   ## 
   aggregations*: seq[BulkAggregateQuestionItem]
 
+
+# Custom JSON deserialization for BulkAggregateQuestionResultsRequest with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkAggregateQuestionResultsRequest]): BulkAggregateQuestionResultsRequest =
+  result = BulkAggregateQuestionResultsRequest()
+  if node.kind == JObject:
+    if node.hasKey("aggregations"):
+      result.aggregations = to(node["aggregations"], seq[BulkAggregateQuestionItem])
+
+# Custom JSON serialization for BulkAggregateQuestionResultsRequest with custom field names
+proc `%`*(obj: BulkAggregateQuestionResultsRequest): JsonNode =
+  result = newJObject()
+  result["aggregations"] = %obj.aggregations
+

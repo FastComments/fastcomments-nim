@@ -18,118 +18,121 @@ import tables
 import typetraits
 import uri
 
+import ../models/model_api_create_user_badge_response
+import ../models/model_api_empty_response
+import ../models/model_api_empty_success_response
+import ../models/model_api_error
+import ../models/model_api_get_comment_response
+import ../models/model_api_get_comments_response
+import ../models/model_api_get_user_badge_progress_list_response
+import ../models/model_api_get_user_badge_progress_response
+import ../models/model_api_get_user_badge_response
+import ../models/model_api_get_user_badges_response
+import ../models/model_api_save_comment_response
 import ../models/model_add_domain_config_params
-import ../models/model_add_domain_config200response
-import ../models/model_add_hash_tag200response
-import ../models/model_add_hash_tags_bulk200response
+import ../models/model_add_domain_config_response
 import ../models/model_add_page_api_response
 import ../models/model_add_sso_user_api_response
-import ../models/model_aggregate_question_results200response
+import ../models/model_aggregate_question_results_response
+import ../models/model_aggregate_response
 import ../models/model_aggregate_time_bucket
 import ../models/model_aggregation_request
-import ../models/model_aggregation_response
 import ../models/model_block_from_comment_params
-import ../models/model_block_from_comment_public200response
+import ../models/model_block_success
 import ../models/model_bulk_aggregate_question_results_request
-import ../models/model_bulk_aggregate_question_results200response
+import ../models/model_bulk_aggregate_question_results_response
 import ../models/model_bulk_create_hash_tags_body
+import ../models/model_bulk_create_hash_tags_response
 import ../models/model_change_ticket_state_body
-import ../models/model_change_ticket_state200response
-import ../models/model_combine_comments_with_question_results200response
+import ../models/model_change_ticket_state_response
+import ../models/model_combine_question_results_with_comments_response
 import ../models/model_create_api_page_data
 import ../models/model_create_apisso_user_data
 import ../models/model_create_api_user_subscription_data
 import ../models/model_create_comment_params
 import ../models/model_create_email_template_body
-import ../models/model_create_email_template200response
+import ../models/model_create_email_template_response
 import ../models/model_create_feed_post_params
-import ../models/model_create_feed_post200response
+import ../models/model_create_feed_posts_response
 import ../models/model_create_hash_tag_body
+import ../models/model_create_hash_tag_response
 import ../models/model_create_moderator_body
-import ../models/model_create_moderator200response
+import ../models/model_create_moderator_response
 import ../models/model_create_question_config_body
-import ../models/model_create_question_config200response
+import ../models/model_create_question_config_response
 import ../models/model_create_question_result_body
-import ../models/model_create_question_result200response
+import ../models/model_create_question_result_response
 import ../models/model_create_subscription_api_response
 import ../models/model_create_tenant_body
 import ../models/model_create_tenant_package_body
-import ../models/model_create_tenant_package200response
+import ../models/model_create_tenant_package_response
+import ../models/model_create_tenant_response
 import ../models/model_create_tenant_user_body
-import ../models/model_create_tenant_user200response
-import ../models/model_create_tenant200response
+import ../models/model_create_tenant_user_response
 import ../models/model_create_ticket_body
-import ../models/model_create_ticket200response
+import ../models/model_create_ticket_response
 import ../models/model_create_user_badge_params
-import ../models/model_create_user_badge200response
-import ../models/model_delete_comment_vote200response
-import ../models/model_delete_comment200response
-import ../models/model_delete_domain_config200response
-import ../models/model_delete_hash_tag_request
+import ../models/model_delete_comment_result
+import ../models/model_delete_domain_config_response
+import ../models/model_delete_hash_tag_request_body
 import ../models/model_delete_page_api_response
 import ../models/model_delete_sso_user_api_response
 import ../models/model_delete_subscription_api_response
 import ../models/model_feed_post
-import ../models/model_flag_comment_public200response
-import ../models/model_flag_comment200response
-import ../models/model_get_audit_logs200response
-import ../models/model_get_cached_notification_count200response
-import ../models/model_get_comment200response
-import ../models/model_get_comments200response
-import ../models/model_get_domain_config200response
-import ../models/model_get_domain_configs200response
-import ../models/model_get_email_template_definitions200response
-import ../models/model_get_email_template_render_errors200response
-import ../models/model_get_email_template200response
-import ../models/model_get_email_templates200response
-import ../models/model_get_feed_posts200response
-import ../models/model_get_hash_tags200response
-import ../models/model_get_moderator200response
-import ../models/model_get_moderators200response
-import ../models/model_get_notification_count200response
-import ../models/model_get_notifications200response
+import ../models/model_flag_comment_response
+import ../models/model_get_audit_logs_response
+import ../models/model_get_cached_notification_count_response
+import ../models/model_get_domain_config_response
+import ../models/model_get_domain_configs_response
+import ../models/model_get_email_template_definitions_response
+import ../models/model_get_email_template_render_errors_response
+import ../models/model_get_email_template_response
+import ../models/model_get_email_templates_response
+import ../models/model_get_feed_posts_response
+import ../models/model_get_hash_tags_response
+import ../models/model_get_moderator_response
+import ../models/model_get_moderators_response
+import ../models/model_get_notification_count_response
+import ../models/model_get_notifications_response
 import ../models/model_get_page_by_urlid_api_response
 import ../models/model_get_pages_api_response
-import ../models/model_get_pending_webhook_event_count200response
-import ../models/model_get_pending_webhook_events200response
-import ../models/model_get_question_config200response
-import ../models/model_get_question_configs200response
-import ../models/model_get_question_result200response
-import ../models/model_get_question_results200response
+import ../models/model_get_pending_webhook_event_count_response
+import ../models/model_get_pending_webhook_events_response
+import ../models/model_get_question_config_response
+import ../models/model_get_question_configs_response
+import ../models/model_get_question_result_response
+import ../models/model_get_question_results_response
 import ../models/model_get_sso_user_by_email_api_response
 import ../models/model_get_sso_user_by_id_api_response
-import ../models/model_get_sso_users200response
+import ../models/model_get_sso_users_response
 import ../models/model_get_subscriptions_api_response
-import ../models/model_get_tenant_daily_usages200response
-import ../models/model_get_tenant_package200response
-import ../models/model_get_tenant_packages200response
-import ../models/model_get_tenant_user200response
-import ../models/model_get_tenant_users200response
-import ../models/model_get_tenant200response
-import ../models/model_get_tenants200response
-import ../models/model_get_ticket200response
-import ../models/model_get_tickets200response
-import ../models/model_get_user_badge_progress_by_id200response
-import ../models/model_get_user_badge_progress_list200response
-import ../models/model_get_user_badge200response
-import ../models/model_get_user_badges200response
-import ../models/model_get_user200response
-import ../models/model_get_votes_for_user200response
-import ../models/model_get_votes200response
+import ../models/model_get_tenant_daily_usages_response
+import ../models/model_get_tenant_package_response
+import ../models/model_get_tenant_packages_response
+import ../models/model_get_tenant_response
+import ../models/model_get_tenant_user_response
+import ../models/model_get_tenant_users_response
+import ../models/model_get_tenants_response
+import ../models/model_get_ticket_response
+import ../models/model_get_tickets_response
+import ../models/model_get_user_response
+import ../models/model_get_votes_for_user_response
+import ../models/model_get_votes_response
 import ../models/model_patch_domain_config_params
-import ../models/model_patch_hash_tag200response
+import ../models/model_patch_domain_config_response
 import ../models/model_patch_page_api_response
 import ../models/model_patch_sso_user_api_response
+import ../models/model_put_domain_config_response
 import ../models/model_put_sso_user_api_response
 import ../models/model_render_email_template_body
-import ../models/model_render_email_template200response
+import ../models/model_render_email_template_response
 import ../models/model_replace_tenant_package_body
 import ../models/model_replace_tenant_user_body
 import ../models/model_sort_dir
-import ../models/model_save_comment200response
+import ../models/model_save_comments_bulk_response
 import ../models/model_sort_directions
-import ../models/model_un_block_comment_public200response
 import ../models/model_un_block_from_comment_params
+import ../models/model_unblock_success
 import ../models/model_updatable_comment_params
 import ../models/model_update_api_page_data
 import ../models/model_update_apisso_user_data
@@ -137,6 +140,7 @@ import ../models/model_update_api_user_subscription_data
 import ../models/model_update_domain_config_params
 import ../models/model_update_email_template_body
 import ../models/model_update_hash_tag_body
+import ../models/model_update_hash_tag_response
 import ../models/model_update_moderator_body
 import ../models/model_update_notification_body
 import ../models/model_update_question_config_body
@@ -146,8 +150,8 @@ import ../models/model_update_tenant_body
 import ../models/model_update_tenant_package_body
 import ../models/model_update_tenant_user_body
 import ../models/model_update_user_badge_params
-import ../models/model_update_user_badge200response
-import ../models/model_vote_comment200response
+import ../models/model_vote_delete_response
+import ../models/model_vote_response
 
 const basepath = "https://fastcomments.com"
 
@@ -164,7 +168,7 @@ template constructResult[T](response: Response): untyped =
     (none(T.typedesc), response)
 
 
-proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigParams: AddDomainConfigParams): (Option[AddDomainConfig_200_response], Response) =
+proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigParams: AddDomainConfigParams): (Option[AddDomainConfigResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -172,10 +176,10 @@ proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigP
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/domain-configs" & "?" & url_encoded_query_params, $(%addDomainConfigParams))
-  constructResult[AddDomainConfig_200_response](response)
+  constructResult[AddDomainConfigResponse](response)
 
 
-proc addHashTag*(httpClient: HttpClient, tenantId: string, createHashTagBody: CreateHashTagBody): (Option[AddHashTag_200_response], Response) =
+proc addHashTag*(httpClient: HttpClient, tenantId: string, createHashTagBody: CreateHashTagBody): (Option[CreateHashTagResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -184,10 +188,10 @@ proc addHashTag*(httpClient: HttpClient, tenantId: string, createHashTagBody: Cr
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/hash-tags" & "?" & url_encoded_query_params, $(%createHashTagBody))
-  constructResult[AddHashTag_200_response](response)
+  constructResult[CreateHashTagResponse](response)
 
 
-proc addHashTagsBulk*(httpClient: HttpClient, tenantId: string, bulkCreateHashTagsBody: BulkCreateHashTagsBody): (Option[AddHashTagsBulk_200_response], Response) =
+proc addHashTagsBulk*(httpClient: HttpClient, tenantId: string, bulkCreateHashTagsBody: BulkCreateHashTagsBody): (Option[BulkCreateHashTagsResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -196,7 +200,7 @@ proc addHashTagsBulk*(httpClient: HttpClient, tenantId: string, bulkCreateHashTa
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/hash-tags/bulk" & "?" & url_encoded_query_params, $(%bulkCreateHashTagsBody))
-  constructResult[AddHashTagsBulk_200_response](response)
+  constructResult[BulkCreateHashTagsResponse](response)
 
 
 proc addPage*(httpClient: HttpClient, tenantId: string, createAPIPageData: CreateAPIPageData): (Option[AddPageAPIResponse], Response) =
@@ -221,7 +225,7 @@ proc addSSOUser*(httpClient: HttpClient, tenantId: string, createAPISSOUserData:
   constructResult[AddSSOUserAPIResponse](response)
 
 
-proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: AggregationRequest, parentTenantId: string, includeStats: bool): (Option[AggregationResponse], Response) =
+proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: AggregationRequest, parentTenantId: string, includeStats: bool): (Option[AggregateResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -233,10 +237,10 @@ proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: Ag
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/aggregate" & "?" & url_encoded_query_params, $(%aggregationRequest))
-  constructResult[AggregationResponse](response)
+  constructResult[AggregateResponse](response)
 
 
-proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, timeBucket: AggregateTimeBucket, startDate: string, forceRecalculate: bool): (Option[AggregateQuestionResults_200_response], Response) =
+proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, timeBucket: AggregateTimeBucket, startDate: string, forceRecalculate: bool): (Option[AggregateQuestionResultsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -255,10 +259,10 @@ proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questio
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/question-results-aggregation" & "?" & url_encoded_query_params)
-  constructResult[AggregateQuestionResults_200_response](response)
+  constructResult[AggregateQuestionResultsResponse](response)
 
 
-proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, blockFromCommentParams: BlockFromCommentParams, userId: string, anonUserId: string): (Option[BlockFromCommentPublic_200_response], Response) =
+proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, blockFromCommentParams: BlockFromCommentParams, userId: string, anonUserId: string): (Option[BlockSuccess], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -270,10 +274,10 @@ proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string,
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/block" & "?" & url_encoded_query_params, $(%blockFromCommentParams))
-  constructResult[BlockFromCommentPublic_200_response](response)
+  constructResult[BlockSuccess](response)
 
 
-proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bulkAggregateQuestionResultsRequest: BulkAggregateQuestionResultsRequest, forceRecalculate: bool): (Option[BulkAggregateQuestionResults_200_response], Response) =
+proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bulkAggregateQuestionResultsRequest: BulkAggregateQuestionResultsRequest, forceRecalculate: bool): (Option[BulkAggregateQuestionResultsResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -283,10 +287,10 @@ proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bul
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/question-results-aggregation/bulk" & "?" & url_encoded_query_params, $(%bulkAggregateQuestionResultsRequest))
-  constructResult[BulkAggregateQuestionResults_200_response](response)
+  constructResult[BulkAggregateQuestionResultsResponse](response)
 
 
-proc changeTicketState*(httpClient: HttpClient, tenantId: string, userId: string, id: string, changeTicketStateBody: ChangeTicketStateBody): (Option[ChangeTicketState_200_response], Response) =
+proc changeTicketState*(httpClient: HttpClient, tenantId: string, userId: string, id: string, changeTicketStateBody: ChangeTicketStateBody): (Option[ChangeTicketStateResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -295,10 +299,10 @@ proc changeTicketState*(httpClient: HttpClient, tenantId: string, userId: string
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/tickets/{id}/state" & "?" & url_encoded_query_params, $(%changeTicketStateBody))
-  constructResult[ChangeTicketState_200_response](response)
+  constructResult[ChangeTicketStateResponse](response)
 
 
-proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, startDate: string, forceRecalculate: bool, minValue: float64, maxValue: float64, limit: float64): (Option[CombineCommentsWithQuestionResults_200_response], Response) =
+proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, startDate: string, forceRecalculate: bool, minValue: float64, maxValue: float64, limit: float64): (Option[CombineQuestionResultsWithCommentsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -321,10 +325,10 @@ proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: strin
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/question-results-aggregation/combine/comments" & "?" & url_encoded_query_params)
-  constructResult[CombineCommentsWithQuestionResults_200_response](response)
+  constructResult[CombineQuestionResultsWithCommentsResponse](response)
 
 
-proc createEmailTemplate*(httpClient: HttpClient, tenantId: string, createEmailTemplateBody: CreateEmailTemplateBody): (Option[CreateEmailTemplate_200_response], Response) =
+proc createEmailTemplate*(httpClient: HttpClient, tenantId: string, createEmailTemplateBody: CreateEmailTemplateBody): (Option[CreateEmailTemplateResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -332,10 +336,10 @@ proc createEmailTemplate*(httpClient: HttpClient, tenantId: string, createEmailT
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/email-templates" & "?" & url_encoded_query_params, $(%createEmailTemplateBody))
-  constructResult[CreateEmailTemplate_200_response](response)
+  constructResult[CreateEmailTemplateResponse](response)
 
 
-proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, broadcastId: string, isLive: bool, doSpamCheck: bool, skipDupCheck: bool): (Option[CreateFeedPost_200_response], Response) =
+proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, broadcastId: string, isLive: bool, doSpamCheck: bool, skipDupCheck: bool): (Option[CreateFeedPostsResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -351,10 +355,10 @@ proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostPar
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/feed-posts" & "?" & url_encoded_query_params, $(%createFeedPostParams))
-  constructResult[CreateFeedPost_200_response](response)
+  constructResult[CreateFeedPostsResponse](response)
 
 
-proc createModerator*(httpClient: HttpClient, tenantId: string, createModeratorBody: CreateModeratorBody): (Option[CreateModerator_200_response], Response) =
+proc createModerator*(httpClient: HttpClient, tenantId: string, createModeratorBody: CreateModeratorBody): (Option[CreateModeratorResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -362,10 +366,10 @@ proc createModerator*(httpClient: HttpClient, tenantId: string, createModeratorB
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/moderators" & "?" & url_encoded_query_params, $(%createModeratorBody))
-  constructResult[CreateModerator_200_response](response)
+  constructResult[CreateModeratorResponse](response)
 
 
-proc createQuestionConfig*(httpClient: HttpClient, tenantId: string, createQuestionConfigBody: CreateQuestionConfigBody): (Option[CreateQuestionConfig_200_response], Response) =
+proc createQuestionConfig*(httpClient: HttpClient, tenantId: string, createQuestionConfigBody: CreateQuestionConfigBody): (Option[CreateQuestionConfigResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -373,10 +377,10 @@ proc createQuestionConfig*(httpClient: HttpClient, tenantId: string, createQuest
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/question-configs" & "?" & url_encoded_query_params, $(%createQuestionConfigBody))
-  constructResult[CreateQuestionConfig_200_response](response)
+  constructResult[CreateQuestionConfigResponse](response)
 
 
-proc createQuestionResult*(httpClient: HttpClient, tenantId: string, createQuestionResultBody: CreateQuestionResultBody): (Option[CreateQuestionResult_200_response], Response) =
+proc createQuestionResult*(httpClient: HttpClient, tenantId: string, createQuestionResultBody: CreateQuestionResultBody): (Option[CreateQuestionResultResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -384,7 +388,7 @@ proc createQuestionResult*(httpClient: HttpClient, tenantId: string, createQuest
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/question-results" & "?" & url_encoded_query_params, $(%createQuestionResultBody))
-  constructResult[CreateQuestionResult_200_response](response)
+  constructResult[CreateQuestionResultResponse](response)
 
 
 proc createSubscription*(httpClient: HttpClient, tenantId: string, createAPIUserSubscriptionData: CreateAPIUserSubscriptionData): (Option[CreateSubscriptionAPIResponse], Response) =
@@ -398,7 +402,7 @@ proc createSubscription*(httpClient: HttpClient, tenantId: string, createAPIUser
   constructResult[CreateSubscriptionAPIResponse](response)
 
 
-proc createTenant*(httpClient: HttpClient, tenantId: string, createTenantBody: CreateTenantBody): (Option[CreateTenant_200_response], Response) =
+proc createTenant*(httpClient: HttpClient, tenantId: string, createTenantBody: CreateTenantBody): (Option[CreateTenantResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -406,10 +410,10 @@ proc createTenant*(httpClient: HttpClient, tenantId: string, createTenantBody: C
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/tenants" & "?" & url_encoded_query_params, $(%createTenantBody))
-  constructResult[CreateTenant_200_response](response)
+  constructResult[CreateTenantResponse](response)
 
 
-proc createTenantPackage*(httpClient: HttpClient, tenantId: string, createTenantPackageBody: CreateTenantPackageBody): (Option[CreateTenantPackage_200_response], Response) =
+proc createTenantPackage*(httpClient: HttpClient, tenantId: string, createTenantPackageBody: CreateTenantPackageBody): (Option[CreateTenantPackageResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -417,10 +421,10 @@ proc createTenantPackage*(httpClient: HttpClient, tenantId: string, createTenant
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/tenant-packages" & "?" & url_encoded_query_params, $(%createTenantPackageBody))
-  constructResult[CreateTenantPackage_200_response](response)
+  constructResult[CreateTenantPackageResponse](response)
 
 
-proc createTenantUser*(httpClient: HttpClient, tenantId: string, createTenantUserBody: CreateTenantUserBody): (Option[CreateTenantUser_200_response], Response) =
+proc createTenantUser*(httpClient: HttpClient, tenantId: string, createTenantUserBody: CreateTenantUserBody): (Option[CreateTenantUserResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -428,10 +432,10 @@ proc createTenantUser*(httpClient: HttpClient, tenantId: string, createTenantUse
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/tenant-users" & "?" & url_encoded_query_params, $(%createTenantUserBody))
-  constructResult[CreateTenantUser_200_response](response)
+  constructResult[CreateTenantUserResponse](response)
 
 
-proc createTicket*(httpClient: HttpClient, tenantId: string, userId: string, createTicketBody: CreateTicketBody): (Option[CreateTicket_200_response], Response) =
+proc createTicket*(httpClient: HttpClient, tenantId: string, userId: string, createTicketBody: CreateTicketBody): (Option[CreateTicketResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -440,10 +444,10 @@ proc createTicket*(httpClient: HttpClient, tenantId: string, userId: string, cre
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/tickets" & "?" & url_encoded_query_params, $(%createTicketBody))
-  constructResult[CreateTicket_200_response](response)
+  constructResult[CreateTicketResponse](response)
 
 
-proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeParams: CreateUserBadgeParams): (Option[CreateUserBadge_200_response], Response) =
+proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeParams: CreateUserBadgeParams): (Option[APICreateUserBadgeResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -451,10 +455,10 @@ proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeP
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/user-badges" & "?" & url_encoded_query_params, $(%createUserBadgeParams))
-  constructResult[CreateUserBadge_200_response](response)
+  constructResult[APICreateUserBadgeResponse](response)
 
 
-proc createVote*(httpClient: HttpClient, tenantId: string, commentId: string, direction: string, userId: string, anonUserId: string): (Option[VoteComment_200_response], Response) =
+proc createVote*(httpClient: HttpClient, tenantId: string, commentId: string, direction: string, userId: string, anonUserId: string): (Option[VoteResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -467,10 +471,10 @@ proc createVote*(httpClient: HttpClient, tenantId: string, commentId: string, di
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/votes" & "?" & url_encoded_query_params)
-  constructResult[VoteComment_200_response](response)
+  constructResult[VoteResponse](response)
 
 
-proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contextUserId: string, isLive: bool): (Option[DeleteComment_200_response], Response) =
+proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contextUserId: string, isLive: bool): (Option[DeleteCommentResult], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -481,51 +485,51 @@ proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contex
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/comments/{id}" & "?" & url_encoded_query_params)
-  constructResult[DeleteComment_200_response](response)
+  constructResult[DeleteCommentResult](response)
 
 
-proc deleteDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[DeleteDomainConfig_200_response], Response) =
+proc deleteDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[DeleteDomainConfigResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/domain-configs/{domain}" & "?" & url_encoded_query_params)
-  constructResult[DeleteDomainConfig_200_response](response)
+  constructResult[DeleteDomainConfigResponse](response)
 
 
-proc deleteEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/email-templates/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteEmailTemplateRenderError*(httpClient: HttpClient, tenantId: string, id: string, errorId: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteEmailTemplateRenderError*(httpClient: HttpClient, tenantId: string, id: string, errorId: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/email-templates/{id}/render-errors/{errorId}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteHashTag*(httpClient: HttpClient, tag: string, tenantId: string, deleteHashTagRequest: DeleteHashTagRequest): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteHashTag*(httpClient: HttpClient, tag: string, tenantId: string, deleteHashTagRequestBody: DeleteHashTagRequestBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
-  let response = httpClient.request(basepath & fmt"/api/v1/hash-tags/{tag}" & "?" & url_encoded_query_params, httpMethod = HttpDelete, body = $(%deleteHashTagRequest))
-  constructResult[FlagCommentPublic_200_response](response)
+  let response = httpClient.request(basepath & fmt"/api/v1/hash-tags/{tag}" & "?" & url_encoded_query_params, httpMethod = HttpDelete, body = $(%deleteHashTagRequestBody))
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, sendEmail: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, sendEmail: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -534,17 +538,17 @@ proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, send
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/moderators/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteNotificationCount*(httpClient: HttpClient, tenantId: string, id: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteNotificationCount*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/notification-count/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
 proc deletePage*(httpClient: HttpClient, tenantId: string, id: string): (Option[DeletePageAPIResponse], Response) =
@@ -557,34 +561,34 @@ proc deletePage*(httpClient: HttpClient, tenantId: string, id: string): (Option[
   constructResult[DeletePageAPIResponse](response)
 
 
-proc deletePendingWebhookEvent*(httpClient: HttpClient, tenantId: string, id: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deletePendingWebhookEvent*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/pending-webhook-events/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/question-configs/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/question-results/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
 proc deleteSSOUser*(httpClient: HttpClient, tenantId: string, id: string, deleteComments: bool, commentDeleteMode: string): (Option[DeleteSSOUserAPIResponse], Response) =
@@ -613,7 +617,7 @@ proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, u
   constructResult[DeleteSubscriptionAPIResponse](response)
 
 
-proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, sure: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, sure: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -622,20 +626,20 @@ proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, sure: s
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/tenants/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/tenant-packages/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteTenantUser*(httpClient: HttpClient, tenantId: string, id: string, deleteComments: string, commentDeleteMode: string): (Option[FlagCommentPublic_200_response], Response) =
+proc deleteTenantUser*(httpClient: HttpClient, tenantId: string, id: string, deleteComments: string, commentDeleteMode: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -646,20 +650,20 @@ proc deleteTenantUser*(httpClient: HttpClient, tenantId: string, id: string, del
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/tenant-users/{id}" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[UpdateUserBadge_200_response], Response) =
+proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptySuccessResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/user-badges/{id}" & "?" & url_encoded_query_params)
-  constructResult[UpdateUserBadge_200_response](response)
+  constructResult[APIEmptySuccessResponse](response)
 
 
-proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, editKey: string): (Option[DeleteCommentVote_200_response], Response) =
+proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, editKey: string): (Option[VoteDeleteResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -668,10 +672,10 @@ proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, editKey: 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/api/v1/votes/{id}" & "?" & url_encoded_query_params)
-  constructResult[DeleteCommentVote_200_response](response)
+  constructResult[VoteDeleteResponse](response)
 
 
-proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagComment_200_response], Response) =
+proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagCommentResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -682,10 +686,10 @@ proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/flag" & "?" & url_encoded_query_params)
-  constructResult[FlagComment_200_response](response)
+  constructResult[FlagCommentResponse](response)
 
 
-proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, skip: float64, order: SORTDIR, after: float64, before: float64): (Option[GetAuditLogs_200_response], Response) =
+proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, skip: float64, order: SORTDIR, after: float64, before: float64): (Option[GetAuditLogsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -702,30 +706,30 @@ proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, ski
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/audit-logs" & "?" & url_encoded_query_params)
-  constructResult[GetAuditLogs_200_response](response)
+  constructResult[GetAuditLogsResponse](response)
 
 
-proc getCachedNotificationCount*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetCachedNotificationCount_200_response], Response) =
+proc getCachedNotificationCount*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetCachedNotificationCountResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/notification-count/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetCachedNotificationCount_200_response](response)
+  constructResult[GetCachedNotificationCountResponse](response)
 
 
-proc getComment*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetComment_200_response], Response) =
+proc getComment*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIGetCommentResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/comments/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetComment_200_response](response)
+  constructResult[APIGetCommentResponse](response)
 
 
-proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: int, skip: int, asTree: bool, skipChildren: int, limitChildren: int, maxTreeDepth: int, urlId: string, userId: string, anonUserId: string, contextUserId: string, hashTag: string, parentId: string, direction: SortDirections): (Option[GetComments_200_response], Response) =
+proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: int, skip: int, asTree: bool, skipChildren: int, limitChildren: int, maxTreeDepth: int, urlId: string, userId: string, anonUserId: string, contextUserId: string, hashTag: string, parentId: string, direction: SortDirections, fromDate: int64, toDate: int64): (Option[APIGetCommentsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -757,53 +761,57 @@ proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: in
     query_params_list.add(("parentId", $parentId))
   if $direction != "":
     query_params_list.add(("direction", $direction))
+  if $fromDate != "":
+    query_params_list.add(("fromDate", $fromDate))
+  if $toDate != "":
+    query_params_list.add(("toDate", $toDate))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/comments" & "?" & url_encoded_query_params)
-  constructResult[GetComments_200_response](response)
+  constructResult[APIGetCommentsResponse](response)
 
 
-proc getDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[GetDomainConfig_200_response], Response) =
+proc getDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[GetDomainConfigResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/domain-configs/{domain}" & "?" & url_encoded_query_params)
-  constructResult[GetDomainConfig_200_response](response)
+  constructResult[GetDomainConfigResponse](response)
 
 
-proc getDomainConfigs*(httpClient: HttpClient, tenantId: string): (Option[GetDomainConfigs_200_response], Response) =
+proc getDomainConfigs*(httpClient: HttpClient, tenantId: string): (Option[GetDomainConfigsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/domain-configs" & "?" & url_encoded_query_params)
-  constructResult[GetDomainConfigs_200_response](response)
+  constructResult[GetDomainConfigsResponse](response)
 
 
-proc getEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetEmailTemplate_200_response], Response) =
+proc getEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetEmailTemplateResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/email-templates/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetEmailTemplate_200_response](response)
+  constructResult[GetEmailTemplateResponse](response)
 
 
-proc getEmailTemplateDefinitions*(httpClient: HttpClient, tenantId: string): (Option[GetEmailTemplateDefinitions_200_response], Response) =
+proc getEmailTemplateDefinitions*(httpClient: HttpClient, tenantId: string): (Option[GetEmailTemplateDefinitionsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/email-templates/definitions" & "?" & url_encoded_query_params)
-  constructResult[GetEmailTemplateDefinitions_200_response](response)
+  constructResult[GetEmailTemplateDefinitionsResponse](response)
 
 
-proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id: string, skip: float64): (Option[GetEmailTemplateRenderErrors_200_response], Response) =
+proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id: string, skip: float64): (Option[GetEmailTemplateRenderErrorsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -812,10 +820,10 @@ proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id:
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/email-templates/{id}/render-errors" & "?" & url_encoded_query_params)
-  constructResult[GetEmailTemplateRenderErrors_200_response](response)
+  constructResult[GetEmailTemplateRenderErrorsResponse](response)
 
 
-proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetEmailTemplates_200_response], Response) =
+proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetEmailTemplatesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -824,10 +832,10 @@ proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, skip: float64)
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/email-templates" & "?" & url_encoded_query_params)
-  constructResult[GetEmailTemplates_200_response](response)
+  constructResult[GetEmailTemplatesResponse](response)
 
 
-proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, limit: int, tags: seq[string]): (Option[GetFeedPosts_200_response], Response) =
+proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, limit: int, tags: seq[string]): (Option[GetFeedPostsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -840,10 +848,10 @@ proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, li
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/feed-posts" & "?" & url_encoded_query_params)
-  constructResult[GetFeedPosts_200_response](response)
+  constructResult[GetFeedPostsResponse](response)
 
 
-proc getHashTags*(httpClient: HttpClient, tenantId: string, page: float64): (Option[GetHashTags_200_response], Response) =
+proc getHashTags*(httpClient: HttpClient, tenantId: string, page: float64): (Option[GetHashTagsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -852,20 +860,20 @@ proc getHashTags*(httpClient: HttpClient, tenantId: string, page: float64): (Opt
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/hash-tags" & "?" & url_encoded_query_params)
-  constructResult[GetHashTags_200_response](response)
+  constructResult[GetHashTagsResponse](response)
 
 
-proc getModerator*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetModerator_200_response], Response) =
+proc getModerator*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetModeratorResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/moderators/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetModerator_200_response](response)
+  constructResult[GetModeratorResponse](response)
 
 
-proc getModerators*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetModerators_200_response], Response) =
+proc getModerators*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetModeratorsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -874,10 +882,10 @@ proc getModerators*(httpClient: HttpClient, tenantId: string, skip: float64): (O
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/moderators" & "?" & url_encoded_query_params)
-  constructResult[GetModerators_200_response](response)
+  constructResult[GetModeratorsResponse](response)
 
 
-proc getNotificationCount*(httpClient: HttpClient, tenantId: string, userId: string, urlId: string, fromCommentId: string, viewed: bool, `type`: string): (Option[GetNotificationCount_200_response], Response) =
+proc getNotificationCount*(httpClient: HttpClient, tenantId: string, userId: string, urlId: string, fromCommentId: string, viewed: bool, `type`: string): (Option[GetNotificationCountResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -894,10 +902,10 @@ proc getNotificationCount*(httpClient: HttpClient, tenantId: string, userId: str
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/notifications/count" & "?" & url_encoded_query_params)
-  constructResult[GetNotificationCount_200_response](response)
+  constructResult[GetNotificationCountResponse](response)
 
 
-proc getNotifications*(httpClient: HttpClient, tenantId: string, userId: string, urlId: string, fromCommentId: string, viewed: bool, `type`: string, skip: float64): (Option[GetNotifications_200_response], Response) =
+proc getNotifications*(httpClient: HttpClient, tenantId: string, userId: string, urlId: string, fromCommentId: string, viewed: bool, `type`: string, skip: float64): (Option[GetNotificationsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -916,7 +924,7 @@ proc getNotifications*(httpClient: HttpClient, tenantId: string, userId: string,
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/notifications" & "?" & url_encoded_query_params)
-  constructResult[GetNotifications_200_response](response)
+  constructResult[GetNotificationsResponse](response)
 
 
 proc getPageByURLId*(httpClient: HttpClient, tenantId: string, urlId: string): (Option[GetPageByURLIdAPIResponse], Response) =
@@ -940,7 +948,7 @@ proc getPages*(httpClient: HttpClient, tenantId: string): (Option[GetPagesAPIRes
   constructResult[GetPagesAPIResponse](response)
 
 
-proc getPendingWebhookEventCount*(httpClient: HttpClient, tenantId: string, commentId: string, externalId: string, eventType: string, `type`: string, domain: string, attemptCountGT: float64): (Option[GetPendingWebhookEventCount_200_response], Response) =
+proc getPendingWebhookEventCount*(httpClient: HttpClient, tenantId: string, commentId: string, externalId: string, eventType: string, `type`: string, domain: string, attemptCountGT: float64): (Option[GetPendingWebhookEventCountResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -959,10 +967,10 @@ proc getPendingWebhookEventCount*(httpClient: HttpClient, tenantId: string, comm
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/pending-webhook-events/count" & "?" & url_encoded_query_params)
-  constructResult[GetPendingWebhookEventCount_200_response](response)
+  constructResult[GetPendingWebhookEventCountResponse](response)
 
 
-proc getPendingWebhookEvents*(httpClient: HttpClient, tenantId: string, commentId: string, externalId: string, eventType: string, `type`: string, domain: string, attemptCountGT: float64, skip: float64): (Option[GetPendingWebhookEvents_200_response], Response) =
+proc getPendingWebhookEvents*(httpClient: HttpClient, tenantId: string, commentId: string, externalId: string, eventType: string, `type`: string, domain: string, attemptCountGT: float64, skip: float64): (Option[GetPendingWebhookEventsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -983,20 +991,20 @@ proc getPendingWebhookEvents*(httpClient: HttpClient, tenantId: string, commentI
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/pending-webhook-events" & "?" & url_encoded_query_params)
-  constructResult[GetPendingWebhookEvents_200_response](response)
+  constructResult[GetPendingWebhookEventsResponse](response)
 
 
-proc getQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetQuestionConfig_200_response], Response) =
+proc getQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetQuestionConfigResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/question-configs/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetQuestionConfig_200_response](response)
+  constructResult[GetQuestionConfigResponse](response)
 
 
-proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetQuestionConfigs_200_response], Response) =
+proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetQuestionConfigsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1005,20 +1013,20 @@ proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, skip: float64
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/question-configs" & "?" & url_encoded_query_params)
-  constructResult[GetQuestionConfigs_200_response](response)
+  constructResult[GetQuestionConfigsResponse](response)
 
 
-proc getQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetQuestionResult_200_response], Response) =
+proc getQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetQuestionResultResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/question-results/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetQuestionResult_200_response](response)
+  constructResult[GetQuestionResultResponse](response)
 
 
-proc getQuestionResults*(httpClient: HttpClient, tenantId: string, urlId: string, userId: string, startDate: string, questionId: string, questionIds: string, skip: float64): (Option[GetQuestionResults_200_response], Response) =
+proc getQuestionResults*(httpClient: HttpClient, tenantId: string, urlId: string, userId: string, startDate: string, questionId: string, questionIds: string, skip: float64): (Option[GetQuestionResultsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1037,7 +1045,7 @@ proc getQuestionResults*(httpClient: HttpClient, tenantId: string, urlId: string
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/question-results" & "?" & url_encoded_query_params)
-  constructResult[GetQuestionResults_200_response](response)
+  constructResult[GetQuestionResultsResponse](response)
 
 
 proc getSSOUserByEmail*(httpClient: HttpClient, tenantId: string, email: string): (Option[GetSSOUserByEmailAPIResponse], Response) =
@@ -1060,7 +1068,7 @@ proc getSSOUserById*(httpClient: HttpClient, tenantId: string, id: string): (Opt
   constructResult[GetSSOUserByIdAPIResponse](response)
 
 
-proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[GetSSOUsers_200_response], Response) =
+proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[GetSSOUsersResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1069,7 +1077,7 @@ proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/sso-users" & "?" & url_encoded_query_params)
-  constructResult[GetSSOUsers_200_response](response)
+  constructResult[GetSSOUsersResponse](response)
 
 
 proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string): (Option[GetSubscriptionsAPIResponse], Response) =
@@ -1084,17 +1092,17 @@ proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string)
   constructResult[GetSubscriptionsAPIResponse](response)
 
 
-proc getTenant*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenant_200_response], Response) =
+proc getTenant*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/tenants/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetTenant_200_response](response)
+  constructResult[GetTenantResponse](response)
 
 
-proc getTenantDailyUsages*(httpClient: HttpClient, tenantId: string, yearNumber: float64, monthNumber: float64, dayNumber: float64, skip: float64): (Option[GetTenantDailyUsages_200_response], Response) =
+proc getTenantDailyUsages*(httpClient: HttpClient, tenantId: string, yearNumber: float64, monthNumber: float64, dayNumber: float64, skip: float64): (Option[GetTenantDailyUsagesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1109,20 +1117,20 @@ proc getTenantDailyUsages*(httpClient: HttpClient, tenantId: string, yearNumber:
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/tenant-daily-usage" & "?" & url_encoded_query_params)
-  constructResult[GetTenantDailyUsages_200_response](response)
+  constructResult[GetTenantDailyUsagesResponse](response)
 
 
-proc getTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantPackage_200_response], Response) =
+proc getTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantPackageResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/tenant-packages/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetTenantPackage_200_response](response)
+  constructResult[GetTenantPackageResponse](response)
 
 
-proc getTenantPackages*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantPackages_200_response], Response) =
+proc getTenantPackages*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantPackagesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1131,20 +1139,20 @@ proc getTenantPackages*(httpClient: HttpClient, tenantId: string, skip: float64)
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/tenant-packages" & "?" & url_encoded_query_params)
-  constructResult[GetTenantPackages_200_response](response)
+  constructResult[GetTenantPackagesResponse](response)
 
 
-proc getTenantUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantUser_200_response], Response) =
+proc getTenantUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantUserResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/tenant-users/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetTenantUser_200_response](response)
+  constructResult[GetTenantUserResponse](response)
 
 
-proc getTenantUsers*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantUsers_200_response], Response) =
+proc getTenantUsers*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantUsersResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1153,10 +1161,10 @@ proc getTenantUsers*(httpClient: HttpClient, tenantId: string, skip: float64): (
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/tenant-users" & "?" & url_encoded_query_params)
-  constructResult[GetTenantUsers_200_response](response)
+  constructResult[GetTenantUsersResponse](response)
 
 
-proc getTenants*(httpClient: HttpClient, tenantId: string, meta: string, skip: float64): (Option[GetTenants_200_response], Response) =
+proc getTenants*(httpClient: HttpClient, tenantId: string, meta: string, skip: float64): (Option[GetTenantsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1167,10 +1175,10 @@ proc getTenants*(httpClient: HttpClient, tenantId: string, meta: string, skip: f
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/tenants" & "?" & url_encoded_query_params)
-  constructResult[GetTenants_200_response](response)
+  constructResult[GetTenantsResponse](response)
 
 
-proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: string): (Option[GetTicket_200_response], Response) =
+proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: string): (Option[GetTicketResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1179,10 +1187,10 @@ proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: st
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/tickets/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetTicket_200_response](response)
+  constructResult[GetTicketResponse](response)
 
 
-proc getTickets*(httpClient: HttpClient, tenantId: string, userId: string, state: float64, skip: float64, limit: float64): (Option[GetTickets_200_response], Response) =
+proc getTickets*(httpClient: HttpClient, tenantId: string, userId: string, state: float64, skip: float64, limit: float64): (Option[GetTicketsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1197,50 +1205,50 @@ proc getTickets*(httpClient: HttpClient, tenantId: string, userId: string, state
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/tickets" & "?" & url_encoded_query_params)
-  constructResult[GetTickets_200_response](response)
+  constructResult[GetTicketsResponse](response)
 
 
-proc getUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUser_200_response], Response) =
+proc getUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUserResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/users/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetUser_200_response](response)
+  constructResult[GetUserResponse](response)
 
 
-proc getUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUserBadge_200_response], Response) =
+proc getUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIGetUserBadgeResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/user-badges/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetUserBadge_200_response](response)
+  constructResult[APIGetUserBadgeResponse](response)
 
 
-proc getUserBadgeProgressById*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUserBadgeProgressById_200_response], Response) =
+proc getUserBadgeProgressById*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIGetUserBadgeProgressResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/user-badge-progress/{id}" & "?" & url_encoded_query_params)
-  constructResult[GetUserBadgeProgressById_200_response](response)
+  constructResult[APIGetUserBadgeProgressResponse](response)
 
 
-proc getUserBadgeProgressByUserId*(httpClient: HttpClient, tenantId: string, userId: string): (Option[GetUserBadgeProgressById_200_response], Response) =
+proc getUserBadgeProgressByUserId*(httpClient: HttpClient, tenantId: string, userId: string): (Option[APIGetUserBadgeProgressResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/api/v1/user-badge-progress/user/{userId}" & "?" & url_encoded_query_params)
-  constructResult[GetUserBadgeProgressById_200_response](response)
+  constructResult[APIGetUserBadgeProgressResponse](response)
 
 
-proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId: string, limit: float64, skip: float64): (Option[GetUserBadgeProgressList_200_response], Response) =
+proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId: string, limit: float64, skip: float64): (Option[APIGetUserBadgeProgressListResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1253,10 +1261,10 @@ proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId:
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/user-badge-progress" & "?" & url_encoded_query_params)
-  constructResult[GetUserBadgeProgressList_200_response](response)
+  constructResult[APIGetUserBadgeProgressListResponse](response)
 
 
-proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, badgeId: string, `type`: float64, displayedOnComments: bool, limit: float64, skip: float64): (Option[GetUserBadges_200_response], Response) =
+proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, badgeId: string, `type`: float64, displayedOnComments: bool, limit: float64, skip: float64): (Option[APIGetUserBadgesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1275,10 +1283,10 @@ proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, ba
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/user-badges" & "?" & url_encoded_query_params)
-  constructResult[GetUserBadges_200_response](response)
+  constructResult[APIGetUserBadgesResponse](response)
 
 
-proc getVotes*(httpClient: HttpClient, tenantId: string, urlId: string): (Option[GetVotes_200_response], Response) =
+proc getVotes*(httpClient: HttpClient, tenantId: string, urlId: string): (Option[GetVotesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1286,10 +1294,10 @@ proc getVotes*(httpClient: HttpClient, tenantId: string, urlId: string): (Option
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/votes" & "?" & url_encoded_query_params)
-  constructResult[GetVotes_200_response](response)
+  constructResult[GetVotesResponse](response)
 
 
-proc getVotesForUser*(httpClient: HttpClient, tenantId: string, urlId: string, userId: string, anonUserId: string): (Option[GetVotesForUser_200_response], Response) =
+proc getVotesForUser*(httpClient: HttpClient, tenantId: string, urlId: string, userId: string, anonUserId: string): (Option[GetVotesForUserResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1301,10 +1309,10 @@ proc getVotesForUser*(httpClient: HttpClient, tenantId: string, urlId: string, u
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/api/v1/votes/for-user" & "?" & url_encoded_query_params)
-  constructResult[GetVotesForUser_200_response](response)
+  constructResult[GetVotesForUserResponse](response)
 
 
-proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, patchDomainConfigParams: PatchDomainConfigParams): (Option[GetDomainConfig_200_response], Response) =
+proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, patchDomainConfigParams: PatchDomainConfigParams): (Option[PatchDomainConfigResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1312,10 +1320,10 @@ proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/domain-configs/{domainToUpdate}" & "?" & url_encoded_query_params, $(%patchDomainConfigParams))
-  constructResult[GetDomainConfig_200_response](response)
+  constructResult[PatchDomainConfigResponse](response)
 
 
-proc patchHashTag*(httpClient: HttpClient, tag: string, tenantId: string, updateHashTagBody: UpdateHashTagBody): (Option[PatchHashTag_200_response], Response) =
+proc patchHashTag*(httpClient: HttpClient, tag: string, tenantId: string, updateHashTagBody: UpdateHashTagBody): (Option[UpdateHashTagResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1324,7 +1332,7 @@ proc patchHashTag*(httpClient: HttpClient, tag: string, tenantId: string, update
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/hash-tags/{tag}" & "?" & url_encoded_query_params, $(%updateHashTagBody))
-  constructResult[PatchHashTag_200_response](response)
+  constructResult[UpdateHashTagResponse](response)
 
 
 proc patchPage*(httpClient: HttpClient, tenantId: string, id: string, updateAPIPageData: UpdateAPIPageData): (Option[PatchPageAPIResponse], Response) =
@@ -1351,7 +1359,7 @@ proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateA
   constructResult[PatchSSOUserAPIResponse](response)
 
 
-proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, updateDomainConfigParams: UpdateDomainConfigParams): (Option[GetDomainConfig_200_response], Response) =
+proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, updateDomainConfigParams: UpdateDomainConfigParams): (Option[PutDomainConfigResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1359,7 +1367,7 @@ proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/domain-configs/{domainToUpdate}" & "?" & url_encoded_query_params, $(%updateDomainConfigParams))
-  constructResult[GetDomainConfig_200_response](response)
+  constructResult[PutDomainConfigResponse](response)
 
 
 proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PutSSOUserAPIResponse], Response) =
@@ -1375,7 +1383,7 @@ proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPI
   constructResult[PutSSOUserAPIResponse](response)
 
 
-proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailTemplateBody: RenderEmailTemplateBody, locale: string): (Option[RenderEmailTemplate_200_response], Response) =
+proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailTemplateBody: RenderEmailTemplateBody, locale: string): (Option[RenderEmailTemplateResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1385,10 +1393,10 @@ proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailT
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/email-templates/render" & "?" & url_encoded_query_params, $(%renderEmailTemplateBody))
-  constructResult[RenderEmailTemplate_200_response](response)
+  constructResult[RenderEmailTemplateResponse](response)
 
 
-proc replaceTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantPackageBody: ReplaceTenantPackageBody): (Option[FlagCommentPublic_200_response], Response) =
+proc replaceTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantPackageBody: ReplaceTenantPackageBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1396,10 +1404,10 @@ proc replaceTenantPackage*(httpClient: HttpClient, tenantId: string, id: string,
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/tenant-packages/{id}" & "?" & url_encoded_query_params, $(%replaceTenantPackageBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantUserBody: ReplaceTenantUserBody, updateComments: string): (Option[FlagCommentPublic_200_response], Response) =
+proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantUserBody: ReplaceTenantUserBody, updateComments: string): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1409,10 +1417,10 @@ proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, re
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/tenant-users/{id}" & "?" & url_encoded_query_params, $(%replaceTenantUserBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams: CreateCommentParams, isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[SaveComment_200_response], Response) =
+proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams: CreateCommentParams, isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[APISaveCommentResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1428,10 +1436,10 @@ proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams:
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/comments" & "?" & url_encoded_query_params, $(%createCommentParams))
-  constructResult[SaveComment_200_response](response)
+  constructResult[APISaveCommentResponse](response)
 
 
-proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentParams: seq[CreateCommentParams], isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[seq[SaveComment_200_response]], Response) =
+proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentParams: seq[CreateCommentParams], isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[seq[SaveCommentsBulkResponse]], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1447,10 +1455,10 @@ proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentPa
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/api/v1/comments/bulk" & "?" & url_encoded_query_params, $(%createCommentParams))
-  constructResult[seq[SaveComment_200_response]](response)
+  constructResult[seq[SaveCommentsBulkResponse]](response)
 
 
-proc sendInvite*(httpClient: HttpClient, tenantId: string, id: string, fromName: string): (Option[FlagCommentPublic_200_response], Response) =
+proc sendInvite*(httpClient: HttpClient, tenantId: string, id: string, fromName: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1458,10 +1466,10 @@ proc sendInvite*(httpClient: HttpClient, tenantId: string, id: string, fromName:
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/moderators/{id}/send-invite" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, redirectURL: string): (Option[FlagCommentPublic_200_response], Response) =
+proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, redirectURL: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1470,10 +1478,10 @@ proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, redire
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/tenant-users/{id}/send-login-link" & "?" & url_encoded_query_params)
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, unBlockFromCommentParams: UnBlockFromCommentParams, userId: string, anonUserId: string): (Option[UnBlockCommentPublic_200_response], Response) =
+proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, unBlockFromCommentParams: UnBlockFromCommentParams, userId: string, anonUserId: string): (Option[UnblockSuccess], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1485,10 +1493,10 @@ proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: strin
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/un-block" & "?" & url_encoded_query_params, $(%unBlockFromCommentParams))
-  constructResult[UnBlockCommentPublic_200_response](response)
+  constructResult[UnblockSuccess](response)
 
 
-proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagComment_200_response], Response) =
+proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagCommentResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1499,10 +1507,10 @@ proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/api/v1/comments/{id}/un-flag" & "?" & url_encoded_query_params)
-  constructResult[FlagComment_200_response](response)
+  constructResult[FlagCommentResponse](response)
 
 
-proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updatableCommentParams: UpdatableCommentParams, contextUserId: string, doSpamCheck: bool, isLive: bool): (Option[FlagCommentPublic_200_response], Response) =
+proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updatableCommentParams: UpdatableCommentParams, contextUserId: string, doSpamCheck: bool, isLive: bool): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1516,10 +1524,10 @@ proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updata
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/comments/{id}" & "?" & url_encoded_query_params, $(%updatableCommentParams))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string, updateEmailTemplateBody: UpdateEmailTemplateBody): (Option[FlagCommentPublic_200_response], Response) =
+proc updateEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string, updateEmailTemplateBody: UpdateEmailTemplateBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1527,10 +1535,10 @@ proc updateEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string, 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/email-templates/{id}" & "?" & url_encoded_query_params, $(%updateEmailTemplateBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedPost: FeedPost): (Option[FlagCommentPublic_200_response], Response) =
+proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedPost: FeedPost): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1538,10 +1546,10 @@ proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedP
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/feed-posts/{id}" & "?" & url_encoded_query_params, $(%feedPost))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateModerator*(httpClient: HttpClient, tenantId: string, id: string, updateModeratorBody: UpdateModeratorBody): (Option[FlagCommentPublic_200_response], Response) =
+proc updateModerator*(httpClient: HttpClient, tenantId: string, id: string, updateModeratorBody: UpdateModeratorBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1549,10 +1557,10 @@ proc updateModerator*(httpClient: HttpClient, tenantId: string, id: string, upda
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/moderators/{id}" & "?" & url_encoded_query_params, $(%updateModeratorBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, updateNotificationBody: UpdateNotificationBody, userId: string): (Option[FlagCommentPublic_200_response], Response) =
+proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, updateNotificationBody: UpdateNotificationBody, userId: string): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1562,10 +1570,10 @@ proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, u
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/notifications/{id}" & "?" & url_encoded_query_params, $(%updateNotificationBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string, updateQuestionConfigBody: UpdateQuestionConfigBody): (Option[FlagCommentPublic_200_response], Response) =
+proc updateQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string, updateQuestionConfigBody: UpdateQuestionConfigBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1573,10 +1581,10 @@ proc updateQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string,
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/question-configs/{id}" & "?" & url_encoded_query_params, $(%updateQuestionConfigBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string, updateQuestionResultBody: UpdateQuestionResultBody): (Option[FlagCommentPublic_200_response], Response) =
+proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string, updateQuestionResultBody: UpdateQuestionResultBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1584,7 +1592,7 @@ proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string,
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/question-results/{id}" & "?" & url_encoded_query_params, $(%updateQuestionResultBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
 proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, updateAPIUserSubscriptionData: UpdateAPIUserSubscriptionData, userId: string): (Option[UpdateSubscriptionAPIResponse], Response) =
@@ -1600,7 +1608,7 @@ proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, u
   constructResult[UpdateSubscriptionAPIResponse](response)
 
 
-proc updateTenant*(httpClient: HttpClient, tenantId: string, id: string, updateTenantBody: UpdateTenantBody): (Option[FlagCommentPublic_200_response], Response) =
+proc updateTenant*(httpClient: HttpClient, tenantId: string, id: string, updateTenantBody: UpdateTenantBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1608,10 +1616,10 @@ proc updateTenant*(httpClient: HttpClient, tenantId: string, id: string, updateT
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/tenants/{id}" & "?" & url_encoded_query_params, $(%updateTenantBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, updateTenantPackageBody: UpdateTenantPackageBody): (Option[FlagCommentPublic_200_response], Response) =
+proc updateTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, updateTenantPackageBody: UpdateTenantPackageBody): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1619,10 +1627,10 @@ proc updateTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/tenant-packages/{id}" & "?" & url_encoded_query_params, $(%updateTenantPackageBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, updateTenantUserBody: UpdateTenantUserBody, updateComments: string): (Option[FlagCommentPublic_200_response], Response) =
+proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, updateTenantUserBody: UpdateTenantUserBody, updateComments: string): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1632,10 +1640,10 @@ proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, upd
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.patch(basepath & fmt"/api/v1/tenant-users/{id}" & "?" & url_encoded_query_params, $(%updateTenantUserBody))
-  constructResult[FlagCommentPublic_200_response](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc updateUserBadge*(httpClient: HttpClient, tenantId: string, id: string, updateUserBadgeParams: UpdateUserBadgeParams): (Option[UpdateUserBadge_200_response], Response) =
+proc updateUserBadge*(httpClient: HttpClient, tenantId: string, id: string, updateUserBadgeParams: UpdateUserBadgeParams): (Option[APIEmptySuccessResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1643,5 +1651,5 @@ proc updateUserBadge*(httpClient: HttpClient, tenantId: string, id: string, upda
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & fmt"/api/v1/user-badges/{id}" & "?" & url_encoded_query_params, $(%updateUserBadgeParams))
-  constructResult[UpdateUserBadge_200_response](response)
+  constructResult[APIEmptySuccessResponse](response)
 

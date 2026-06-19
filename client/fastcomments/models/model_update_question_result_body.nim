@@ -25,3 +25,41 @@ type UpdateQuestionResultBody* = object
   questionId*: Option[string]
   meta*: Option[seq[MetaItem]]
 
+
+# Custom JSON deserialization for UpdateQuestionResultBody with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateQuestionResultBody]): UpdateQuestionResultBody =
+  result = UpdateQuestionResultBody()
+  if node.kind == JObject:
+    if node.hasKey("urlId") and node["urlId"].kind != JNull:
+      result.urlId = some(to(node["urlId"], typeof(result.urlId.get())))
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("value") and node["value"].kind != JNull:
+      result.value = some(to(node["value"], typeof(result.value.get())))
+    if node.hasKey("commentId") and node["commentId"].kind != JNull:
+      result.commentId = some(to(node["commentId"], typeof(result.commentId.get())))
+    if node.hasKey("questionId") and node["questionId"].kind != JNull:
+      result.questionId = some(to(node["questionId"], typeof(result.questionId.get())))
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+
+# Custom JSON serialization for UpdateQuestionResultBody with custom field names
+proc `%`*(obj: UpdateQuestionResultBody): JsonNode =
+  result = newJObject()
+  if obj.urlId.isSome():
+    result["urlId"] = %obj.urlId.get()
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.value.isSome():
+    result["value"] = %obj.value.get()
+  if obj.commentId.isSome():
+    result["commentId"] = %obj.commentId.get()
+  if obj.questionId.isSome():
+    result["questionId"] = %obj.questionId.get()
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+

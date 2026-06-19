@@ -28,8 +28,10 @@ This library contains the generated API client and the SSO utilities to make wor
 
 ### Public vs Secured APIs
 
-For the API client, there are two API modules, `api_default` and `api_public`. The `api_default` contains methods that require your API key, and `api_public` contains api calls
-that can be made directly from a browser/mobile device/etc without authentication.
+For the API client, there are three API modules, `api_default`, `api_public`, and `api_moderation`. The `api_default` contains methods that require your API key, and `api_public` contains api calls
+that can be made directly from a browser/mobile device/etc without authentication. The `api_moderation` module contains methods for the moderator dashboard.
+
+The `api_moderation` methods cover listing, counting, searching, and exporting comments and their logs; moderation actions like removing/restoring comments, flagging, setting review/spam/approval status, adjusting votes, and reopening/closing threads; bans (banning a user from a comment, undoing a ban, pre-ban summaries, ban status and preferences, and banned-user counts); and badges & trust (awarding/removing a badge, listing manual badges, getting/setting a user's trust factor, and fetching a user's internal profile). Every `api_moderation` method accepts an `sso` parameter so the call is authenticated as an SSO moderator.
 
 ## Quick Start
 
@@ -122,10 +124,40 @@ if response.isSome:
     echo "Found ", resp.comments.get().len, " comments"
 ```
 
+### Using Moderation APIs (ModerationAPI)
+
+Moderation endpoints power the moderator dashboard and are authenticated with an SSO token for the acting moderator:
+
+```nim
+import httpclient
+import fastcomments
+import fastcomments/apis/api_moderation
+
+let client = newHttpClient()
+
+# List comments in the moderation dashboard
+let (response, httpResponse) = getApiComments(
+  httpClient = client,
+  page = 0,
+  count = 30,
+  textSearch = "",
+  byIPFromComment = "",
+  filters = "",
+  searchFilters = "",
+  sorts = "",
+  demo = false,
+  sso = "your-sso-token"
+)
+
+if response.isSome:
+  let resp = response.get()
+  echo "Found ", resp.comments.len, " comments"
+```
+
 ### Common Issues
 
 1. **401 authentication error**: Make sure you set the `x-api-key` header on your HttpClient before making DefaultAPI requests: `client.headers["x-api-key"] = "your-api-key"`
-2. **Wrong API class**: Use `api_default` for server-side authenticated requests, `api_public` for client-side/public requests.
+2. **Wrong API class**: Use `api_default` for server-side authenticated requests, `api_public` for client-side/public requests, and `api_moderation` for moderator dashboard requests.
 
 ## Making API Calls
 

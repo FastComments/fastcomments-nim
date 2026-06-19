@@ -22,3 +22,31 @@ type PublicVote* = object
   direction*: string
   createdAt*: string
 
+
+# Custom JSON deserialization for PublicVote with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicVote]): PublicVote =
+  result = PublicVote()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("commentId"):
+      result.commentId = to(node["commentId"], string)
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("direction"):
+      result.direction = to(node["direction"], string)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+
+# Custom JSON serialization for PublicVote with custom field names
+proc `%`*(obj: PublicVote): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["urlId"] = %obj.urlId
+  result["commentId"] = %obj.commentId
+  result["userId"] = %obj.userId
+  result["direction"] = %obj.direction
+  result["createdAt"] = %obj.createdAt
+

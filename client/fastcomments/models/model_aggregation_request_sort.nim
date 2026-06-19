@@ -43,3 +43,19 @@ proc to*(node: JsonNode, T: typedesc[Dir]): Dir =
   else:
     raise newException(ValueError, "Invalid enum value for Dir: " & strVal)
 
+
+# Custom JSON deserialization for AggregationRequestSort with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationRequestSort]): AggregationRequestSort =
+  result = AggregationRequestSort()
+  if node.kind == JObject:
+    if node.hasKey("dir"):
+      result.dir = to(node["dir"], Dir)
+    if node.hasKey("field"):
+      result.field = to(node["field"], string)
+
+# Custom JSON serialization for AggregationRequestSort with custom field names
+proc `%`*(obj: AggregationRequestSort): JsonNode =
+  result = newJObject()
+  result["dir"] = %obj.dir
+  result["field"] = %obj.field
+

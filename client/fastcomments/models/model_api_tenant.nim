@@ -46,3 +46,114 @@ type APITenant* = object
   deAnonIpAddr*: Option[float64]
   meta*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for APITenant with custom field names
+proc to*(node: JsonNode, T: typedesc[APITenant]): APITenant =
+  result = APITenant()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("signUpDate"):
+      result.signUpDate = to(node["signUpDate"], float64)
+    if node.hasKey("packageId"):
+      result.packageId = to(node["packageId"], string)
+    if node.hasKey("paymentFrequency"):
+      result.paymentFrequency = to(node["paymentFrequency"], float64)
+    if node.hasKey("billingInfoValid"):
+      result.billingInfoValid = to(node["billingInfoValid"], bool)
+    if node.hasKey("billingHandledExternally") and node["billingHandledExternally"].kind != JNull:
+      result.billingHandledExternally = some(to(node["billingHandledExternally"], typeof(result.billingHandledExternally.get())))
+    if node.hasKey("createdBy"):
+      result.createdBy = to(node["createdBy"], string)
+    if node.hasKey("isSetup"):
+      result.isSetup = to(node["isSetup"], bool)
+    if node.hasKey("domainConfiguration"):
+      result.domainConfiguration = to(node["domainConfiguration"], seq[APIDomainConfiguration])
+    if node.hasKey("billingInfo") and node["billingInfo"].kind != JNull:
+      result.billingInfo = some(to(node["billingInfo"], typeof(result.billingInfo.get())))
+    if node.hasKey("stripeCustomerId") and node["stripeCustomerId"].kind != JNull:
+      result.stripeCustomerId = some(to(node["stripeCustomerId"], typeof(result.stripeCustomerId.get())))
+    if node.hasKey("stripeSubscriptionId") and node["stripeSubscriptionId"].kind != JNull:
+      result.stripeSubscriptionId = some(to(node["stripeSubscriptionId"], typeof(result.stripeSubscriptionId.get())))
+    if node.hasKey("stripePlanId") and node["stripePlanId"].kind != JNull:
+      result.stripePlanId = some(to(node["stripePlanId"], typeof(result.stripePlanId.get())))
+    if node.hasKey("enableProfanityFilter"):
+      result.enableProfanityFilter = to(node["enableProfanityFilter"], bool)
+    if node.hasKey("enableSpamFilter"):
+      result.enableSpamFilter = to(node["enableSpamFilter"], bool)
+    if node.hasKey("lastBillingIssueReminderDate") and node["lastBillingIssueReminderDate"].kind != JNull:
+      result.lastBillingIssueReminderDate = some(to(node["lastBillingIssueReminderDate"], typeof(result.lastBillingIssueReminderDate.get())))
+    if node.hasKey("removeUnverifiedComments") and node["removeUnverifiedComments"].kind != JNull:
+      result.removeUnverifiedComments = some(to(node["removeUnverifiedComments"], typeof(result.removeUnverifiedComments.get())))
+    if node.hasKey("unverifiedCommentsTTLms") and node["unverifiedCommentsTTLms"].kind != JNull:
+      result.unverifiedCommentsTTLms = some(to(node["unverifiedCommentsTTLms"], typeof(result.unverifiedCommentsTTLms.get())))
+    if node.hasKey("commentsRequireApproval") and node["commentsRequireApproval"].kind != JNull:
+      result.commentsRequireApproval = some(to(node["commentsRequireApproval"], typeof(result.commentsRequireApproval.get())))
+    if node.hasKey("autoApproveCommentOnVerification") and node["autoApproveCommentOnVerification"].kind != JNull:
+      result.autoApproveCommentOnVerification = some(to(node["autoApproveCommentOnVerification"], typeof(result.autoApproveCommentOnVerification.get())))
+    if node.hasKey("sendProfaneToSpam") and node["sendProfaneToSpam"].kind != JNull:
+      result.sendProfaneToSpam = some(to(node["sendProfaneToSpam"], typeof(result.sendProfaneToSpam.get())))
+    if node.hasKey("hasFlexPricing") and node["hasFlexPricing"].kind != JNull:
+      result.hasFlexPricing = some(to(node["hasFlexPricing"], typeof(result.hasFlexPricing.get())))
+    if node.hasKey("hasAuditing") and node["hasAuditing"].kind != JNull:
+      result.hasAuditing = some(to(node["hasAuditing"], typeof(result.hasAuditing.get())))
+    if node.hasKey("flexLastBilledAmount") and node["flexLastBilledAmount"].kind != JNull:
+      result.flexLastBilledAmount = some(to(node["flexLastBilledAmount"], typeof(result.flexLastBilledAmount.get())))
+    if node.hasKey("deAnonIpAddr") and node["deAnonIpAddr"].kind != JNull:
+      result.deAnonIpAddr = some(to(node["deAnonIpAddr"], typeof(result.deAnonIpAddr.get())))
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+
+# Custom JSON serialization for APITenant with custom field names
+proc `%`*(obj: APITenant): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["name"] = %obj.name
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  result["signUpDate"] = %obj.signUpDate
+  result["packageId"] = %obj.packageId
+  result["paymentFrequency"] = %obj.paymentFrequency
+  result["billingInfoValid"] = %obj.billingInfoValid
+  if obj.billingHandledExternally.isSome():
+    result["billingHandledExternally"] = %obj.billingHandledExternally.get()
+  result["createdBy"] = %obj.createdBy
+  result["isSetup"] = %obj.isSetup
+  result["domainConfiguration"] = %obj.domainConfiguration
+  if obj.billingInfo.isSome():
+    result["billingInfo"] = %obj.billingInfo.get()
+  if obj.stripeCustomerId.isSome():
+    result["stripeCustomerId"] = %obj.stripeCustomerId.get()
+  if obj.stripeSubscriptionId.isSome():
+    result["stripeSubscriptionId"] = %obj.stripeSubscriptionId.get()
+  if obj.stripePlanId.isSome():
+    result["stripePlanId"] = %obj.stripePlanId.get()
+  result["enableProfanityFilter"] = %obj.enableProfanityFilter
+  result["enableSpamFilter"] = %obj.enableSpamFilter
+  if obj.lastBillingIssueReminderDate.isSome():
+    result["lastBillingIssueReminderDate"] = %obj.lastBillingIssueReminderDate.get()
+  if obj.removeUnverifiedComments.isSome():
+    result["removeUnverifiedComments"] = %obj.removeUnverifiedComments.get()
+  if obj.unverifiedCommentsTTLms.isSome():
+    result["unverifiedCommentsTTLms"] = %obj.unverifiedCommentsTTLms.get()
+  if obj.commentsRequireApproval.isSome():
+    result["commentsRequireApproval"] = %obj.commentsRequireApproval.get()
+  if obj.autoApproveCommentOnVerification.isSome():
+    result["autoApproveCommentOnVerification"] = %obj.autoApproveCommentOnVerification.get()
+  if obj.sendProfaneToSpam.isSome():
+    result["sendProfaneToSpam"] = %obj.sendProfaneToSpam.get()
+  if obj.hasFlexPricing.isSome():
+    result["hasFlexPricing"] = %obj.hasFlexPricing.get()
+  if obj.hasAuditing.isSome():
+    result["hasAuditing"] = %obj.hasAuditing.get()
+  if obj.flexLastBilledAmount.isSome():
+    result["flexLastBilledAmount"] = %obj.flexLastBilledAmount.get()
+  if obj.deAnonIpAddr.isSome():
+    result["deAnonIpAddr"] = %obj.deAnonIpAddr.get()
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+

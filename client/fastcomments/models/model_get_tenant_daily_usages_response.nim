@@ -20,3 +20,19 @@ type GetTenantDailyUsagesResponse* = object
   status*: APIStatus
   tenantDailyUsages*: seq[APITenantDailyUsage]
 
+
+# Custom JSON deserialization for GetTenantDailyUsagesResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetTenantDailyUsagesResponse]): GetTenantDailyUsagesResponse =
+  result = GetTenantDailyUsagesResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("tenantDailyUsages"):
+      result.tenantDailyUsages = to(node["tenantDailyUsages"], seq[APITenantDailyUsage])
+
+# Custom JSON serialization for GetTenantDailyUsagesResponse with custom field names
+proc `%`*(obj: GetTenantDailyUsagesResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["tenantDailyUsages"] = %obj.tenantDailyUsages
+

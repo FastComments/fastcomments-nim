@@ -15,6 +15,24 @@ import options
 
 type RecordStringBeforeStringOrNullAfterStringOrNullValue* = object
   ## 
-  after*: string
-  before*: string
+  after*: Option[string]
+  before*: Option[string]
+
+
+# Custom JSON deserialization for RecordStringBeforeStringOrNullAfterStringOrNullValue with custom field names
+proc to*(node: JsonNode, T: typedesc[RecordStringBeforeStringOrNullAfterStringOrNullValue]): RecordStringBeforeStringOrNullAfterStringOrNullValue =
+  result = RecordStringBeforeStringOrNullAfterStringOrNullValue()
+  if node.kind == JObject:
+    if node.hasKey("after") and node["after"].kind != JNull:
+      result.after = some(to(node["after"], typeof(result.after.get())))
+    if node.hasKey("before") and node["before"].kind != JNull:
+      result.before = some(to(node["before"], typeof(result.before.get())))
+
+# Custom JSON serialization for RecordStringBeforeStringOrNullAfterStringOrNullValue with custom field names
+proc `%`*(obj: RecordStringBeforeStringOrNullAfterStringOrNullValue): JsonNode =
+  result = newJObject()
+  if obj.after.isSome():
+    result["after"] = %obj.after.get()
+  if obj.before.isSome():
+    result["before"] = %obj.before.get()
 

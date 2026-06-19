@@ -19,3 +19,25 @@ type UpdateHashTagBody* = object
   url*: Option[string]
   tag*: Option[string]
 
+
+# Custom JSON deserialization for UpdateHashTagBody with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateHashTagBody]): UpdateHashTagBody =
+  result = UpdateHashTagBody()
+  if node.kind == JObject:
+    if node.hasKey("tenantId") and node["tenantId"].kind != JNull:
+      result.tenantId = some(to(node["tenantId"], typeof(result.tenantId.get())))
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("tag") and node["tag"].kind != JNull:
+      result.tag = some(to(node["tag"], typeof(result.tag.get())))
+
+# Custom JSON serialization for UpdateHashTagBody with custom field names
+proc `%`*(obj: UpdateHashTagBody): JsonNode =
+  result = newJObject()
+  if obj.tenantId.isSome():
+    result["tenantId"] = %obj.tenantId.get()
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  if obj.tag.isSome():
+    result["tag"] = %obj.tag.get()
+

@@ -28,12 +28,7 @@ proc to*(node: JsonNode, T: typedesc[APIGetCommentsResponse]): APIGetCommentsRes
     if node.hasKey("status"):
       result.status = to(node["status"], APIStatus)
     if node.hasKey("comments"):
-      # Array of types with custom JSON - manually iterate and deserialize
-      let arrayNode = node["comments"]
-      if arrayNode.kind == JArray:
-        result.comments = @[]
-        for item in arrayNode.items:
-          result.comments.add(to(item, APIComment))
+      result.comments = to(node["comments"], seq[APIComment])
 
 # Custom JSON serialization for APIGetCommentsResponse with custom field names
 proc `%`*(obj: APIGetCommentsResponse): JsonNode =

@@ -20,3 +20,19 @@ type GetEmailTemplateDefinitionsResponse* = object
   status*: APIStatus
   definitions*: seq[EmailTemplateDefinition]
 
+
+# Custom JSON deserialization for GetEmailTemplateDefinitionsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetEmailTemplateDefinitionsResponse]): GetEmailTemplateDefinitionsResponse =
+  result = GetEmailTemplateDefinitionsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("definitions"):
+      result.definitions = to(node["definitions"], seq[EmailTemplateDefinition])
+
+# Custom JSON serialization for GetEmailTemplateDefinitionsResponse with custom field names
+proc `%`*(obj: GetEmailTemplateDefinitionsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["definitions"] = %obj.definitions
+

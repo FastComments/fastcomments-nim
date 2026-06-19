@@ -20,3 +20,19 @@ type UserSearchSectionResult* = object
   section*: UserSearchSection
   users*: seq[UserSearchResult]
 
+
+# Custom JSON deserialization for UserSearchSectionResult with custom field names
+proc to*(node: JsonNode, T: typedesc[UserSearchSectionResult]): UserSearchSectionResult =
+  result = UserSearchSectionResult()
+  if node.kind == JObject:
+    if node.hasKey("section"):
+      result.section = to(node["section"], UserSearchSection)
+    if node.hasKey("users"):
+      result.users = to(node["users"], seq[UserSearchResult])
+
+# Custom JSON serialization for UserSearchSectionResult with custom field names
+proc `%`*(obj: UserSearchSectionResult): JsonNode =
+  result = newJObject()
+  result["section"] = %obj.section
+  result["users"] = %obj.users
+

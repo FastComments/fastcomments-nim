@@ -19,3 +19,19 @@ type RenderEmailTemplateResponse* = object
   status*: APIStatus
   html*: string
 
+
+# Custom JSON deserialization for RenderEmailTemplateResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[RenderEmailTemplateResponse]): RenderEmailTemplateResponse =
+  result = RenderEmailTemplateResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("html"):
+      result.html = to(node["html"], string)
+
+# Custom JSON serialization for RenderEmailTemplateResponse with custom field names
+proc `%`*(obj: RenderEmailTemplateResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["html"] = %obj.html
+

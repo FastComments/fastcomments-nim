@@ -24,3 +24,39 @@ type BillingInfo* = object
   currency*: Option[string] ## Currency for invoices.
   email*: Option[string] ## Email for invoices.
 
+
+# Custom JSON deserialization for BillingInfo with custom field names
+proc to*(node: JsonNode, T: typedesc[BillingInfo]): BillingInfo =
+  result = BillingInfo()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("address"):
+      result.address = to(node["address"], string)
+    if node.hasKey("city"):
+      result.city = to(node["city"], string)
+    if node.hasKey("state"):
+      result.state = to(node["state"], string)
+    if node.hasKey("zip"):
+      result.zip = to(node["zip"], string)
+    if node.hasKey("country"):
+      result.country = to(node["country"], string)
+    if node.hasKey("currency") and node["currency"].kind != JNull:
+      result.currency = some(to(node["currency"], typeof(result.currency.get())))
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+
+# Custom JSON serialization for BillingInfo with custom field names
+proc `%`*(obj: BillingInfo): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  result["address"] = %obj.address
+  result["city"] = %obj.city
+  result["state"] = %obj.state
+  result["zip"] = %obj.zip
+  result["country"] = %obj.country
+  if obj.currency.isSome():
+    result["currency"] = %obj.currency.get()
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+

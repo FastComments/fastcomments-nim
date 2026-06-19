@@ -22,3 +22,25 @@ type GetVotesForUserResponse* = object
   appliedAnonymousVotes*: seq[PublicVote]
   pendingVotes*: seq[PublicVote]
 
+
+# Custom JSON deserialization for GetVotesForUserResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetVotesForUserResponse]): GetVotesForUserResponse =
+  result = GetVotesForUserResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("appliedAuthorizedVotes"):
+      result.appliedAuthorizedVotes = to(node["appliedAuthorizedVotes"], seq[PublicVote])
+    if node.hasKey("appliedAnonymousVotes"):
+      result.appliedAnonymousVotes = to(node["appliedAnonymousVotes"], seq[PublicVote])
+    if node.hasKey("pendingVotes"):
+      result.pendingVotes = to(node["pendingVotes"], seq[PublicVote])
+
+# Custom JSON serialization for GetVotesForUserResponse with custom field names
+proc `%`*(obj: GetVotesForUserResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["appliedAuthorizedVotes"] = %obj.appliedAuthorizedVotes
+  result["appliedAnonymousVotes"] = %obj.appliedAnonymousVotes
+  result["pendingVotes"] = %obj.pendingVotes
+

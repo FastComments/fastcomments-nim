@@ -78,8 +78,8 @@ type APICommentBase* = object
 proc to*(node: JsonNode, T: typedesc[APICommentBase]): APICommentBase =
   result = APICommentBase()
   if node.kind == JObject:
-    if node.hasKey("_id"):
-      result.id = to(node["_id"], string)
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
     if node.hasKey("aiDeterminedSpam") and node["aiDeterminedSpam"].kind != JNull:
       result.aiDeterminedSpam = some(to(node["aiDeterminedSpam"], typeof(result.aiDeterminedSpam.get())))
     if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
@@ -188,7 +188,7 @@ proc to*(node: JsonNode, T: typedesc[APICommentBase]): APICommentBase =
 # Custom JSON serialization for APICommentBase with custom field names
 proc `%`*(obj: APICommentBase): JsonNode =
   result = newJObject()
-  result["_id"] = %obj.id
+  result["id"] = %obj.id
   if obj.aiDeterminedSpam.isSome():
     result["aiDeterminedSpam"] = %obj.aiDeterminedSpam.get()
   if obj.anonUserId.isSome():

@@ -20,3 +20,19 @@ type AggregateQuestionResultsResponse* = object
   status*: APIStatus
   data*: QuestionResultAggregationOverall
 
+
+# Custom JSON deserialization for AggregateQuestionResultsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregateQuestionResultsResponse]): AggregateQuestionResultsResponse =
+  result = AggregateQuestionResultsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("data"):
+      result.data = to(node["data"], QuestionResultAggregationOverall)
+
+# Custom JSON serialization for AggregateQuestionResultsResponse with custom field names
+proc `%`*(obj: AggregateQuestionResultsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["data"] = %obj.data
+

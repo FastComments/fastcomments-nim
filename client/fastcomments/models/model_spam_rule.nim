@@ -48,3 +48,20 @@ proc to*(node: JsonNode, T: typedesc[Actions]): Actions =
   else:
     raise newException(ValueError, "Invalid enum value for Actions: " & strVal)
 
+
+# Custom JSON deserialization for SpamRule with custom field names
+proc to*(node: JsonNode, T: typedesc[SpamRule]): SpamRule =
+  result = SpamRule()
+  if node.kind == JObject:
+    if node.hasKey("actions"):
+      result.actions = to(node["actions"], Actions)
+    if node.hasKey("commentContains") and node["commentContains"].kind != JNull:
+      result.commentContains = some(to(node["commentContains"], typeof(result.commentContains.get())))
+
+# Custom JSON serialization for SpamRule with custom field names
+proc `%`*(obj: SpamRule): JsonNode =
+  result = newJObject()
+  result["actions"] = %obj.actions
+  if obj.commentContains.isSome():
+    result["commentContains"] = %obj.commentContains.get()
+

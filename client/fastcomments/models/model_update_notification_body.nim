@@ -19,3 +19,21 @@ type UpdateNotificationBody* = object
   viewed*: Option[bool]
   optedOut*: Option[bool]
 
+
+# Custom JSON deserialization for UpdateNotificationBody with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateNotificationBody]): UpdateNotificationBody =
+  result = UpdateNotificationBody()
+  if node.kind == JObject:
+    if node.hasKey("viewed") and node["viewed"].kind != JNull:
+      result.viewed = some(to(node["viewed"], typeof(result.viewed.get())))
+    if node.hasKey("optedOut") and node["optedOut"].kind != JNull:
+      result.optedOut = some(to(node["optedOut"], typeof(result.optedOut.get())))
+
+# Custom JSON serialization for UpdateNotificationBody with custom field names
+proc `%`*(obj: UpdateNotificationBody): JsonNode =
+  result = newJObject()
+  if obj.viewed.isSome():
+    result["viewed"] = %obj.viewed.get()
+  if obj.optedOut.isSome():
+    result["optedOut"] = %obj.optedOut.get()
+

@@ -25,12 +25,7 @@ proc to*(node: JsonNode, T: typedesc[FindCommentsByRangeResponse]): FindComments
   result = FindCommentsByRangeResponse()
   if node.kind == JObject:
     if node.hasKey("results"):
-      # Array of types with custom JSON - manually iterate and deserialize
-      let arrayNode = node["results"]
-      if arrayNode.kind == JArray:
-        result.results = @[]
-        for item in arrayNode.items:
-          result.results.add(to(item, FindCommentsByRangeItem))
+      result.results = to(node["results"], seq[FindCommentsByRangeItem])
     if node.hasKey("createdAt"):
       result.createdAt = to(node["createdAt"], string)
 

@@ -35,3 +35,70 @@ type APITenantDailyUsage* = object
   ignored*: bool
   apiErrorCount*: float64
 
+
+# Custom JSON deserialization for APITenantDailyUsage with custom field names
+proc to*(node: JsonNode, T: typedesc[APITenantDailyUsage]): APITenantDailyUsage =
+  result = APITenantDailyUsage()
+  if node.kind == JObject:
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("yearNumber"):
+      result.yearNumber = to(node["yearNumber"], float64)
+    if node.hasKey("monthNumber"):
+      result.monthNumber = to(node["monthNumber"], float64)
+    if node.hasKey("dayNumber"):
+      result.dayNumber = to(node["dayNumber"], float64)
+    if node.hasKey("commentFetchCount"):
+      result.commentFetchCount = to(node["commentFetchCount"], float64)
+    if node.hasKey("commentCreateCount"):
+      result.commentCreateCount = to(node["commentCreateCount"], float64)
+    if node.hasKey("conversationCreateCount"):
+      result.conversationCreateCount = to(node["conversationCreateCount"], float64)
+    if node.hasKey("voteCount"):
+      result.voteCount = to(node["voteCount"], float64)
+    if node.hasKey("accountCreatedCount"):
+      result.accountCreatedCount = to(node["accountCreatedCount"], float64)
+    if node.hasKey("userMentionSearch"):
+      result.userMentionSearch = to(node["userMentionSearch"], float64)
+    if node.hasKey("hashTagSearch"):
+      result.hashTagSearch = to(node["hashTagSearch"], float64)
+    if node.hasKey("gifSearchTrending"):
+      result.gifSearchTrending = to(node["gifSearchTrending"], float64)
+    if node.hasKey("gifSearch"):
+      result.gifSearch = to(node["gifSearch"], float64)
+    if node.hasKey("apiCreditsUsed"):
+      result.apiCreditsUsed = to(node["apiCreditsUsed"], float64)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("billed"):
+      result.billed = to(node["billed"], bool)
+    if node.hasKey("ignored"):
+      result.ignored = to(node["ignored"], bool)
+    if node.hasKey("apiErrorCount"):
+      result.apiErrorCount = to(node["apiErrorCount"], float64)
+
+# Custom JSON serialization for APITenantDailyUsage with custom field names
+proc `%`*(obj: APITenantDailyUsage): JsonNode =
+  result = newJObject()
+  result["id"] = %obj.id
+  result["tenantId"] = %obj.tenantId
+  result["yearNumber"] = %obj.yearNumber
+  result["monthNumber"] = %obj.monthNumber
+  result["dayNumber"] = %obj.dayNumber
+  result["commentFetchCount"] = %obj.commentFetchCount
+  result["commentCreateCount"] = %obj.commentCreateCount
+  result["conversationCreateCount"] = %obj.conversationCreateCount
+  result["voteCount"] = %obj.voteCount
+  result["accountCreatedCount"] = %obj.accountCreatedCount
+  result["userMentionSearch"] = %obj.userMentionSearch
+  result["hashTagSearch"] = %obj.hashTagSearch
+  result["gifSearchTrending"] = %obj.gifSearchTrending
+  result["gifSearch"] = %obj.gifSearch
+  result["apiCreditsUsed"] = %obj.apiCreditsUsed
+  result["createdAt"] = %obj.createdAt
+  result["billed"] = %obj.billed
+  result["ignored"] = %obj.ignored
+  result["apiErrorCount"] = %obj.apiErrorCount
+

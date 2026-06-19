@@ -31,6 +31,12 @@ type LiveEventType* {.pure.} = enum
   NewFeedPost
   UpdatedFeedPost
   DeletedFeedPost
+  NewTicket
+  UpdatedTicketState
+  UpdatedTicketAssignment
+  DeletedTicket
+  PageReact
+  QuestionResult
 
 func `%`*(v: LiveEventType): JsonNode =
   result = case v:
@@ -51,6 +57,12 @@ func `%`*(v: LiveEventType): JsonNode =
     of LiveEventType.NewFeedPost: %"new-feed-post"
     of LiveEventType.UpdatedFeedPost: %"updated-feed-post"
     of LiveEventType.DeletedFeedPost: %"deleted-feed-post"
+    of LiveEventType.NewTicket: %"new-ticket"
+    of LiveEventType.UpdatedTicketState: %"updated-ticket-state"
+    of LiveEventType.UpdatedTicketAssignment: %"updated-ticket-assignment"
+    of LiveEventType.DeletedTicket: %"deleted-ticket"
+    of LiveEventType.PageReact: %"page-react"
+    of LiveEventType.QuestionResult: %"question-result"
 
 func `$`*(v: LiveEventType): string =
   result = case v:
@@ -71,6 +83,12 @@ func `$`*(v: LiveEventType): string =
     of LiveEventType.NewFeedPost: $("new-feed-post")
     of LiveEventType.UpdatedFeedPost: $("updated-feed-post")
     of LiveEventType.DeletedFeedPost: $("deleted-feed-post")
+    of LiveEventType.NewTicket: $("new-ticket")
+    of LiveEventType.UpdatedTicketState: $("updated-ticket-state")
+    of LiveEventType.UpdatedTicketAssignment: $("updated-ticket-assignment")
+    of LiveEventType.DeletedTicket: $("deleted-ticket")
+    of LiveEventType.PageReact: $("page-react")
+    of LiveEventType.QuestionResult: $("question-result")
 
 proc to*(node: JsonNode, T: typedesc[LiveEventType]): LiveEventType =
   if node.kind != JString:
@@ -111,6 +129,18 @@ proc to*(node: JsonNode, T: typedesc[LiveEventType]): LiveEventType =
     return LiveEventType.UpdatedFeedPost
   of $("deleted-feed-post"):
     return LiveEventType.DeletedFeedPost
+  of $("new-ticket"):
+    return LiveEventType.NewTicket
+  of $("updated-ticket-state"):
+    return LiveEventType.UpdatedTicketState
+  of $("updated-ticket-assignment"):
+    return LiveEventType.UpdatedTicketAssignment
+  of $("deleted-ticket"):
+    return LiveEventType.DeletedTicket
+  of $("page-react"):
+    return LiveEventType.PageReact
+  of $("question-result"):
+    return LiveEventType.QuestionResult
   else:
     raise newException(ValueError, "Invalid enum value for LiveEventType: " & strVal)
 

@@ -19,3 +19,19 @@ type GetPendingWebhookEventCountResponse* = object
   status*: APIStatus
   count*: float64
 
+
+# Custom JSON deserialization for GetPendingWebhookEventCountResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetPendingWebhookEventCountResponse]): GetPendingWebhookEventCountResponse =
+  result = GetPendingWebhookEventCountResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("count"):
+      result.count = to(node["count"], float64)
+
+# Custom JSON serialization for GetPendingWebhookEventCountResponse with custom field names
+proc `%`*(obj: GetPendingWebhookEventCountResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["count"] = %obj.count
+

@@ -33,7 +33,7 @@ type QuestionConfig* = object
   defaultValue*: float64
   labelNegative*: string
   labelPositive*: string
-  customOptions*: seq[QuestionConfig_customOptions_inner]
+  customOptions*: seq[QuestionConfigCustomOptionsInner]
   subQuestionIds*: seq[string]
   alwaysShowSubQuestions*: bool
   reportingOrder*: float64
@@ -78,7 +78,7 @@ proc to*(node: JsonNode, T: typedesc[QuestionConfig]): QuestionConfig =
     if node.hasKey("labelPositive"):
       result.labelPositive = to(node["labelPositive"], string)
     if node.hasKey("customOptions"):
-      result.customOptions = to(node["customOptions"], seq[QuestionConfig_customOptions_inner])
+      result.customOptions = to(node["customOptions"], seq[QuestionConfigCustomOptionsInner])
     if node.hasKey("subQuestionIds"):
       result.subQuestionIds = to(node["subQuestionIds"], seq[string])
     if node.hasKey("alwaysShowSubQuestions"):

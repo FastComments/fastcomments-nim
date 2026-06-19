@@ -25,3 +25,38 @@ type CreateQuestionResultBody* = object
   commentId*: Option[string]
   meta*: Option[seq[MetaItem]]
 
+
+# Custom JSON deserialization for CreateQuestionResultBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateQuestionResultBody]): CreateQuestionResultBody =
+  result = CreateQuestionResultBody()
+  if node.kind == JObject:
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("value"):
+      result.value = to(node["value"], float64)
+    if node.hasKey("questionId"):
+      result.questionId = to(node["questionId"], string)
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("commentId") and node["commentId"].kind != JNull:
+      result.commentId = some(to(node["commentId"], typeof(result.commentId.get())))
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+
+# Custom JSON serialization for CreateQuestionResultBody with custom field names
+proc `%`*(obj: CreateQuestionResultBody): JsonNode =
+  result = newJObject()
+  result["urlId"] = %obj.urlId
+  result["value"] = %obj.value
+  result["questionId"] = %obj.questionId
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.commentId.isSome():
+    result["commentId"] = %obj.commentId.get()
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+

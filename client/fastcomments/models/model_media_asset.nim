@@ -19,3 +19,22 @@ type MediaAsset* = object
   h*: int
   src*: string
 
+
+# Custom JSON deserialization for MediaAsset with custom field names
+proc to*(node: JsonNode, T: typedesc[MediaAsset]): MediaAsset =
+  result = MediaAsset()
+  if node.kind == JObject:
+    if node.hasKey("w"):
+      result.w = to(node["w"], int)
+    if node.hasKey("h"):
+      result.h = to(node["h"], int)
+    if node.hasKey("src"):
+      result.src = to(node["src"], string)
+
+# Custom JSON serialization for MediaAsset with custom field names
+proc `%`*(obj: MediaAsset): JsonNode =
+  result = newJObject()
+  result["w"] = %obj.w
+  result["h"] = %obj.h
+  result["src"] = %obj.src
+

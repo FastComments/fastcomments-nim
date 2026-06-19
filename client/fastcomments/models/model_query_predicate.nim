@@ -24,7 +24,7 @@ type Operator* {.pure.} = enum
 type QueryPredicate* = object
   ## 
   key*: string
-  value*: QueryPredicate_value
+  value*: QueryPredicateValue
   operator*: Operator
 
 func `%`*(v: Operator): JsonNode =
@@ -59,4 +59,23 @@ proc to*(node: JsonNode, T: typedesc[Operator]): Operator =
     return Operator.Contains
   else:
     raise newException(ValueError, "Invalid enum value for Operator: " & strVal)
+
+
+# Custom JSON deserialization for QueryPredicate with custom field names
+proc to*(node: JsonNode, T: typedesc[QueryPredicate]): QueryPredicate =
+  result = QueryPredicate()
+  if node.kind == JObject:
+    if node.hasKey("key"):
+      result.key = to(node["key"], string)
+    if node.hasKey("value"):
+      result.value = to(node["value"], QueryPredicateValue)
+    if node.hasKey("operator"):
+      result.operator = to(node["operator"], Operator)
+
+# Custom JSON serialization for QueryPredicate with custom field names
+proc `%`*(obj: QueryPredicate): JsonNode =
+  result = newJObject()
+  result["key"] = %obj.key
+  result["value"] = %obj.value
+  result["operator"] = %obj.operator
 

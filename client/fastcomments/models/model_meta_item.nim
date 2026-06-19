@@ -18,3 +18,19 @@ type MetaItem* = object
   name*: string
   values*: seq[string]
 
+
+# Custom JSON deserialization for MetaItem with custom field names
+proc to*(node: JsonNode, T: typedesc[MetaItem]): MetaItem =
+  result = MetaItem()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("values"):
+      result.values = to(node["values"], seq[string])
+
+# Custom JSON serialization for MetaItem with custom field names
+proc `%`*(obj: MetaItem): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  result["values"] = %obj.values
+

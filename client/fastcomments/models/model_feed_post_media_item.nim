@@ -20,3 +20,24 @@ type FeedPostMediaItem* = object
   linkUrl*: Option[string]
   sizes*: seq[FeedPostMediaItemAsset]
 
+
+# Custom JSON deserialization for FeedPostMediaItem with custom field names
+proc to*(node: JsonNode, T: typedesc[FeedPostMediaItem]): FeedPostMediaItem =
+  result = FeedPostMediaItem()
+  if node.kind == JObject:
+    if node.hasKey("title") and node["title"].kind != JNull:
+      result.title = some(to(node["title"], typeof(result.title.get())))
+    if node.hasKey("linkUrl") and node["linkUrl"].kind != JNull:
+      result.linkUrl = some(to(node["linkUrl"], typeof(result.linkUrl.get())))
+    if node.hasKey("sizes"):
+      result.sizes = to(node["sizes"], seq[FeedPostMediaItemAsset])
+
+# Custom JSON serialization for FeedPostMediaItem with custom field names
+proc `%`*(obj: FeedPostMediaItem): JsonNode =
+  result = newJObject()
+  if obj.title.isSome():
+    result["title"] = %obj.title.get()
+  if obj.linkUrl.isSome():
+    result["linkUrl"] = %obj.linkUrl.get()
+  result["sizes"] = %obj.sizes
+

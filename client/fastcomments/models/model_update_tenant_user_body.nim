@@ -40,3 +40,109 @@ type UpdateTenantUserBody* = object
   digestEmailFrequency*: Option[float64]
   displayLabel*: Option[string]
 
+
+# Custom JSON deserialization for UpdateTenantUserBody with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateTenantUserBody]): UpdateTenantUserBody =
+  result = UpdateTenantUserBody()
+  if node.kind == JObject:
+    if node.hasKey("username") and node["username"].kind != JNull:
+      result.username = some(to(node["username"], typeof(result.username.get())))
+    if node.hasKey("displayName") and node["displayName"].kind != JNull:
+      result.displayName = some(to(node["displayName"], typeof(result.displayName.get())))
+    if node.hasKey("websiteUrl") and node["websiteUrl"].kind != JNull:
+      result.websiteUrl = some(to(node["websiteUrl"], typeof(result.websiteUrl.get())))
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("signUpDate") and node["signUpDate"].kind != JNull:
+      result.signUpDate = some(to(node["signUpDate"], typeof(result.signUpDate.get())))
+    if node.hasKey("verified") and node["verified"].kind != JNull:
+      result.verified = some(to(node["verified"], typeof(result.verified.get())))
+    if node.hasKey("loginCount") and node["loginCount"].kind != JNull:
+      result.loginCount = some(to(node["loginCount"], typeof(result.loginCount.get())))
+    if node.hasKey("optedInNotifications") and node["optedInNotifications"].kind != JNull:
+      result.optedInNotifications = some(to(node["optedInNotifications"], typeof(result.optedInNotifications.get())))
+    if node.hasKey("optedInTenantNotifications") and node["optedInTenantNotifications"].kind != JNull:
+      result.optedInTenantNotifications = some(to(node["optedInTenantNotifications"], typeof(result.optedInTenantNotifications.get())))
+    if node.hasKey("hideAccountCode") and node["hideAccountCode"].kind != JNull:
+      result.hideAccountCode = some(to(node["hideAccountCode"], typeof(result.hideAccountCode.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("isHelpRequestAdmin") and node["isHelpRequestAdmin"].kind != JNull:
+      result.isHelpRequestAdmin = some(to(node["isHelpRequestAdmin"], typeof(result.isHelpRequestAdmin.get())))
+    if node.hasKey("isAccountOwner") and node["isAccountOwner"].kind != JNull:
+      result.isAccountOwner = some(to(node["isAccountOwner"], typeof(result.isAccountOwner.get())))
+    if node.hasKey("isAdminAdmin") and node["isAdminAdmin"].kind != JNull:
+      result.isAdminAdmin = some(to(node["isAdminAdmin"], typeof(result.isAdminAdmin.get())))
+    if node.hasKey("isBillingAdmin") and node["isBillingAdmin"].kind != JNull:
+      result.isBillingAdmin = some(to(node["isBillingAdmin"], typeof(result.isBillingAdmin.get())))
+    if node.hasKey("isAnalyticsAdmin") and node["isAnalyticsAdmin"].kind != JNull:
+      result.isAnalyticsAdmin = some(to(node["isAnalyticsAdmin"], typeof(result.isAnalyticsAdmin.get())))
+    if node.hasKey("isCustomizationAdmin") and node["isCustomizationAdmin"].kind != JNull:
+      result.isCustomizationAdmin = some(to(node["isCustomizationAdmin"], typeof(result.isCustomizationAdmin.get())))
+    if node.hasKey("isManageDataAdmin") and node["isManageDataAdmin"].kind != JNull:
+      result.isManageDataAdmin = some(to(node["isManageDataAdmin"], typeof(result.isManageDataAdmin.get())))
+    if node.hasKey("isCommentModeratorAdmin") and node["isCommentModeratorAdmin"].kind != JNull:
+      result.isCommentModeratorAdmin = some(to(node["isCommentModeratorAdmin"], typeof(result.isCommentModeratorAdmin.get())))
+    if node.hasKey("isAPIAdmin") and node["isAPIAdmin"].kind != JNull:
+      result.isAPIAdmin = some(to(node["isAPIAdmin"], typeof(result.isAPIAdmin.get())))
+    if node.hasKey("moderatorIds") and node["moderatorIds"].kind != JNull:
+      result.moderatorIds = some(to(node["moderatorIds"], typeof(result.moderatorIds.get())))
+    if node.hasKey("locale") and node["locale"].kind != JNull:
+      result.locale = some(to(node["locale"], typeof(result.locale.get())))
+    if node.hasKey("digestEmailFrequency") and node["digestEmailFrequency"].kind != JNull:
+      result.digestEmailFrequency = some(to(node["digestEmailFrequency"], typeof(result.digestEmailFrequency.get())))
+    if node.hasKey("displayLabel") and node["displayLabel"].kind != JNull:
+      result.displayLabel = some(to(node["displayLabel"], typeof(result.displayLabel.get())))
+
+# Custom JSON serialization for UpdateTenantUserBody with custom field names
+proc `%`*(obj: UpdateTenantUserBody): JsonNode =
+  result = newJObject()
+  if obj.username.isSome():
+    result["username"] = %obj.username.get()
+  if obj.displayName.isSome():
+    result["displayName"] = %obj.displayName.get()
+  if obj.websiteUrl.isSome():
+    result["websiteUrl"] = %obj.websiteUrl.get()
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  if obj.signUpDate.isSome():
+    result["signUpDate"] = %obj.signUpDate.get()
+  if obj.verified.isSome():
+    result["verified"] = %obj.verified.get()
+  if obj.loginCount.isSome():
+    result["loginCount"] = %obj.loginCount.get()
+  if obj.optedInNotifications.isSome():
+    result["optedInNotifications"] = %obj.optedInNotifications.get()
+  if obj.optedInTenantNotifications.isSome():
+    result["optedInTenantNotifications"] = %obj.optedInTenantNotifications.get()
+  if obj.hideAccountCode.isSome():
+    result["hideAccountCode"] = %obj.hideAccountCode.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.isHelpRequestAdmin.isSome():
+    result["isHelpRequestAdmin"] = %obj.isHelpRequestAdmin.get()
+  if obj.isAccountOwner.isSome():
+    result["isAccountOwner"] = %obj.isAccountOwner.get()
+  if obj.isAdminAdmin.isSome():
+    result["isAdminAdmin"] = %obj.isAdminAdmin.get()
+  if obj.isBillingAdmin.isSome():
+    result["isBillingAdmin"] = %obj.isBillingAdmin.get()
+  if obj.isAnalyticsAdmin.isSome():
+    result["isAnalyticsAdmin"] = %obj.isAnalyticsAdmin.get()
+  if obj.isCustomizationAdmin.isSome():
+    result["isCustomizationAdmin"] = %obj.isCustomizationAdmin.get()
+  if obj.isManageDataAdmin.isSome():
+    result["isManageDataAdmin"] = %obj.isManageDataAdmin.get()
+  if obj.isCommentModeratorAdmin.isSome():
+    result["isCommentModeratorAdmin"] = %obj.isCommentModeratorAdmin.get()
+  if obj.isAPIAdmin.isSome():
+    result["isAPIAdmin"] = %obj.isAPIAdmin.get()
+  if obj.moderatorIds.isSome():
+    result["moderatorIds"] = %obj.moderatorIds.get()
+  if obj.locale.isSome():
+    result["locale"] = %obj.locale.get()
+  if obj.digestEmailFrequency.isSome():
+    result["digestEmailFrequency"] = %obj.digestEmailFrequency.get()
+  if obj.displayLabel.isSome():
+    result["displayLabel"] = %obj.displayLabel.get()
+

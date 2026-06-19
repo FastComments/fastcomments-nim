@@ -44,3 +44,19 @@ proc to*(node: JsonNode, T: typedesc[Note]): Note =
   else:
     raise newException(ValueError, "Invalid enum value for Note: " & strVal)
 
+
+# Custom JSON deserialization for IgnoredResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[IgnoredResponse]): IgnoredResponse =
+  result = IgnoredResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("note"):
+      result.note = to(node["note"], Note)
+
+# Custom JSON serialization for IgnoredResponse with custom field names
+proc `%`*(obj: IgnoredResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["note"] = %obj.note
+

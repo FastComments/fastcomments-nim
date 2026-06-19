@@ -23,3 +23,36 @@ type BulkAggregateQuestionItem* = object
   timeBucket*: Option[AggregateTimeBucket]
   startDate*: Option[string]
 
+
+# Custom JSON deserialization for BulkAggregateQuestionItem with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkAggregateQuestionItem]): BulkAggregateQuestionItem =
+  result = BulkAggregateQuestionItem()
+  if node.kind == JObject:
+    if node.hasKey("aggId"):
+      result.aggId = to(node["aggId"], string)
+    if node.hasKey("questionId") and node["questionId"].kind != JNull:
+      result.questionId = some(to(node["questionId"], typeof(result.questionId.get())))
+    if node.hasKey("questionIds") and node["questionIds"].kind != JNull:
+      result.questionIds = some(to(node["questionIds"], typeof(result.questionIds.get())))
+    if node.hasKey("urlId") and node["urlId"].kind != JNull:
+      result.urlId = some(to(node["urlId"], typeof(result.urlId.get())))
+    if node.hasKey("timeBucket") and node["timeBucket"].kind != JNull:
+      result.timeBucket = some(to(node["timeBucket"], typeof(result.timeBucket.get())))
+    if node.hasKey("startDate") and node["startDate"].kind != JNull:
+      result.startDate = some(to(node["startDate"], typeof(result.startDate.get())))
+
+# Custom JSON serialization for BulkAggregateQuestionItem with custom field names
+proc `%`*(obj: BulkAggregateQuestionItem): JsonNode =
+  result = newJObject()
+  result["aggId"] = %obj.aggId
+  if obj.questionId.isSome():
+    result["questionId"] = %obj.questionId.get()
+  if obj.questionIds.isSome():
+    result["questionIds"] = %obj.questionIds.get()
+  if obj.urlId.isSome():
+    result["urlId"] = %obj.urlId.get()
+  if obj.timeBucket.isSome():
+    result["timeBucket"] = %obj.timeBucket.get()
+  if obj.startDate.isSome():
+    result["startDate"] = %obj.startDate.get()
+
