@@ -17,3 +17,17 @@ type DeleteHashTagRequestBody* = object
   ## 
   tenantId*: Option[string]
 
+
+# Custom JSON deserialization for DeleteHashTagRequestBody with custom field names
+proc to*(node: JsonNode, T: typedesc[DeleteHashTagRequestBody]): DeleteHashTagRequestBody =
+  result = DeleteHashTagRequestBody()
+  if node.kind == JObject:
+    if node.hasKey("tenantId") and node["tenantId"].kind != JNull:
+      result.tenantId = some(to(node["tenantId"], typeof(result.tenantId.get())))
+
+# Custom JSON serialization for DeleteHashTagRequestBody with custom field names
+proc `%`*(obj: DeleteHashTagRequestBody): JsonNode =
+  result = newJObject()
+  if obj.tenantId.isSome():
+    result["tenantId"] = %obj.tenantId.get()
+

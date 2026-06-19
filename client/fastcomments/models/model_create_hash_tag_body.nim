@@ -19,3 +19,24 @@ type CreateHashTagBody* = object
   tag*: string
   url*: Option[string]
 
+
+# Custom JSON deserialization for CreateHashTagBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateHashTagBody]): CreateHashTagBody =
+  result = CreateHashTagBody()
+  if node.kind == JObject:
+    if node.hasKey("tenantId") and node["tenantId"].kind != JNull:
+      result.tenantId = some(to(node["tenantId"], typeof(result.tenantId.get())))
+    if node.hasKey("tag"):
+      result.tag = to(node["tag"], string)
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+
+# Custom JSON serialization for CreateHashTagBody with custom field names
+proc `%`*(obj: CreateHashTagBody): JsonNode =
+  result = newJObject()
+  if obj.tenantId.isSome():
+    result["tenantId"] = %obj.tenantId.get()
+  result["tag"] = %obj.tag
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+

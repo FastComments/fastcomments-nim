@@ -18,3 +18,19 @@ type GetBannedUsersCountResponse* = object
   totalCount*: float64
   status*: string
 
+
+# Custom JSON deserialization for GetBannedUsersCountResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetBannedUsersCountResponse]): GetBannedUsersCountResponse =
+  result = GetBannedUsersCountResponse()
+  if node.kind == JObject:
+    if node.hasKey("totalCount"):
+      result.totalCount = to(node["totalCount"], float64)
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+
+# Custom JSON serialization for GetBannedUsersCountResponse with custom field names
+proc `%`*(obj: GetBannedUsersCountResponse): JsonNode =
+  result = newJObject()
+  result["totalCount"] = %obj.totalCount
+  result["status"] = %obj.status
+

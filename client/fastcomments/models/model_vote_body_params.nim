@@ -45,3 +45,28 @@ proc to*(node: JsonNode, T: typedesc[VoteDir]): VoteDir =
   else:
     raise newException(ValueError, "Invalid enum value for VoteDir: " & strVal)
 
+
+# Custom JSON deserialization for VoteBodyParams with custom field names
+proc to*(node: JsonNode, T: typedesc[VoteBodyParams]): VoteBodyParams =
+  result = VoteBodyParams()
+  if node.kind == JObject:
+    if node.hasKey("commenterEmail") and node["commenterEmail"].kind != JNull:
+      result.commenterEmail = some(to(node["commenterEmail"], typeof(result.commenterEmail.get())))
+    if node.hasKey("commenterName") and node["commenterName"].kind != JNull:
+      result.commenterName = some(to(node["commenterName"], typeof(result.commenterName.get())))
+    if node.hasKey("voteDir"):
+      result.voteDir = to(node["voteDir"], VoteDir)
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+
+# Custom JSON serialization for VoteBodyParams with custom field names
+proc `%`*(obj: VoteBodyParams): JsonNode =
+  result = newJObject()
+  if obj.commenterEmail.isSome():
+    result["commenterEmail"] = %obj.commenterEmail.get()
+  if obj.commenterName.isSome():
+    result["commenterName"] = %obj.commenterName.get()
+  result["voteDir"] = %obj.voteDir
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+

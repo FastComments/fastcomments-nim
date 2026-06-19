@@ -18,3 +18,20 @@ type BulkCreateHashTagsBodyTagsInner* = object
   url*: Option[string]
   tag*: string
 
+
+# Custom JSON deserialization for BulkCreateHashTagsBodyTagsInner with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkCreateHashTagsBodyTagsInner]): BulkCreateHashTagsBodyTagsInner =
+  result = BulkCreateHashTagsBodyTagsInner()
+  if node.kind == JObject:
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("tag"):
+      result.tag = to(node["tag"], string)
+
+# Custom JSON serialization for BulkCreateHashTagsBodyTagsInner with custom field names
+proc `%`*(obj: BulkCreateHashTagsBodyTagsInner): JsonNode =
+  result = newJObject()
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  result["tag"] = %obj.tag
+

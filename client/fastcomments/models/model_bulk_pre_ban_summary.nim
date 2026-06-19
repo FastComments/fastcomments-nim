@@ -22,3 +22,31 @@ type BulkPreBanSummary* = object
   userIds*: seq[string]
   ipHashes*: seq[string]
 
+
+# Custom JSON deserialization for BulkPreBanSummary with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkPreBanSummary]): BulkPreBanSummary =
+  result = BulkPreBanSummary()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("totalRelatedCommentCount"):
+      result.totalRelatedCommentCount = to(node["totalRelatedCommentCount"], int)
+    if node.hasKey("emailDomains"):
+      result.emailDomains = to(node["emailDomains"], seq[string])
+    if node.hasKey("emails"):
+      result.emails = to(node["emails"], seq[string])
+    if node.hasKey("userIds"):
+      result.userIds = to(node["userIds"], seq[string])
+    if node.hasKey("ipHashes"):
+      result.ipHashes = to(node["ipHashes"], seq[string])
+
+# Custom JSON serialization for BulkPreBanSummary with custom field names
+proc `%`*(obj: BulkPreBanSummary): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["totalRelatedCommentCount"] = %obj.totalRelatedCommentCount
+  result["emailDomains"] = %obj.emailDomains
+  result["emails"] = %obj.emails
+  result["userIds"] = %obj.userIds
+  result["ipHashes"] = %obj.ipHashes
+

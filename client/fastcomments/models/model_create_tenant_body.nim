@@ -41,3 +41,103 @@ type CreateTenantBody* = object
   deAnonIpAddr*: Option[float64]
   meta*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for CreateTenantBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateTenantBody]): CreateTenantBody =
+  result = CreateTenantBody()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("domainConfiguration"):
+      result.domainConfiguration = to(node["domainConfiguration"], seq[APIDomainConfiguration])
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("signUpDate") and node["signUpDate"].kind != JNull:
+      result.signUpDate = some(to(node["signUpDate"], typeof(result.signUpDate.get())))
+    if node.hasKey("packageId") and node["packageId"].kind != JNull:
+      result.packageId = some(to(node["packageId"], typeof(result.packageId.get())))
+    if node.hasKey("paymentFrequency") and node["paymentFrequency"].kind != JNull:
+      result.paymentFrequency = some(to(node["paymentFrequency"], typeof(result.paymentFrequency.get())))
+    if node.hasKey("billingInfoValid") and node["billingInfoValid"].kind != JNull:
+      result.billingInfoValid = some(to(node["billingInfoValid"], typeof(result.billingInfoValid.get())))
+    if node.hasKey("billingHandledExternally") and node["billingHandledExternally"].kind != JNull:
+      result.billingHandledExternally = some(to(node["billingHandledExternally"], typeof(result.billingHandledExternally.get())))
+    if node.hasKey("createdBy") and node["createdBy"].kind != JNull:
+      result.createdBy = some(to(node["createdBy"], typeof(result.createdBy.get())))
+    if node.hasKey("isSetup") and node["isSetup"].kind != JNull:
+      result.isSetup = some(to(node["isSetup"], typeof(result.isSetup.get())))
+    if node.hasKey("billingInfo") and node["billingInfo"].kind != JNull:
+      result.billingInfo = some(to(node["billingInfo"], typeof(result.billingInfo.get())))
+    if node.hasKey("stripeCustomerId") and node["stripeCustomerId"].kind != JNull:
+      result.stripeCustomerId = some(to(node["stripeCustomerId"], typeof(result.stripeCustomerId.get())))
+    if node.hasKey("stripeSubscriptionId") and node["stripeSubscriptionId"].kind != JNull:
+      result.stripeSubscriptionId = some(to(node["stripeSubscriptionId"], typeof(result.stripeSubscriptionId.get())))
+    if node.hasKey("stripePlanId") and node["stripePlanId"].kind != JNull:
+      result.stripePlanId = some(to(node["stripePlanId"], typeof(result.stripePlanId.get())))
+    if node.hasKey("enableProfanityFilter") and node["enableProfanityFilter"].kind != JNull:
+      result.enableProfanityFilter = some(to(node["enableProfanityFilter"], typeof(result.enableProfanityFilter.get())))
+    if node.hasKey("enableSpamFilter") and node["enableSpamFilter"].kind != JNull:
+      result.enableSpamFilter = some(to(node["enableSpamFilter"], typeof(result.enableSpamFilter.get())))
+    if node.hasKey("removeUnverifiedComments") and node["removeUnverifiedComments"].kind != JNull:
+      result.removeUnverifiedComments = some(to(node["removeUnverifiedComments"], typeof(result.removeUnverifiedComments.get())))
+    if node.hasKey("unverifiedCommentsTTLms") and node["unverifiedCommentsTTLms"].kind != JNull:
+      result.unverifiedCommentsTTLms = some(to(node["unverifiedCommentsTTLms"], typeof(result.unverifiedCommentsTTLms.get())))
+    if node.hasKey("commentsRequireApproval") and node["commentsRequireApproval"].kind != JNull:
+      result.commentsRequireApproval = some(to(node["commentsRequireApproval"], typeof(result.commentsRequireApproval.get())))
+    if node.hasKey("autoApproveCommentOnVerification") and node["autoApproveCommentOnVerification"].kind != JNull:
+      result.autoApproveCommentOnVerification = some(to(node["autoApproveCommentOnVerification"], typeof(result.autoApproveCommentOnVerification.get())))
+    if node.hasKey("sendProfaneToSpam") and node["sendProfaneToSpam"].kind != JNull:
+      result.sendProfaneToSpam = some(to(node["sendProfaneToSpam"], typeof(result.sendProfaneToSpam.get())))
+    if node.hasKey("deAnonIpAddr") and node["deAnonIpAddr"].kind != JNull:
+      result.deAnonIpAddr = some(to(node["deAnonIpAddr"], typeof(result.deAnonIpAddr.get())))
+    if node.hasKey("meta") and node["meta"].kind != JNull:
+      result.meta = some(to(node["meta"], typeof(result.meta.get())))
+
+# Custom JSON serialization for CreateTenantBody with custom field names
+proc `%`*(obj: CreateTenantBody): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  result["domainConfiguration"] = %obj.domainConfiguration
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  if obj.signUpDate.isSome():
+    result["signUpDate"] = %obj.signUpDate.get()
+  if obj.packageId.isSome():
+    result["packageId"] = %obj.packageId.get()
+  if obj.paymentFrequency.isSome():
+    result["paymentFrequency"] = %obj.paymentFrequency.get()
+  if obj.billingInfoValid.isSome():
+    result["billingInfoValid"] = %obj.billingInfoValid.get()
+  if obj.billingHandledExternally.isSome():
+    result["billingHandledExternally"] = %obj.billingHandledExternally.get()
+  if obj.createdBy.isSome():
+    result["createdBy"] = %obj.createdBy.get()
+  if obj.isSetup.isSome():
+    result["isSetup"] = %obj.isSetup.get()
+  if obj.billingInfo.isSome():
+    result["billingInfo"] = %obj.billingInfo.get()
+  if obj.stripeCustomerId.isSome():
+    result["stripeCustomerId"] = %obj.stripeCustomerId.get()
+  if obj.stripeSubscriptionId.isSome():
+    result["stripeSubscriptionId"] = %obj.stripeSubscriptionId.get()
+  if obj.stripePlanId.isSome():
+    result["stripePlanId"] = %obj.stripePlanId.get()
+  if obj.enableProfanityFilter.isSome():
+    result["enableProfanityFilter"] = %obj.enableProfanityFilter.get()
+  if obj.enableSpamFilter.isSome():
+    result["enableSpamFilter"] = %obj.enableSpamFilter.get()
+  if obj.removeUnverifiedComments.isSome():
+    result["removeUnverifiedComments"] = %obj.removeUnverifiedComments.get()
+  if obj.unverifiedCommentsTTLms.isSome():
+    result["unverifiedCommentsTTLms"] = %obj.unverifiedCommentsTTLms.get()
+  if obj.commentsRequireApproval.isSome():
+    result["commentsRequireApproval"] = %obj.commentsRequireApproval.get()
+  if obj.autoApproveCommentOnVerification.isSome():
+    result["autoApproveCommentOnVerification"] = %obj.autoApproveCommentOnVerification.get()
+  if obj.sendProfaneToSpam.isSome():
+    result["sendProfaneToSpam"] = %obj.sendProfaneToSpam.get()
+  if obj.deAnonIpAddr.isSome():
+    result["deAnonIpAddr"] = %obj.deAnonIpAddr.get()
+  if obj.meta.isSome():
+    result["meta"] = %obj.meta.get()
+

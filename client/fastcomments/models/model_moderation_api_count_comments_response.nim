@@ -19,3 +19,19 @@ type ModerationAPICountCommentsResponse* = object
   status*: APIStatus
   count*: float64
 
+
+# Custom JSON deserialization for ModerationAPICountCommentsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationAPICountCommentsResponse]): ModerationAPICountCommentsResponse =
+  result = ModerationAPICountCommentsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("count"):
+      result.count = to(node["count"], float64)
+
+# Custom JSON serialization for ModerationAPICountCommentsResponse with custom field names
+proc `%`*(obj: ModerationAPICountCommentsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["count"] = %obj.count
+

@@ -19,3 +19,19 @@ type BlockSuccess* = object
   status*: APIStatus
   commentStatuses*: Table[string, bool] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for BlockSuccess with custom field names
+proc to*(node: JsonNode, T: typedesc[BlockSuccess]): BlockSuccess =
+  result = BlockSuccess()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("commentStatuses"):
+      result.commentStatuses = to(node["commentStatuses"], Table[string, bool])
+
+# Custom JSON serialization for BlockSuccess with custom field names
+proc `%`*(obj: BlockSuccess): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["commentStatuses"] = %obj.commentStatuses
+

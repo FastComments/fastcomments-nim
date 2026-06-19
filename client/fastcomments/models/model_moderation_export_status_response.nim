@@ -20,3 +20,26 @@ type ModerationExportStatusResponse* = object
   recordCount*: int
   downloadUrl*: Option[string]
 
+
+# Custom JSON deserialization for ModerationExportStatusResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationExportStatusResponse]): ModerationExportStatusResponse =
+  result = ModerationExportStatusResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("jobStatus"):
+      result.jobStatus = to(node["jobStatus"], string)
+    if node.hasKey("recordCount"):
+      result.recordCount = to(node["recordCount"], int)
+    if node.hasKey("downloadUrl") and node["downloadUrl"].kind != JNull:
+      result.downloadUrl = some(to(node["downloadUrl"], typeof(result.downloadUrl.get())))
+
+# Custom JSON serialization for ModerationExportStatusResponse with custom field names
+proc `%`*(obj: ModerationExportStatusResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["jobStatus"] = %obj.jobStatus
+  result["recordCount"] = %obj.recordCount
+  if obj.downloadUrl.isSome():
+    result["downloadUrl"] = %obj.downloadUrl.get()
+

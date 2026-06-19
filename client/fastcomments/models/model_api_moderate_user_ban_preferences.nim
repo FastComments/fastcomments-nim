@@ -20,3 +20,25 @@ type APIModerateUserBanPreferences* = object
   lastBanType*: string
   lastBanDuration*: string
 
+
+# Custom JSON deserialization for APIModerateUserBanPreferences with custom field names
+proc to*(node: JsonNode, T: typedesc[APIModerateUserBanPreferences]): APIModerateUserBanPreferences =
+  result = APIModerateUserBanPreferences()
+  if node.kind == JObject:
+    if node.hasKey("shouldBanEmail"):
+      result.shouldBanEmail = to(node["shouldBanEmail"], bool)
+    if node.hasKey("shouldBanByIP"):
+      result.shouldBanByIP = to(node["shouldBanByIP"], bool)
+    if node.hasKey("lastBanType"):
+      result.lastBanType = to(node["lastBanType"], string)
+    if node.hasKey("lastBanDuration"):
+      result.lastBanDuration = to(node["lastBanDuration"], string)
+
+# Custom JSON serialization for APIModerateUserBanPreferences with custom field names
+proc `%`*(obj: APIModerateUserBanPreferences): JsonNode =
+  result = newJObject()
+  result["shouldBanEmail"] = %obj.shouldBanEmail
+  result["shouldBanByIP"] = %obj.shouldBanByIP
+  result["lastBanType"] = %obj.lastBanType
+  result["lastBanDuration"] = %obj.lastBanDuration
+

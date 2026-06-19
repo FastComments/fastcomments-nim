@@ -18,3 +18,17 @@ type AggregationItem* = object
   ## 
   groups*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for AggregationItem with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationItem]): AggregationItem =
+  result = AggregationItem()
+  if node.kind == JObject:
+    if node.hasKey("groups") and node["groups"].kind != JNull:
+      result.groups = some(to(node["groups"], typeof(result.groups.get())))
+
+# Custom JSON serialization for AggregationItem with custom field names
+proc `%`*(obj: AggregationItem): JsonNode =
+  result = newJObject()
+  if obj.groups.isSome():
+    result["groups"] = %obj.groups.get()
+

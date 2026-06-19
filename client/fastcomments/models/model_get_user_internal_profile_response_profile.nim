@@ -33,3 +33,81 @@ type GetUserInternalProfileResponseProfile* = object
   anonUserId*: Option[string]
   userId*: Option[string]
 
+
+# Custom JSON deserialization for GetUserInternalProfileResponseProfile with custom field names
+proc to*(node: JsonNode, T: typedesc[GetUserInternalProfileResponseProfile]): GetUserInternalProfileResponseProfile =
+  result = GetUserInternalProfileResponseProfile()
+  if node.kind == JObject:
+    if node.hasKey("commenterName") and node["commenterName"].kind != JNull:
+      result.commenterName = some(to(node["commenterName"], typeof(result.commenterName.get())))
+    if node.hasKey("firstCommentDate") and node["firstCommentDate"].kind != JNull:
+      result.firstCommentDate = some(to(node["firstCommentDate"], typeof(result.firstCommentDate.get())))
+    if node.hasKey("ipHash") and node["ipHash"].kind != JNull:
+      result.ipHash = some(to(node["ipHash"], typeof(result.ipHash.get())))
+    if node.hasKey("countryFlag") and node["countryFlag"].kind != JNull:
+      result.countryFlag = some(to(node["countryFlag"], typeof(result.countryFlag.get())))
+    if node.hasKey("countryCode") and node["countryCode"].kind != JNull:
+      result.countryCode = some(to(node["countryCode"], typeof(result.countryCode.get())))
+    if node.hasKey("websiteUrl") and node["websiteUrl"].kind != JNull:
+      result.websiteUrl = some(to(node["websiteUrl"], typeof(result.websiteUrl.get())))
+    if node.hasKey("bio") and node["bio"].kind != JNull:
+      result.bio = some(to(node["bio"], typeof(result.bio.get())))
+    if node.hasKey("karma") and node["karma"].kind != JNull:
+      result.karma = some(to(node["karma"], typeof(result.karma.get())))
+    if node.hasKey("locale") and node["locale"].kind != JNull:
+      result.locale = some(to(node["locale"], typeof(result.locale.get())))
+    if node.hasKey("verified") and node["verified"].kind != JNull:
+      result.verified = some(to(node["verified"], typeof(result.verified.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("displayName") and node["displayName"].kind != JNull:
+      result.displayName = some(to(node["displayName"], typeof(result.displayName.get())))
+    if node.hasKey("username") and node["username"].kind != JNull:
+      result.username = some(to(node["username"], typeof(result.username.get())))
+    if node.hasKey("commenterEmail") and node["commenterEmail"].kind != JNull:
+      result.commenterEmail = some(to(node["commenterEmail"], typeof(result.commenterEmail.get())))
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("anonUserId") and node["anonUserId"].kind != JNull:
+      result.anonUserId = some(to(node["anonUserId"], typeof(result.anonUserId.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+
+# Custom JSON serialization for GetUserInternalProfileResponseProfile with custom field names
+proc `%`*(obj: GetUserInternalProfileResponseProfile): JsonNode =
+  result = newJObject()
+  if obj.commenterName.isSome():
+    result["commenterName"] = %obj.commenterName.get()
+  if obj.firstCommentDate.isSome():
+    result["firstCommentDate"] = %obj.firstCommentDate.get()
+  if obj.ipHash.isSome():
+    result["ipHash"] = %obj.ipHash.get()
+  if obj.countryFlag.isSome():
+    result["countryFlag"] = %obj.countryFlag.get()
+  if obj.countryCode.isSome():
+    result["countryCode"] = %obj.countryCode.get()
+  if obj.websiteUrl.isSome():
+    result["websiteUrl"] = %obj.websiteUrl.get()
+  if obj.bio.isSome():
+    result["bio"] = %obj.bio.get()
+  if obj.karma.isSome():
+    result["karma"] = %obj.karma.get()
+  if obj.locale.isSome():
+    result["locale"] = %obj.locale.get()
+  if obj.verified.isSome():
+    result["verified"] = %obj.verified.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  if obj.displayName.isSome():
+    result["displayName"] = %obj.displayName.get()
+  if obj.username.isSome():
+    result["username"] = %obj.username.get()
+  if obj.commenterEmail.isSome():
+    result["commenterEmail"] = %obj.commenterEmail.get()
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  if obj.anonUserId.isSome():
+    result["anonUserId"] = %obj.anonUserId.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+

@@ -20,3 +20,26 @@ type ModerationAPICommentLog* = object
   actionName*: string
   messageHTML*: string
 
+
+# Custom JSON deserialization for ModerationAPICommentLog with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationAPICommentLog]): ModerationAPICommentLog =
+  result = ModerationAPICommentLog()
+  if node.kind == JObject:
+    if node.hasKey("date"):
+      result.date = to(node["date"], string)
+    if node.hasKey("username") and node["username"].kind != JNull:
+      result.username = some(to(node["username"], typeof(result.username.get())))
+    if node.hasKey("actionName"):
+      result.actionName = to(node["actionName"], string)
+    if node.hasKey("messageHTML"):
+      result.messageHTML = to(node["messageHTML"], string)
+
+# Custom JSON serialization for ModerationAPICommentLog with custom field names
+proc `%`*(obj: ModerationAPICommentLog): JsonNode =
+  result = newJObject()
+  result["date"] = %obj.date
+  if obj.username.isSome():
+    result["username"] = %obj.username.get()
+  result["actionName"] = %obj.actionName
+  result["messageHTML"] = %obj.messageHTML
+

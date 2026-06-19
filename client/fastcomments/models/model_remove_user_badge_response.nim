@@ -20,3 +20,20 @@ type RemoveUserBadgeResponse* = object
   badges*: Option[seq[CommentUserBadgeInfo]]
   status*: APIStatus
 
+
+# Custom JSON deserialization for RemoveUserBadgeResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[RemoveUserBadgeResponse]): RemoveUserBadgeResponse =
+  result = RemoveUserBadgeResponse()
+  if node.kind == JObject:
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for RemoveUserBadgeResponse with custom field names
+proc `%`*(obj: RemoveUserBadgeResponse): JsonNode =
+  result = newJObject()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  result["status"] = %obj.status
+

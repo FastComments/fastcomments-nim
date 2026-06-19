@@ -19,3 +19,19 @@ type BuildModerationFilterResponse* = object
   status*: string
   moderationFilter*: ModerationFilter
 
+
+# Custom JSON deserialization for BuildModerationFilterResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[BuildModerationFilterResponse]): BuildModerationFilterResponse =
+  result = BuildModerationFilterResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("moderationFilter"):
+      result.moderationFilter = to(node["moderationFilter"], ModerationFilter)
+
+# Custom JSON serialization for BuildModerationFilterResponse with custom field names
+proc `%`*(obj: BuildModerationFilterResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["moderationFilter"] = %obj.moderationFilter
+

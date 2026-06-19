@@ -20,3 +20,19 @@ type ModerationSiteSearchResponse* = object
   sites*: seq[ModerationSiteSearchProjected]
   status*: APIStatus
 
+
+# Custom JSON deserialization for ModerationSiteSearchResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationSiteSearchResponse]): ModerationSiteSearchResponse =
+  result = ModerationSiteSearchResponse()
+  if node.kind == JObject:
+    if node.hasKey("sites"):
+      result.sites = to(node["sites"], seq[ModerationSiteSearchProjected])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for ModerationSiteSearchResponse with custom field names
+proc `%`*(obj: ModerationSiteSearchResponse): JsonNode =
+  result = newJObject()
+  result["sites"] = %obj.sites
+  result["status"] = %obj.status
+

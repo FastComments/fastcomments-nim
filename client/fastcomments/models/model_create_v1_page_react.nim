@@ -19,3 +19,20 @@ type CreateV1PageReact* = object
   code*: Option[string]
   status*: APIStatus
 
+
+# Custom JSON deserialization for CreateV1PageReact with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateV1PageReact]): CreateV1PageReact =
+  result = CreateV1PageReact()
+  if node.kind == JObject:
+    if node.hasKey("code") and node["code"].kind != JNull:
+      result.code = some(to(node["code"], typeof(result.code.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for CreateV1PageReact with custom field names
+proc `%`*(obj: CreateV1PageReact): JsonNode =
+  result = newJObject()
+  if obj.code.isSome():
+    result["code"] = %obj.code.get()
+  result["status"] = %obj.status
+

@@ -20,3 +20,27 @@ type PageUserEntry* = object
   displayName*: string
   id*: string
 
+
+# Custom JSON deserialization for PageUserEntry with custom field names
+proc to*(node: JsonNode, T: typedesc[PageUserEntry]): PageUserEntry =
+  result = PageUserEntry()
+  if node.kind == JObject:
+    if node.hasKey("isPrivate") and node["isPrivate"].kind != JNull:
+      result.isPrivate = some(to(node["isPrivate"], typeof(result.isPrivate.get())))
+    if node.hasKey("avatarSrc") and node["avatarSrc"].kind != JNull:
+      result.avatarSrc = some(to(node["avatarSrc"], typeof(result.avatarSrc.get())))
+    if node.hasKey("displayName"):
+      result.displayName = to(node["displayName"], string)
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+
+# Custom JSON serialization for PageUserEntry with custom field names
+proc `%`*(obj: PageUserEntry): JsonNode =
+  result = newJObject()
+  if obj.isPrivate.isSome():
+    result["isPrivate"] = %obj.isPrivate.get()
+  if obj.avatarSrc.isSome():
+    result["avatarSrc"] = %obj.avatarSrc.get()
+  result["displayName"] = %obj.displayName
+  result["id"] = %obj.id
+

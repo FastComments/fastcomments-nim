@@ -20,3 +20,19 @@ type GetTenantsResponse* = object
   status*: APIStatus
   tenants*: seq[APITenant]
 
+
+# Custom JSON deserialization for GetTenantsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetTenantsResponse]): GetTenantsResponse =
+  result = GetTenantsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("tenants"):
+      result.tenants = to(node["tenants"], seq[APITenant])
+
+# Custom JSON serialization for GetTenantsResponse with custom field names
+proc `%`*(obj: GetTenantsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["tenants"] = %obj.tenants
+

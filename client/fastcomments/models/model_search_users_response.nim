@@ -20,3 +20,19 @@ type SearchUsersResponse* = object
   status*: APIStatus
   users*: seq[UserSearchResult]
 
+
+# Custom JSON deserialization for SearchUsersResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[SearchUsersResponse]): SearchUsersResponse =
+  result = SearchUsersResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("users"):
+      result.users = to(node["users"], seq[UserSearchResult])
+
+# Custom JSON serialization for SearchUsersResponse with custom field names
+proc `%`*(obj: SearchUsersResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["users"] = %obj.users
+

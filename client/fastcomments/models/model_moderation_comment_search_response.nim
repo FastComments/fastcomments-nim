@@ -19,3 +19,19 @@ type ModerationCommentSearchResponse* = object
   commentCount*: int
   status*: APIStatus
 
+
+# Custom JSON deserialization for ModerationCommentSearchResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationCommentSearchResponse]): ModerationCommentSearchResponse =
+  result = ModerationCommentSearchResponse()
+  if node.kind == JObject:
+    if node.hasKey("commentCount"):
+      result.commentCount = to(node["commentCount"], int)
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for ModerationCommentSearchResponse with custom field names
+proc `%`*(obj: ModerationCommentSearchResponse): JsonNode =
+  result = newJObject()
+  result["commentCount"] = %obj.commentCount
+  result["status"] = %obj.status
+

@@ -19,3 +19,19 @@ type GetSSOUsersResponse* = object
   users*: seq[APISSOUser]
   status*: string
 
+
+# Custom JSON deserialization for GetSSOUsersResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetSSOUsersResponse]): GetSSOUsersResponse =
+  result = GetSSOUsersResponse()
+  if node.kind == JObject:
+    if node.hasKey("users"):
+      result.users = to(node["users"], seq[APISSOUser])
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+
+# Custom JSON serialization for GetSSOUsersResponse with custom field names
+proc `%`*(obj: GetSSOUsersResponse): JsonNode =
+  result = newJObject()
+  result["users"] = %obj.users
+  result["status"] = %obj.status
+

@@ -21,3 +21,23 @@ type GetPublicPagesResponse* = object
   pages*: seq[PublicPage]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetPublicPagesResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetPublicPagesResponse]): GetPublicPagesResponse =
+  result = GetPublicPagesResponse()
+  if node.kind == JObject:
+    if node.hasKey("nextCursor") and node["nextCursor"].kind != JNull:
+      result.nextCursor = some(to(node["nextCursor"], typeof(result.nextCursor.get())))
+    if node.hasKey("pages"):
+      result.pages = to(node["pages"], seq[PublicPage])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetPublicPagesResponse with custom field names
+proc `%`*(obj: GetPublicPagesResponse): JsonNode =
+  result = newJObject()
+  if obj.nextCursor.isSome():
+    result["nextCursor"] = %obj.nextCursor.get()
+  result["pages"] = %obj.pages
+  result["status"] = %obj.status
+

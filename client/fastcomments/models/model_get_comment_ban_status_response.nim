@@ -19,3 +19,24 @@ type GetCommentBanStatusResponse* = object
   emailDomain*: Option[string]
   canIPBan*: Option[bool]
 
+
+# Custom JSON deserialization for GetCommentBanStatusResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetCommentBanStatusResponse]): GetCommentBanStatusResponse =
+  result = GetCommentBanStatusResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("emailDomain") and node["emailDomain"].kind != JNull:
+      result.emailDomain = some(to(node["emailDomain"], typeof(result.emailDomain.get())))
+    if node.hasKey("canIPBan") and node["canIPBan"].kind != JNull:
+      result.canIPBan = some(to(node["canIPBan"], typeof(result.canIPBan.get())))
+
+# Custom JSON serialization for GetCommentBanStatusResponse with custom field names
+proc `%`*(obj: GetCommentBanStatusResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  if obj.emailDomain.isSome():
+    result["emailDomain"] = %obj.emailDomain.get()
+  if obj.canIPBan.isSome():
+    result["canIPBan"] = %obj.canIPBan.get()
+

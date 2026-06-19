@@ -17,3 +17,16 @@ type AdjustCommentVotesParams* = object
   ## 
   adjustVoteAmount*: float64
 
+
+# Custom JSON deserialization for AdjustCommentVotesParams with custom field names
+proc to*(node: JsonNode, T: typedesc[AdjustCommentVotesParams]): AdjustCommentVotesParams =
+  result = AdjustCommentVotesParams()
+  if node.kind == JObject:
+    if node.hasKey("adjustVoteAmount"):
+      result.adjustVoteAmount = to(node["adjustVoteAmount"], float64)
+
+# Custom JSON serialization for AdjustCommentVotesParams with custom field names
+proc `%`*(obj: AdjustCommentVotesParams): JsonNode =
+  result = newJObject()
+  result["adjustVoteAmount"] = %obj.adjustVoteAmount
+

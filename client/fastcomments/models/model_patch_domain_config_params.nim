@@ -23,3 +23,41 @@ type PatchDomainConfigParams* = object
   footerUnsubscribeURL*: Option[string]
   emailHeaders*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for PatchDomainConfigParams with custom field names
+proc to*(node: JsonNode, T: typedesc[PatchDomainConfigParams]): PatchDomainConfigParams =
+  result = PatchDomainConfigParams()
+  if node.kind == JObject:
+    if node.hasKey("domain") and node["domain"].kind != JNull:
+      result.domain = some(to(node["domain"], typeof(result.domain.get())))
+    if node.hasKey("emailFromName") and node["emailFromName"].kind != JNull:
+      result.emailFromName = some(to(node["emailFromName"], typeof(result.emailFromName.get())))
+    if node.hasKey("emailFromEmail") and node["emailFromEmail"].kind != JNull:
+      result.emailFromEmail = some(to(node["emailFromEmail"], typeof(result.emailFromEmail.get())))
+    if node.hasKey("logoSrc") and node["logoSrc"].kind != JNull:
+      result.logoSrc = some(to(node["logoSrc"], typeof(result.logoSrc.get())))
+    if node.hasKey("logoSrc100px") and node["logoSrc100px"].kind != JNull:
+      result.logoSrc100px = some(to(node["logoSrc100px"], typeof(result.logoSrc100px.get())))
+    if node.hasKey("footerUnsubscribeURL") and node["footerUnsubscribeURL"].kind != JNull:
+      result.footerUnsubscribeURL = some(to(node["footerUnsubscribeURL"], typeof(result.footerUnsubscribeURL.get())))
+    if node.hasKey("emailHeaders") and node["emailHeaders"].kind != JNull:
+      result.emailHeaders = some(to(node["emailHeaders"], typeof(result.emailHeaders.get())))
+
+# Custom JSON serialization for PatchDomainConfigParams with custom field names
+proc `%`*(obj: PatchDomainConfigParams): JsonNode =
+  result = newJObject()
+  if obj.domain.isSome():
+    result["domain"] = %obj.domain.get()
+  if obj.emailFromName.isSome():
+    result["emailFromName"] = %obj.emailFromName.get()
+  if obj.emailFromEmail.isSome():
+    result["emailFromEmail"] = %obj.emailFromEmail.get()
+  if obj.logoSrc.isSome():
+    result["logoSrc"] = %obj.logoSrc.get()
+  if obj.logoSrc100px.isSome():
+    result["logoSrc100px"] = %obj.logoSrc100px.get()
+  if obj.footerUnsubscribeURL.isSome():
+    result["footerUnsubscribeURL"] = %obj.footerUnsubscribeURL.get()
+  if obj.emailHeaders.isSome():
+    result["emailHeaders"] = %obj.emailHeaders.get()
+

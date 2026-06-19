@@ -21,3 +21,28 @@ type PublicPage* = object
   url*: string
   urlId*: string
 
+
+# Custom JSON deserialization for PublicPage with custom field names
+proc to*(node: JsonNode, T: typedesc[PublicPage]): PublicPage =
+  result = PublicPage()
+  if node.kind == JObject:
+    if node.hasKey("updatedAt"):
+      result.updatedAt = to(node["updatedAt"], int64)
+    if node.hasKey("commentCount"):
+      result.commentCount = to(node["commentCount"], int)
+    if node.hasKey("title"):
+      result.title = to(node["title"], string)
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+
+# Custom JSON serialization for PublicPage with custom field names
+proc `%`*(obj: PublicPage): JsonNode =
+  result = newJObject()
+  result["updatedAt"] = %obj.updatedAt
+  result["commentCount"] = %obj.commentCount
+  result["title"] = %obj.title
+  result["url"] = %obj.url
+  result["urlId"] = %obj.urlId
+

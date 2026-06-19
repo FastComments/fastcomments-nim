@@ -20,3 +20,29 @@ type FeedPostLink* = object
   description*: Option[string]
   url*: Option[string]
 
+
+# Custom JSON deserialization for FeedPostLink with custom field names
+proc to*(node: JsonNode, T: typedesc[FeedPostLink]): FeedPostLink =
+  result = FeedPostLink()
+  if node.kind == JObject:
+    if node.hasKey("text") and node["text"].kind != JNull:
+      result.text = some(to(node["text"], typeof(result.text.get())))
+    if node.hasKey("title") and node["title"].kind != JNull:
+      result.title = some(to(node["title"], typeof(result.title.get())))
+    if node.hasKey("description") and node["description"].kind != JNull:
+      result.description = some(to(node["description"], typeof(result.description.get())))
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+
+# Custom JSON serialization for FeedPostLink with custom field names
+proc `%`*(obj: FeedPostLink): JsonNode =
+  result = newJObject()
+  if obj.text.isSome():
+    result["text"] = %obj.text.get()
+  if obj.title.isSome():
+    result["title"] = %obj.title.get()
+  if obj.description.isSome():
+    result["description"] = %obj.description.get()
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+

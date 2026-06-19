@@ -20,3 +20,19 @@ type BulkCreateHashTagsResponse* = object
   status*: APIStatus
   results*: seq[BulkCreateHashTagsResponseResultsInner]
 
+
+# Custom JSON deserialization for BulkCreateHashTagsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkCreateHashTagsResponse]): BulkCreateHashTagsResponse =
+  result = BulkCreateHashTagsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("results"):
+      result.results = to(node["results"], seq[BulkCreateHashTagsResponseResultsInner])
+
+# Custom JSON serialization for BulkCreateHashTagsResponse with custom field names
+proc `%`*(obj: BulkCreateHashTagsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["results"] = %obj.results
+

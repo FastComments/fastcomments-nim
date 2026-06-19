@@ -20,3 +20,20 @@ type APIModerateGetUserBanPreferencesResponse* = object
   preferences*: Option[APIModerateUserBanPreferences]
   status*: APIStatus
 
+
+# Custom JSON deserialization for APIModerateGetUserBanPreferencesResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[APIModerateGetUserBanPreferencesResponse]): APIModerateGetUserBanPreferencesResponse =
+  result = APIModerateGetUserBanPreferencesResponse()
+  if node.kind == JObject:
+    if node.hasKey("preferences") and node["preferences"].kind != JNull:
+      result.preferences = some(to(node["preferences"], typeof(result.preferences.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for APIModerateGetUserBanPreferencesResponse with custom field names
+proc `%`*(obj: APIModerateGetUserBanPreferencesResponse): JsonNode =
+  result = newJObject()
+  if obj.preferences.isSome():
+    result["preferences"] = %obj.preferences.get()
+  result["status"] = %obj.status
+

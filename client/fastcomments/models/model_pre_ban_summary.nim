@@ -20,3 +20,22 @@ type PreBanSummary* = object
   usernames*: seq[string]
   count*: float64
 
+
+# Custom JSON deserialization for PreBanSummary with custom field names
+proc to*(node: JsonNode, T: typedesc[PreBanSummary]): PreBanSummary =
+  result = PreBanSummary()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("usernames"):
+      result.usernames = to(node["usernames"], seq[string])
+    if node.hasKey("count"):
+      result.count = to(node["count"], float64)
+
+# Custom JSON serialization for PreBanSummary with custom field names
+proc `%`*(obj: PreBanSummary): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["usernames"] = %obj.usernames
+  result["count"] = %obj.count
+

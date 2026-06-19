@@ -19,3 +19,25 @@ type TOSConfig* = object
   textByLocale*: Option[Table[string, string]] ## Construct a type with a set of properties K of type T
   lastUpdated*: Option[string]
 
+
+# Custom JSON deserialization for TOSConfig with custom field names
+proc to*(node: JsonNode, T: typedesc[TOSConfig]): TOSConfig =
+  result = TOSConfig()
+  if node.kind == JObject:
+    if node.hasKey("enabled") and node["enabled"].kind != JNull:
+      result.enabled = some(to(node["enabled"], typeof(result.enabled.get())))
+    if node.hasKey("textByLocale") and node["textByLocale"].kind != JNull:
+      result.textByLocale = some(to(node["textByLocale"], typeof(result.textByLocale.get())))
+    if node.hasKey("lastUpdated") and node["lastUpdated"].kind != JNull:
+      result.lastUpdated = some(to(node["lastUpdated"], typeof(result.lastUpdated.get())))
+
+# Custom JSON serialization for TOSConfig with custom field names
+proc `%`*(obj: TOSConfig): JsonNode =
+  result = newJObject()
+  if obj.enabled.isSome():
+    result["enabled"] = %obj.enabled.get()
+  if obj.textByLocale.isSome():
+    result["textByLocale"] = %obj.textByLocale.get()
+  if obj.lastUpdated.isSome():
+    result["lastUpdated"] = %obj.lastUpdated.get()
+

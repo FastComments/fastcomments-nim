@@ -24,3 +24,33 @@ type PageUsersOnlineResponse* = object
   users*: seq[PageUserEntry]
   status*: APIStatus
 
+
+# Custom JSON deserialization for PageUsersOnlineResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[PageUsersOnlineResponse]): PageUsersOnlineResponse =
+  result = PageUsersOnlineResponse()
+  if node.kind == JObject:
+    if node.hasKey("nextAfterUserId") and node["nextAfterUserId"].kind != JNull:
+      result.nextAfterUserId = some(to(node["nextAfterUserId"], typeof(result.nextAfterUserId.get())))
+    if node.hasKey("nextAfterName") and node["nextAfterName"].kind != JNull:
+      result.nextAfterName = some(to(node["nextAfterName"], typeof(result.nextAfterName.get())))
+    if node.hasKey("totalCount"):
+      result.totalCount = to(node["totalCount"], float64)
+    if node.hasKey("anonCount"):
+      result.anonCount = to(node["anonCount"], float64)
+    if node.hasKey("users"):
+      result.users = to(node["users"], seq[PageUserEntry])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for PageUsersOnlineResponse with custom field names
+proc `%`*(obj: PageUsersOnlineResponse): JsonNode =
+  result = newJObject()
+  if obj.nextAfterUserId.isSome():
+    result["nextAfterUserId"] = %obj.nextAfterUserId.get()
+  if obj.nextAfterName.isSome():
+    result["nextAfterName"] = %obj.nextAfterName.get()
+  result["totalCount"] = %obj.totalCount
+  result["anonCount"] = %obj.anonCount
+  result["users"] = %obj.users
+  result["status"] = %obj.status
+

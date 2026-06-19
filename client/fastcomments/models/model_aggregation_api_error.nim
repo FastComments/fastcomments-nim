@@ -21,3 +21,26 @@ type AggregationAPIError* = object
   code*: string
   validResourceNames*: Option[seq[string]]
 
+
+# Custom JSON deserialization for AggregationAPIError with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationAPIError]): AggregationAPIError =
+  result = AggregationAPIError()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("reason"):
+      result.reason = to(node["reason"], string)
+    if node.hasKey("code"):
+      result.code = to(node["code"], string)
+    if node.hasKey("validResourceNames") and node["validResourceNames"].kind != JNull:
+      result.validResourceNames = some(to(node["validResourceNames"], typeof(result.validResourceNames.get())))
+
+# Custom JSON serialization for AggregationAPIError with custom field names
+proc `%`*(obj: AggregationAPIError): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["reason"] = %obj.reason
+  result["code"] = %obj.code
+  if obj.validResourceNames.isSome():
+    result["validResourceNames"] = %obj.validResourceNames.get()
+

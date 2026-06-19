@@ -21,3 +21,29 @@ type UpdateModeratorBody* = object
   userId*: Option[string]
   moderationGroupIds*: Option[seq[string]]
 
+
+# Custom JSON deserialization for UpdateModeratorBody with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateModeratorBody]): UpdateModeratorBody =
+  result = UpdateModeratorBody()
+  if node.kind == JObject:
+    if node.hasKey("name") and node["name"].kind != JNull:
+      result.name = some(to(node["name"], typeof(result.name.get())))
+    if node.hasKey("email") and node["email"].kind != JNull:
+      result.email = some(to(node["email"], typeof(result.email.get())))
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("moderationGroupIds") and node["moderationGroupIds"].kind != JNull:
+      result.moderationGroupIds = some(to(node["moderationGroupIds"], typeof(result.moderationGroupIds.get())))
+
+# Custom JSON serialization for UpdateModeratorBody with custom field names
+proc `%`*(obj: UpdateModeratorBody): JsonNode =
+  result = newJObject()
+  if obj.name.isSome():
+    result["name"] = %obj.name.get()
+  if obj.email.isSome():
+    result["email"] = %obj.email.get()
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.moderationGroupIds.isSome():
+    result["moderationGroupIds"] = %obj.moderationGroupIds.get()
+

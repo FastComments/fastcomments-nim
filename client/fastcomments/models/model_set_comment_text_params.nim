@@ -17,3 +17,16 @@ type SetCommentTextParams* = object
   ## 
   comment*: string
 
+
+# Custom JSON deserialization for SetCommentTextParams with custom field names
+proc to*(node: JsonNode, T: typedesc[SetCommentTextParams]): SetCommentTextParams =
+  result = SetCommentTextParams()
+  if node.kind == JObject:
+    if node.hasKey("comment"):
+      result.comment = to(node["comment"], string)
+
+# Custom JSON serialization for SetCommentTextParams with custom field names
+proc `%`*(obj: SetCommentTextParams): JsonNode =
+  result = newJObject()
+  result["comment"] = %obj.comment
+

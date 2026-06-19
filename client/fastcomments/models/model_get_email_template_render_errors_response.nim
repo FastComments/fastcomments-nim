@@ -20,3 +20,19 @@ type GetEmailTemplateRenderErrorsResponse* = object
   status*: APIStatus
   renderErrors*: seq[EmailTemplateRenderErrorResponse]
 
+
+# Custom JSON deserialization for GetEmailTemplateRenderErrorsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetEmailTemplateRenderErrorsResponse]): GetEmailTemplateRenderErrorsResponse =
+  result = GetEmailTemplateRenderErrorsResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("renderErrors"):
+      result.renderErrors = to(node["renderErrors"], seq[EmailTemplateRenderErrorResponse])
+
+# Custom JSON serialization for GetEmailTemplateRenderErrorsResponse with custom field names
+proc `%`*(obj: GetEmailTemplateRenderErrorsResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["renderErrors"] = %obj.renderErrors
+

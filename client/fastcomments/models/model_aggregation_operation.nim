@@ -21,3 +21,27 @@ type AggregationOperation* = object
   alias*: Option[string] ## Optional alias for the output; if not provided, a default alias is computed
   expandArray*: Option[bool]
 
+
+# Custom JSON deserialization for AggregationOperation with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationOperation]): AggregationOperation =
+  result = AggregationOperation()
+  if node.kind == JObject:
+    if node.hasKey("field"):
+      result.field = to(node["field"], string)
+    if node.hasKey("op"):
+      result.op = to(node["op"], AggregationOpType)
+    if node.hasKey("alias") and node["alias"].kind != JNull:
+      result.alias = some(to(node["alias"], typeof(result.alias.get())))
+    if node.hasKey("expandArray") and node["expandArray"].kind != JNull:
+      result.expandArray = some(to(node["expandArray"], typeof(result.expandArray.get())))
+
+# Custom JSON serialization for AggregationOperation with custom field names
+proc `%`*(obj: AggregationOperation): JsonNode =
+  result = newJObject()
+  result["field"] = %obj.field
+  result["op"] = %obj.op
+  if obj.alias.isSome():
+    result["alias"] = %obj.alias.get()
+  if obj.expandArray.isSome():
+    result["expandArray"] = %obj.expandArray.get()
+

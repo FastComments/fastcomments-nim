@@ -19,3 +19,21 @@ type APICommentBaseMeta* = object
   wpUserId*: Option[string]
   wpPostId*: Option[string]
 
+
+# Custom JSON deserialization for APICommentBaseMeta with custom field names
+proc to*(node: JsonNode, T: typedesc[APICommentBaseMeta]): APICommentBaseMeta =
+  result = APICommentBaseMeta()
+  if node.kind == JObject:
+    if node.hasKey("wpUserId") and node["wpUserId"].kind != JNull:
+      result.wpUserId = some(to(node["wpUserId"], typeof(result.wpUserId.get())))
+    if node.hasKey("wpPostId") and node["wpPostId"].kind != JNull:
+      result.wpPostId = some(to(node["wpPostId"], typeof(result.wpPostId.get())))
+
+# Custom JSON serialization for APICommentBaseMeta with custom field names
+proc `%`*(obj: APICommentBaseMeta): JsonNode =
+  result = newJObject()
+  if obj.wpUserId.isSome():
+    result["wpUserId"] = %obj.wpUserId.get()
+  if obj.wpPostId.isSome():
+    result["wpPostId"] = %obj.wpPostId.get()
+

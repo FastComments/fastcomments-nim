@@ -20,3 +20,22 @@ type ModerationAPIGetCommentIdsResponse* = object
   hasMore*: bool
   status*: APIStatus
 
+
+# Custom JSON deserialization for ModerationAPIGetCommentIdsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationAPIGetCommentIdsResponse]): ModerationAPIGetCommentIdsResponse =
+  result = ModerationAPIGetCommentIdsResponse()
+  if node.kind == JObject:
+    if node.hasKey("ids"):
+      result.ids = to(node["ids"], seq[string])
+    if node.hasKey("hasMore"):
+      result.hasMore = to(node["hasMore"], bool)
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for ModerationAPIGetCommentIdsResponse with custom field names
+proc `%`*(obj: ModerationAPIGetCommentIdsResponse): JsonNode =
+  result = newJObject()
+  result["ids"] = %obj.ids
+  result["hasMore"] = %obj.hasMore
+  result["status"] = %obj.status
+

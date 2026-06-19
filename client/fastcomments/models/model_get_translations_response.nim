@@ -19,3 +19,19 @@ type GetTranslationsResponse* = object
   translations*: Table[string, string] ## Construct a type with a set of properties K of type T
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetTranslationsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetTranslationsResponse]): GetTranslationsResponse =
+  result = GetTranslationsResponse()
+  if node.kind == JObject:
+    if node.hasKey("translations"):
+      result.translations = to(node["translations"], Table[string, string])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetTranslationsResponse with custom field names
+proc `%`*(obj: GetTranslationsResponse): JsonNode =
+  result = newJObject()
+  result["translations"] = %obj.translations
+  result["status"] = %obj.status
+

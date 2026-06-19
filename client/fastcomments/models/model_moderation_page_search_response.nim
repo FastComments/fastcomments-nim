@@ -20,3 +20,19 @@ type ModerationPageSearchResponse* = object
   pages*: seq[ModerationPageSearchProjected]
   status*: APIStatus
 
+
+# Custom JSON deserialization for ModerationPageSearchResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationPageSearchResponse]): ModerationPageSearchResponse =
+  result = ModerationPageSearchResponse()
+  if node.kind == JObject:
+    if node.hasKey("pages"):
+      result.pages = to(node["pages"], seq[ModerationPageSearchProjected])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for ModerationPageSearchResponse with custom field names
+proc `%`*(obj: ModerationPageSearchResponse): JsonNode =
+  result = newJObject()
+  result["pages"] = %obj.pages
+  result["status"] = %obj.status
+

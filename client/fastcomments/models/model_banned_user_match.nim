@@ -20,3 +20,20 @@ type BannedUserMatch* = object
   matchedOn*: BannedUserMatchType
   matchedOnValue*: Option[BannedUserMatchMatchedOnValue]
 
+
+# Custom JSON deserialization for BannedUserMatch with custom field names
+proc to*(node: JsonNode, T: typedesc[BannedUserMatch]): BannedUserMatch =
+  result = BannedUserMatch()
+  if node.kind == JObject:
+    if node.hasKey("matchedOn"):
+      result.matchedOn = to(node["matchedOn"], BannedUserMatchType)
+    if node.hasKey("matchedOnValue") and node["matchedOnValue"].kind != JNull:
+      result.matchedOnValue = some(to(node["matchedOnValue"], typeof(result.matchedOnValue.get())))
+
+# Custom JSON serialization for BannedUserMatch with custom field names
+proc `%`*(obj: BannedUserMatch): JsonNode =
+  result = newJObject()
+  result["matchedOn"] = %obj.matchedOn
+  if obj.matchedOnValue.isSome():
+    result["matchedOnValue"] = %obj.matchedOnValue.get()
+

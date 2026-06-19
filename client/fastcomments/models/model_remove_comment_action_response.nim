@@ -18,3 +18,19 @@ type RemoveCommentActionResponse* = object
   status*: string
   action*: string
 
+
+# Custom JSON deserialization for RemoveCommentActionResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[RemoveCommentActionResponse]): RemoveCommentActionResponse =
+  result = RemoveCommentActionResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("action"):
+      result.action = to(node["action"], string)
+
+# Custom JSON serialization for RemoveCommentActionResponse with custom field names
+proc `%`*(obj: RemoveCommentActionResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["action"] = %obj.action
+

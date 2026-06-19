@@ -20,3 +20,25 @@ type ModerationPageSearchProjected* = object
   title*: string
   commentCount*: float64
 
+
+# Custom JSON deserialization for ModerationPageSearchProjected with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationPageSearchProjected]): ModerationPageSearchProjected =
+  result = ModerationPageSearchProjected()
+  if node.kind == JObject:
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("title"):
+      result.title = to(node["title"], string)
+    if node.hasKey("commentCount"):
+      result.commentCount = to(node["commentCount"], float64)
+
+# Custom JSON serialization for ModerationPageSearchProjected with custom field names
+proc `%`*(obj: ModerationPageSearchProjected): JsonNode =
+  result = newJObject()
+  result["urlId"] = %obj.urlId
+  result["url"] = %obj.url
+  result["title"] = %obj.title
+  result["commentCount"] = %obj.commentCount
+

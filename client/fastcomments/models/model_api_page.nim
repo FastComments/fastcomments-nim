@@ -25,3 +25,43 @@ type APIPage* = object
   urlId*: string
   id*: string
 
+
+# Custom JSON deserialization for APIPage with custom field names
+proc to*(node: JsonNode, T: typedesc[APIPage]): APIPage =
+  result = APIPage()
+  if node.kind == JObject:
+    if node.hasKey("isClosed") and node["isClosed"].kind != JNull:
+      result.isClosed = some(to(node["isClosed"], typeof(result.isClosed.get())))
+    if node.hasKey("accessibleByGroupIds") and node["accessibleByGroupIds"].kind != JNull:
+      result.accessibleByGroupIds = some(to(node["accessibleByGroupIds"], typeof(result.accessibleByGroupIds.get())))
+    if node.hasKey("rootCommentCount"):
+      result.rootCommentCount = to(node["rootCommentCount"], int64)
+    if node.hasKey("commentCount"):
+      result.commentCount = to(node["commentCount"], int64)
+    if node.hasKey("createdAt"):
+      result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("title"):
+      result.title = to(node["title"], string)
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+    if node.hasKey("id"):
+      result.id = to(node["id"], string)
+
+# Custom JSON serialization for APIPage with custom field names
+proc `%`*(obj: APIPage): JsonNode =
+  result = newJObject()
+  if obj.isClosed.isSome():
+    result["isClosed"] = %obj.isClosed.get()
+  if obj.accessibleByGroupIds.isSome():
+    result["accessibleByGroupIds"] = %obj.accessibleByGroupIds.get()
+  result["rootCommentCount"] = %obj.rootCommentCount
+  result["commentCount"] = %obj.commentCount
+  result["createdAt"] = %obj.createdAt
+  result["title"] = %obj.title
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  result["urlId"] = %obj.urlId
+  result["id"] = %obj.id
+

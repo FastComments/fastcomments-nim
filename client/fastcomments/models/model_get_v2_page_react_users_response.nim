@@ -19,3 +19,19 @@ type GetV2PageReactUsersResponse* = object
   userNames*: seq[string]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetV2PageReactUsersResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetV2PageReactUsersResponse]): GetV2PageReactUsersResponse =
+  result = GetV2PageReactUsersResponse()
+  if node.kind == JObject:
+    if node.hasKey("userNames"):
+      result.userNames = to(node["userNames"], seq[string])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetV2PageReactUsersResponse with custom field names
+proc `%`*(obj: GetV2PageReactUsersResponse): JsonNode =
+  result = newJObject()
+  result["userNames"] = %obj.userNames
+  result["status"] = %obj.status
+

@@ -18,3 +18,19 @@ type QuestionDatum* = object
   v*: Table[string, float64] ## Construct a type with a set of properties K of type T
   total*: int64
 
+
+# Custom JSON deserialization for QuestionDatum with custom field names
+proc to*(node: JsonNode, T: typedesc[QuestionDatum]): QuestionDatum =
+  result = QuestionDatum()
+  if node.kind == JObject:
+    if node.hasKey("v"):
+      result.v = to(node["v"], Table[string, float64])
+    if node.hasKey("total"):
+      result.total = to(node["total"], int64)
+
+# Custom JSON serialization for QuestionDatum with custom field names
+proc `%`*(obj: QuestionDatum): JsonNode =
+  result = newJObject()
+  result["v"] = %obj.v
+  result["total"] = %obj.total
+

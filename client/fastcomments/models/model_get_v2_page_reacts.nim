@@ -20,3 +20,24 @@ type GetV2PageReacts* = object
   counts*: Option[Table[string, float64]] ## Construct a type with a set of properties K of type T
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetV2PageReacts with custom field names
+proc to*(node: JsonNode, T: typedesc[GetV2PageReacts]): GetV2PageReacts =
+  result = GetV2PageReacts()
+  if node.kind == JObject:
+    if node.hasKey("reactedIds") and node["reactedIds"].kind != JNull:
+      result.reactedIds = some(to(node["reactedIds"], typeof(result.reactedIds.get())))
+    if node.hasKey("counts") and node["counts"].kind != JNull:
+      result.counts = some(to(node["counts"], typeof(result.counts.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetV2PageReacts with custom field names
+proc `%`*(obj: GetV2PageReacts): JsonNode =
+  result = newJObject()
+  if obj.reactedIds.isSome():
+    result["reactedIds"] = %obj.reactedIds.get()
+  if obj.counts.isSome():
+    result["counts"] = %obj.counts.get()
+  result["status"] = %obj.status
+

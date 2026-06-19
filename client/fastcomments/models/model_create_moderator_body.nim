@@ -21,3 +21,27 @@ type CreateModeratorBody* = object
   userId*: Option[string]
   moderationGroupIds*: Option[seq[string]]
 
+
+# Custom JSON deserialization for CreateModeratorBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateModeratorBody]): CreateModeratorBody =
+  result = CreateModeratorBody()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("email"):
+      result.email = to(node["email"], string)
+    if node.hasKey("userId") and node["userId"].kind != JNull:
+      result.userId = some(to(node["userId"], typeof(result.userId.get())))
+    if node.hasKey("moderationGroupIds") and node["moderationGroupIds"].kind != JNull:
+      result.moderationGroupIds = some(to(node["moderationGroupIds"], typeof(result.moderationGroupIds.get())))
+
+# Custom JSON serialization for CreateModeratorBody with custom field names
+proc `%`*(obj: CreateModeratorBody): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  result["email"] = %obj.email
+  if obj.userId.isSome():
+    result["userId"] = %obj.userId.get()
+  if obj.moderationGroupIds.isSome():
+    result["moderationGroupIds"] = %obj.moderationGroupIds.get()
+

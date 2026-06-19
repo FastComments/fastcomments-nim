@@ -19,3 +19,19 @@ type SetCommentTextResponse* = object
   newCommentTextHTML*: string
   status*: APIStatus
 
+
+# Custom JSON deserialization for SetCommentTextResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[SetCommentTextResponse]): SetCommentTextResponse =
+  result = SetCommentTextResponse()
+  if node.kind == JObject:
+    if node.hasKey("newCommentTextHTML"):
+      result.newCommentTextHTML = to(node["newCommentTextHTML"], string)
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for SetCommentTextResponse with custom field names
+proc `%`*(obj: SetCommentTextResponse): JsonNode =
+  result = newJObject()
+  result["newCommentTextHTML"] = %obj.newCommentTextHTML
+  result["status"] = %obj.status
+

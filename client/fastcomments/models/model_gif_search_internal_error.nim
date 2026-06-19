@@ -19,3 +19,19 @@ type GifSearchInternalError* = object
   code*: string
   status*: APIStatus
 
+
+# Custom JSON deserialization for GifSearchInternalError with custom field names
+proc to*(node: JsonNode, T: typedesc[GifSearchInternalError]): GifSearchInternalError =
+  result = GifSearchInternalError()
+  if node.kind == JObject:
+    if node.hasKey("code"):
+      result.code = to(node["code"], string)
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GifSearchInternalError with custom field names
+proc `%`*(obj: GifSearchInternalError): JsonNode =
+  result = newJObject()
+  result["code"] = %obj.code
+  result["status"] = %obj.status
+

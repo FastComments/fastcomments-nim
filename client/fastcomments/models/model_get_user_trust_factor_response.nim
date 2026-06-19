@@ -20,3 +20,24 @@ type GetUserTrustFactorResponse* = object
   autoTrustFactor*: Option[float64]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetUserTrustFactorResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetUserTrustFactorResponse]): GetUserTrustFactorResponse =
+  result = GetUserTrustFactorResponse()
+  if node.kind == JObject:
+    if node.hasKey("manualTrustFactor") and node["manualTrustFactor"].kind != JNull:
+      result.manualTrustFactor = some(to(node["manualTrustFactor"], typeof(result.manualTrustFactor.get())))
+    if node.hasKey("autoTrustFactor") and node["autoTrustFactor"].kind != JNull:
+      result.autoTrustFactor = some(to(node["autoTrustFactor"], typeof(result.autoTrustFactor.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetUserTrustFactorResponse with custom field names
+proc `%`*(obj: GetUserTrustFactorResponse): JsonNode =
+  result = newJObject()
+  if obj.manualTrustFactor.isSome():
+    result["manualTrustFactor"] = %obj.manualTrustFactor.get()
+  if obj.autoTrustFactor.isSome():
+    result["autoTrustFactor"] = %obj.autoTrustFactor.get()
+  result["status"] = %obj.status
+

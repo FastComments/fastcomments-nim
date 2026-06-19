@@ -17,3 +17,16 @@ type ChangeTicketStateBody* = object
   ## 
   state*: int
 
+
+# Custom JSON deserialization for ChangeTicketStateBody with custom field names
+proc to*(node: JsonNode, T: typedesc[ChangeTicketStateBody]): ChangeTicketStateBody =
+  result = ChangeTicketStateBody()
+  if node.kind == JObject:
+    if node.hasKey("state"):
+      result.state = to(node["state"], int)
+
+# Custom JSON serialization for ChangeTicketStateBody with custom field names
+proc `%`*(obj: ChangeTicketStateBody): JsonNode =
+  result = newJObject()
+  result["state"] = %obj.state
+

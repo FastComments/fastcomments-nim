@@ -19,3 +19,20 @@ type GetCommentTextResponse* = object
   comment*: Option[string]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetCommentTextResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetCommentTextResponse]): GetCommentTextResponse =
+  result = GetCommentTextResponse()
+  if node.kind == JObject:
+    if node.hasKey("comment") and node["comment"].kind != JNull:
+      result.comment = some(to(node["comment"], typeof(result.comment.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetCommentTextResponse with custom field names
+proc `%`*(obj: GetCommentTextResponse): JsonNode =
+  result = newJObject()
+  if obj.comment.isSome():
+    result["comment"] = %obj.comment.get()
+  result["status"] = %obj.status
+

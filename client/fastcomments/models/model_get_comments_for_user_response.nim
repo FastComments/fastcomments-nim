@@ -18,3 +18,17 @@ type GetCommentsForUserResponse* = object
   ## 
   moderatingTenantIds*: Option[seq[string]]
 
+
+# Custom JSON deserialization for GetCommentsForUserResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetCommentsForUserResponse]): GetCommentsForUserResponse =
+  result = GetCommentsForUserResponse()
+  if node.kind == JObject:
+    if node.hasKey("moderatingTenantIds") and node["moderatingTenantIds"].kind != JNull:
+      result.moderatingTenantIds = some(to(node["moderatingTenantIds"], typeof(result.moderatingTenantIds.get())))
+
+# Custom JSON serialization for GetCommentsForUserResponse with custom field names
+proc `%`*(obj: GetCommentsForUserResponse): JsonNode =
+  result = newJObject()
+  if obj.moderatingTenantIds.isSome():
+    result["moderatingTenantIds"] = %obj.moderatingTenantIds.get()
+

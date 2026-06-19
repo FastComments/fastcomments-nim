@@ -26,3 +26,42 @@ type APIError* = object
   translatedError*: Option[string]
   customConfig*: Option[CustomConfigParameters]
 
+
+# Custom JSON deserialization for APIError with custom field names
+proc to*(node: JsonNode, T: typedesc[APIError]): APIError =
+  result = APIError()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+    if node.hasKey("reason"):
+      result.reason = to(node["reason"], string)
+    if node.hasKey("code"):
+      result.code = to(node["code"], string)
+    if node.hasKey("secondaryCode") and node["secondaryCode"].kind != JNull:
+      result.secondaryCode = some(to(node["secondaryCode"], typeof(result.secondaryCode.get())))
+    if node.hasKey("bannedUntil") and node["bannedUntil"].kind != JNull:
+      result.bannedUntil = some(to(node["bannedUntil"], typeof(result.bannedUntil.get())))
+    if node.hasKey("maxCharacterLength") and node["maxCharacterLength"].kind != JNull:
+      result.maxCharacterLength = some(to(node["maxCharacterLength"], typeof(result.maxCharacterLength.get())))
+    if node.hasKey("translatedError") and node["translatedError"].kind != JNull:
+      result.translatedError = some(to(node["translatedError"], typeof(result.translatedError.get())))
+    if node.hasKey("customConfig") and node["customConfig"].kind != JNull:
+      result.customConfig = some(to(node["customConfig"], typeof(result.customConfig.get())))
+
+# Custom JSON serialization for APIError with custom field names
+proc `%`*(obj: APIError): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["reason"] = %obj.reason
+  result["code"] = %obj.code
+  if obj.secondaryCode.isSome():
+    result["secondaryCode"] = %obj.secondaryCode.get()
+  if obj.bannedUntil.isSome():
+    result["bannedUntil"] = %obj.bannedUntil.get()
+  if obj.maxCharacterLength.isSome():
+    result["maxCharacterLength"] = %obj.maxCharacterLength.get()
+  if obj.translatedError.isSome():
+    result["translatedError"] = %obj.translatedError.get()
+  if obj.customConfig.isSome():
+    result["customConfig"] = %obj.customConfig.get()
+

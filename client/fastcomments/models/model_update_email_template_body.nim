@@ -23,3 +23,37 @@ type UpdateEmailTemplateBody* = object
   translationOverridesByLocale*: Option[Table[string, Table[string, string]]] ## Construct a type with a set of properties K of type T
   testData*: Option[Table[string, JsonNode]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for UpdateEmailTemplateBody with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateEmailTemplateBody]): UpdateEmailTemplateBody =
+  result = UpdateEmailTemplateBody()
+  if node.kind == JObject:
+    if node.hasKey("emailTemplateId") and node["emailTemplateId"].kind != JNull:
+      result.emailTemplateId = some(to(node["emailTemplateId"], typeof(result.emailTemplateId.get())))
+    if node.hasKey("displayName") and node["displayName"].kind != JNull:
+      result.displayName = some(to(node["displayName"], typeof(result.displayName.get())))
+    if node.hasKey("ejs") and node["ejs"].kind != JNull:
+      result.ejs = some(to(node["ejs"], typeof(result.ejs.get())))
+    if node.hasKey("domain") and node["domain"].kind != JNull:
+      result.domain = some(to(node["domain"], typeof(result.domain.get())))
+    if node.hasKey("translationOverridesByLocale") and node["translationOverridesByLocale"].kind != JNull:
+      result.translationOverridesByLocale = some(to(node["translationOverridesByLocale"], typeof(result.translationOverridesByLocale.get())))
+    if node.hasKey("testData") and node["testData"].kind != JNull:
+      result.testData = some(to(node["testData"], typeof(result.testData.get())))
+
+# Custom JSON serialization for UpdateEmailTemplateBody with custom field names
+proc `%`*(obj: UpdateEmailTemplateBody): JsonNode =
+  result = newJObject()
+  if obj.emailTemplateId.isSome():
+    result["emailTemplateId"] = %obj.emailTemplateId.get()
+  if obj.displayName.isSome():
+    result["displayName"] = %obj.displayName.get()
+  if obj.ejs.isSome():
+    result["ejs"] = %obj.ejs.get()
+  if obj.domain.isSome():
+    result["domain"] = %obj.domain.get()
+  if obj.translationOverridesByLocale.isSome():
+    result["translationOverridesByLocale"] = %obj.translationOverridesByLocale.get()
+  if obj.testData.isSome():
+    result["testData"] = %obj.testData.get()
+

@@ -18,3 +18,19 @@ type ModerationExportResponse* = object
   status*: string
   batchJobId*: string
 
+
+# Custom JSON deserialization for ModerationExportResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationExportResponse]): ModerationExportResponse =
+  result = ModerationExportResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("batchJobId"):
+      result.batchJobId = to(node["batchJobId"], string)
+
+# Custom JSON serialization for ModerationExportResponse with custom field names
+proc `%`*(obj: ModerationExportResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["batchJobId"] = %obj.batchJobId
+

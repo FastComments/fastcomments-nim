@@ -20,3 +20,19 @@ type ModerationAPIGetLogsResponse* = object
   logs*: seq[ModerationAPICommentLog]
   status*: APIStatus
 
+
+# Custom JSON deserialization for ModerationAPIGetLogsResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationAPIGetLogsResponse]): ModerationAPIGetLogsResponse =
+  result = ModerationAPIGetLogsResponse()
+  if node.kind == JObject:
+    if node.hasKey("logs"):
+      result.logs = to(node["logs"], seq[ModerationAPICommentLog])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for ModerationAPIGetLogsResponse with custom field names
+proc `%`*(obj: ModerationAPIGetLogsResponse): JsonNode =
+  result = newJObject()
+  result["logs"] = %obj.logs
+  result["status"] = %obj.status
+

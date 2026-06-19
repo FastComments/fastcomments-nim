@@ -21,3 +21,33 @@ type AggregationValue* = object
   distinctCount*: Option[int64]
   distinctCounts*: Option[Table[string, float64]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for AggregationValue with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationValue]): AggregationValue =
+  result = AggregationValue()
+  if node.kind == JObject:
+    if node.hasKey("groups") and node["groups"].kind != JNull:
+      result.groups = some(to(node["groups"], typeof(result.groups.get())))
+    if node.hasKey("stringValue") and node["stringValue"].kind != JNull:
+      result.stringValue = some(to(node["stringValue"], typeof(result.stringValue.get())))
+    if node.hasKey("numericValue") and node["numericValue"].kind != JNull:
+      result.numericValue = some(to(node["numericValue"], typeof(result.numericValue.get())))
+    if node.hasKey("distinctCount") and node["distinctCount"].kind != JNull:
+      result.distinctCount = some(to(node["distinctCount"], typeof(result.distinctCount.get())))
+    if node.hasKey("distinctCounts") and node["distinctCounts"].kind != JNull:
+      result.distinctCounts = some(to(node["distinctCounts"], typeof(result.distinctCounts.get())))
+
+# Custom JSON serialization for AggregationValue with custom field names
+proc `%`*(obj: AggregationValue): JsonNode =
+  result = newJObject()
+  if obj.groups.isSome():
+    result["groups"] = %obj.groups.get()
+  if obj.stringValue.isSome():
+    result["stringValue"] = %obj.stringValue.get()
+  if obj.numericValue.isSome():
+    result["numericValue"] = %obj.numericValue.get()
+  if obj.distinctCount.isSome():
+    result["distinctCount"] = %obj.distinctCount.get()
+  if obj.distinctCounts.isSome():
+    result["distinctCounts"] = %obj.distinctCounts.get()
+

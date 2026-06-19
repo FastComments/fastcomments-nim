@@ -19,3 +19,20 @@ type SetCommentApprovedResponse* = object
   didResetFlaggedCount*: Option[bool]
   status*: APIStatus
 
+
+# Custom JSON deserialization for SetCommentApprovedResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[SetCommentApprovedResponse]): SetCommentApprovedResponse =
+  result = SetCommentApprovedResponse()
+  if node.kind == JObject:
+    if node.hasKey("didResetFlaggedCount") and node["didResetFlaggedCount"].kind != JNull:
+      result.didResetFlaggedCount = some(to(node["didResetFlaggedCount"], typeof(result.didResetFlaggedCount.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for SetCommentApprovedResponse with custom field names
+proc `%`*(obj: SetCommentApprovedResponse): JsonNode =
+  result = newJObject()
+  if obj.didResetFlaggedCount.isSome():
+    result["didResetFlaggedCount"] = %obj.didResetFlaggedCount.get()
+  result["status"] = %obj.status
+

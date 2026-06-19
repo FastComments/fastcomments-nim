@@ -21,3 +21,33 @@ type UpdateAPIPageData* = object
   url*: Option[string]
   urlId*: Option[string]
 
+
+# Custom JSON deserialization for UpdateAPIPageData with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateAPIPageData]): UpdateAPIPageData =
+  result = UpdateAPIPageData()
+  if node.kind == JObject:
+    if node.hasKey("isClosed") and node["isClosed"].kind != JNull:
+      result.isClosed = some(to(node["isClosed"], typeof(result.isClosed.get())))
+    if node.hasKey("accessibleByGroupIds") and node["accessibleByGroupIds"].kind != JNull:
+      result.accessibleByGroupIds = some(to(node["accessibleByGroupIds"], typeof(result.accessibleByGroupIds.get())))
+    if node.hasKey("title") and node["title"].kind != JNull:
+      result.title = some(to(node["title"], typeof(result.title.get())))
+    if node.hasKey("url") and node["url"].kind != JNull:
+      result.url = some(to(node["url"], typeof(result.url.get())))
+    if node.hasKey("urlId") and node["urlId"].kind != JNull:
+      result.urlId = some(to(node["urlId"], typeof(result.urlId.get())))
+
+# Custom JSON serialization for UpdateAPIPageData with custom field names
+proc `%`*(obj: UpdateAPIPageData): JsonNode =
+  result = newJObject()
+  if obj.isClosed.isSome():
+    result["isClosed"] = %obj.isClosed.get()
+  if obj.accessibleByGroupIds.isSome():
+    result["accessibleByGroupIds"] = %obj.accessibleByGroupIds.get()
+  if obj.title.isSome():
+    result["title"] = %obj.title.get()
+  if obj.url.isSome():
+    result["url"] = %obj.url.get()
+  if obj.urlId.isSome():
+    result["urlId"] = %obj.urlId.get()
+

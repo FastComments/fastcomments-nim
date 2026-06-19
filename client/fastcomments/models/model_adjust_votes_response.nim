@@ -18,3 +18,19 @@ type AdjustVotesResponse* = object
   status*: string
   newCommentVotes*: int
 
+
+# Custom JSON deserialization for AdjustVotesResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[AdjustVotesResponse]): AdjustVotesResponse =
+  result = AdjustVotesResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], string)
+    if node.hasKey("newCommentVotes"):
+      result.newCommentVotes = to(node["newCommentVotes"], int)
+
+# Custom JSON serialization for AdjustVotesResponse with custom field names
+proc `%`*(obj: AdjustVotesResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+  result["newCommentVotes"] = %obj.newCommentVotes
+

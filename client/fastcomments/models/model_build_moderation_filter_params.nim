@@ -22,3 +22,31 @@ type BuildModerationFilterParams* = object
   searchFilters*: Option[string]
   textSearch*: Option[string]
 
+
+# Custom JSON deserialization for BuildModerationFilterParams with custom field names
+proc to*(node: JsonNode, T: typedesc[BuildModerationFilterParams]): BuildModerationFilterParams =
+  result = BuildModerationFilterParams()
+  if node.kind == JObject:
+    if node.hasKey("userId"):
+      result.userId = to(node["userId"], string)
+    if node.hasKey("tenantId"):
+      result.tenantId = to(node["tenantId"], string)
+    if node.hasKey("filters") and node["filters"].kind != JNull:
+      result.filters = some(to(node["filters"], typeof(result.filters.get())))
+    if node.hasKey("searchFilters") and node["searchFilters"].kind != JNull:
+      result.searchFilters = some(to(node["searchFilters"], typeof(result.searchFilters.get())))
+    if node.hasKey("textSearch") and node["textSearch"].kind != JNull:
+      result.textSearch = some(to(node["textSearch"], typeof(result.textSearch.get())))
+
+# Custom JSON serialization for BuildModerationFilterParams with custom field names
+proc `%`*(obj: BuildModerationFilterParams): JsonNode =
+  result = newJObject()
+  result["userId"] = %obj.userId
+  result["tenantId"] = %obj.tenantId
+  if obj.filters.isSome():
+    result["filters"] = %obj.filters.get()
+  if obj.searchFilters.isSome():
+    result["searchFilters"] = %obj.searchFilters.get()
+  if obj.textSearch.isSome():
+    result["textSearch"] = %obj.textSearch.get()
+

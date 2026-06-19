@@ -20,3 +20,19 @@ type GetUserInternalProfileResponse* = object
   profile*: GetUserInternalProfileResponseProfile
   status*: APIStatus
 
+
+# Custom JSON deserialization for GetUserInternalProfileResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GetUserInternalProfileResponse]): GetUserInternalProfileResponse =
+  result = GetUserInternalProfileResponse()
+  if node.kind == JObject:
+    if node.hasKey("profile"):
+      result.profile = to(node["profile"], GetUserInternalProfileResponseProfile)
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GetUserInternalProfileResponse with custom field names
+proc `%`*(obj: GetUserInternalProfileResponse): JsonNode =
+  result = newJObject()
+  result["profile"] = %obj.profile
+  result["status"] = %obj.status
+

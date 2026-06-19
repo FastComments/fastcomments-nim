@@ -18,3 +18,16 @@ type DeleteFeedPostPublicResponse* = object
   ## 
   status*: APIStatus
 
+
+# Custom JSON deserialization for DeleteFeedPostPublicResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[DeleteFeedPostPublicResponse]): DeleteFeedPostPublicResponse =
+  result = DeleteFeedPostPublicResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for DeleteFeedPostPublicResponse with custom field names
+proc `%`*(obj: DeleteFeedPostPublicResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
+

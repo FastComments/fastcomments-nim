@@ -20,3 +20,19 @@ type PageUsersInfoResponse* = object
   users*: seq[PageUserEntry]
   status*: APIStatus
 
+
+# Custom JSON deserialization for PageUsersInfoResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[PageUsersInfoResponse]): PageUsersInfoResponse =
+  result = PageUsersInfoResponse()
+  if node.kind == JObject:
+    if node.hasKey("users"):
+      result.users = to(node["users"], seq[PageUserEntry])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for PageUsersInfoResponse with custom field names
+proc `%`*(obj: PageUsersInfoResponse): JsonNode =
+  result = newJObject()
+  result["users"] = %obj.users
+  result["status"] = %obj.status
+

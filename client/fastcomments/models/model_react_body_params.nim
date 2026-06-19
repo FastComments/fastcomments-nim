@@ -17,3 +17,17 @@ type ReactBodyParams* = object
   ## 
   reactType*: Option[string]
 
+
+# Custom JSON deserialization for ReactBodyParams with custom field names
+proc to*(node: JsonNode, T: typedesc[ReactBodyParams]): ReactBodyParams =
+  result = ReactBodyParams()
+  if node.kind == JObject:
+    if node.hasKey("reactType") and node["reactType"].kind != JNull:
+      result.reactType = some(to(node["reactType"], typeof(result.reactType.get())))
+
+# Custom JSON serialization for ReactBodyParams with custom field names
+proc `%`*(obj: ReactBodyParams): JsonNode =
+  result = newJObject()
+  if obj.reactType.isSome():
+    result["reactType"] = %obj.reactType.get()
+

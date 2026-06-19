@@ -20,3 +20,19 @@ type GifSearchResponse* = object
   images*: seq[seq[GifSearchResponseImagesInnerInner]]
   status*: APIStatus
 
+
+# Custom JSON deserialization for GifSearchResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GifSearchResponse]): GifSearchResponse =
+  result = GifSearchResponse()
+  if node.kind == JObject:
+    if node.hasKey("images"):
+      result.images = to(node["images"], seq[seq[GifSearchResponseImagesInnerInner]])
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GifSearchResponse with custom field names
+proc `%`*(obj: GifSearchResponse): JsonNode =
+  result = newJObject()
+  result["images"] = %obj.images
+  result["status"] = %obj.status
+

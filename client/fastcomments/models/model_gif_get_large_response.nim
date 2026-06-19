@@ -19,3 +19,19 @@ type GifGetLargeResponse* = object
   src*: string
   status*: APIStatus
 
+
+# Custom JSON deserialization for GifGetLargeResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[GifGetLargeResponse]): GifGetLargeResponse =
+  result = GifGetLargeResponse()
+  if node.kind == JObject:
+    if node.hasKey("src"):
+      result.src = to(node["src"], string)
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for GifGetLargeResponse with custom field names
+proc `%`*(obj: GifGetLargeResponse): JsonNode =
+  result = newJObject()
+  result["src"] = %obj.src
+  result["status"] = %obj.status
+

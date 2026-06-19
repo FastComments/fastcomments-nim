@@ -19,3 +19,20 @@ type BulkCreateHashTagsBody* = object
   tenantId*: Option[string]
   tags*: seq[BulkCreateHashTagsBodyTagsInner]
 
+
+# Custom JSON deserialization for BulkCreateHashTagsBody with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkCreateHashTagsBody]): BulkCreateHashTagsBody =
+  result = BulkCreateHashTagsBody()
+  if node.kind == JObject:
+    if node.hasKey("tenantId") and node["tenantId"].kind != JNull:
+      result.tenantId = some(to(node["tenantId"], typeof(result.tenantId.get())))
+    if node.hasKey("tags"):
+      result.tags = to(node["tags"], seq[BulkCreateHashTagsBodyTagsInner])
+
+# Custom JSON serialization for BulkCreateHashTagsBody with custom field names
+proc `%`*(obj: BulkCreateHashTagsBody): JsonNode =
+  result = newJObject()
+  if obj.tenantId.isSome():
+    result["tenantId"] = %obj.tenantId.get()
+  result["tags"] = %obj.tags
+

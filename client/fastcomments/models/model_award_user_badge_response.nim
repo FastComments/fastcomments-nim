@@ -21,3 +21,24 @@ type AwardUserBadgeResponse* = object
   badges*: Option[seq[CommentUserBadgeInfo]]
   status*: APIStatus
 
+
+# Custom JSON deserialization for AwardUserBadgeResponse with custom field names
+proc to*(node: JsonNode, T: typedesc[AwardUserBadgeResponse]): AwardUserBadgeResponse =
+  result = AwardUserBadgeResponse()
+  if node.kind == JObject:
+    if node.hasKey("notes") and node["notes"].kind != JNull:
+      result.notes = some(to(node["notes"], typeof(result.notes.get())))
+    if node.hasKey("badges") and node["badges"].kind != JNull:
+      result.badges = some(to(node["badges"], typeof(result.badges.get())))
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for AwardUserBadgeResponse with custom field names
+proc `%`*(obj: AwardUserBadgeResponse): JsonNode =
+  result = newJObject()
+  if obj.notes.isSome():
+    result["notes"] = %obj.notes.get()
+  if obj.badges.isSome():
+    result["badges"] = %obj.badges.get()
+  result["status"] = %obj.status
+

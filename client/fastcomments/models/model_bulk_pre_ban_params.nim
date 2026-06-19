@@ -17,3 +17,16 @@ type BulkPreBanParams* = object
   ## 
   commentIds*: seq[string]
 
+
+# Custom JSON deserialization for BulkPreBanParams with custom field names
+proc to*(node: JsonNode, T: typedesc[BulkPreBanParams]): BulkPreBanParams =
+  result = BulkPreBanParams()
+  if node.kind == JObject:
+    if node.hasKey("commentIds"):
+      result.commentIds = to(node["commentIds"], seq[string])
+
+# Custom JSON serialization for BulkPreBanParams with custom field names
+proc `%`*(obj: BulkPreBanParams): JsonNode =
+  result = newJObject()
+  result["commentIds"] = %obj.commentIds
+

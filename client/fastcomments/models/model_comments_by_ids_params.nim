@@ -17,3 +17,16 @@ type CommentsByIdsParams* = object
   ## 
   ids*: seq[string]
 
+
+# Custom JSON deserialization for CommentsByIdsParams with custom field names
+proc to*(node: JsonNode, T: typedesc[CommentsByIdsParams]): CommentsByIdsParams =
+  result = CommentsByIdsParams()
+  if node.kind == JObject:
+    if node.hasKey("ids"):
+      result.ids = to(node["ids"], seq[string])
+
+# Custom JSON serialization for CommentsByIdsParams with custom field names
+proc `%`*(obj: CommentsByIdsParams): JsonNode =
+  result = newJObject()
+  result["ids"] = %obj.ids
+

@@ -65,3 +65,196 @@ type CreateTenantPackageBody* = object
   flexSSOModeratorCostCents*: Option[float64]
   flexSSOModeratorUnit*: Option[float64]
 
+
+# Custom JSON deserialization for CreateTenantPackageBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateTenantPackageBody]): CreateTenantPackageBody =
+  result = CreateTenantPackageBody()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("monthlyCostUSD") and node["monthlyCostUSD"].kind != JNull:
+      result.monthlyCostUSD = some(to(node["monthlyCostUSD"], typeof(result.monthlyCostUSD.get())))
+    if node.hasKey("yearlyCostUSD") and node["yearlyCostUSD"].kind != JNull:
+      result.yearlyCostUSD = some(to(node["yearlyCostUSD"], typeof(result.yearlyCostUSD.get())))
+    if node.hasKey("monthlyStripePlanId") and node["monthlyStripePlanId"].kind != JNull:
+      result.monthlyStripePlanId = some(to(node["monthlyStripePlanId"], typeof(result.monthlyStripePlanId.get())))
+    if node.hasKey("yearlyStripePlanId") and node["yearlyStripePlanId"].kind != JNull:
+      result.yearlyStripePlanId = some(to(node["yearlyStripePlanId"], typeof(result.yearlyStripePlanId.get())))
+    if node.hasKey("maxMonthlyPageLoads"):
+      result.maxMonthlyPageLoads = to(node["maxMonthlyPageLoads"], float64)
+    if node.hasKey("maxMonthlyAPICredits"):
+      result.maxMonthlyAPICredits = to(node["maxMonthlyAPICredits"], float64)
+    if node.hasKey("maxMonthlySmallWidgetsCredits") and node["maxMonthlySmallWidgetsCredits"].kind != JNull:
+      result.maxMonthlySmallWidgetsCredits = some(to(node["maxMonthlySmallWidgetsCredits"], typeof(result.maxMonthlySmallWidgetsCredits.get())))
+    if node.hasKey("maxMonthlyComments"):
+      result.maxMonthlyComments = to(node["maxMonthlyComments"], float64)
+    if node.hasKey("maxConcurrentUsers"):
+      result.maxConcurrentUsers = to(node["maxConcurrentUsers"], float64)
+    if node.hasKey("maxTenantUsers"):
+      result.maxTenantUsers = to(node["maxTenantUsers"], float64)
+    if node.hasKey("maxSSOUsers"):
+      result.maxSSOUsers = to(node["maxSSOUsers"], float64)
+    if node.hasKey("maxModerators"):
+      result.maxModerators = to(node["maxModerators"], float64)
+    if node.hasKey("maxDomains"):
+      result.maxDomains = to(node["maxDomains"], float64)
+    if node.hasKey("maxWhiteLabeledTenants") and node["maxWhiteLabeledTenants"].kind != JNull:
+      result.maxWhiteLabeledTenants = some(to(node["maxWhiteLabeledTenants"], typeof(result.maxWhiteLabeledTenants.get())))
+    if node.hasKey("maxMonthlyEventLogRequests") and node["maxMonthlyEventLogRequests"].kind != JNull:
+      result.maxMonthlyEventLogRequests = some(to(node["maxMonthlyEventLogRequests"], typeof(result.maxMonthlyEventLogRequests.get())))
+    if node.hasKey("maxCustomCollectionSize") and node["maxCustomCollectionSize"].kind != JNull:
+      result.maxCustomCollectionSize = some(to(node["maxCustomCollectionSize"], typeof(result.maxCustomCollectionSize.get())))
+    if node.hasKey("hasWhiteLabeling") and node["hasWhiteLabeling"].kind != JNull:
+      result.hasWhiteLabeling = some(to(node["hasWhiteLabeling"], typeof(result.hasWhiteLabeling.get())))
+    if node.hasKey("hasDebranding"):
+      result.hasDebranding = to(node["hasDebranding"], bool)
+    if node.hasKey("hasLLMSpamDetection") and node["hasLLMSpamDetection"].kind != JNull:
+      result.hasLLMSpamDetection = some(to(node["hasLLMSpamDetection"], typeof(result.hasLLMSpamDetection.get())))
+    if node.hasKey("forWhoText"):
+      result.forWhoText = to(node["forWhoText"], string)
+    if node.hasKey("featureTaglines"):
+      result.featureTaglines = to(node["featureTaglines"], seq[string])
+    if node.hasKey("hasAuditing") and node["hasAuditing"].kind != JNull:
+      result.hasAuditing = some(to(node["hasAuditing"], typeof(result.hasAuditing.get())))
+    if node.hasKey("hasFlexPricing"):
+      result.hasFlexPricing = to(node["hasFlexPricing"], bool)
+    if node.hasKey("enableSAML") and node["enableSAML"].kind != JNull:
+      result.enableSAML = some(to(node["enableSAML"], typeof(result.enableSAML.get())))
+    if node.hasKey("flexPageLoadCostCents") and node["flexPageLoadCostCents"].kind != JNull:
+      result.flexPageLoadCostCents = some(to(node["flexPageLoadCostCents"], typeof(result.flexPageLoadCostCents.get())))
+    if node.hasKey("flexPageLoadUnit") and node["flexPageLoadUnit"].kind != JNull:
+      result.flexPageLoadUnit = some(to(node["flexPageLoadUnit"], typeof(result.flexPageLoadUnit.get())))
+    if node.hasKey("flexCommentCostCents") and node["flexCommentCostCents"].kind != JNull:
+      result.flexCommentCostCents = some(to(node["flexCommentCostCents"], typeof(result.flexCommentCostCents.get())))
+    if node.hasKey("flexCommentUnit") and node["flexCommentUnit"].kind != JNull:
+      result.flexCommentUnit = some(to(node["flexCommentUnit"], typeof(result.flexCommentUnit.get())))
+    if node.hasKey("flexSSOUserCostCents") and node["flexSSOUserCostCents"].kind != JNull:
+      result.flexSSOUserCostCents = some(to(node["flexSSOUserCostCents"], typeof(result.flexSSOUserCostCents.get())))
+    if node.hasKey("flexSSOUserUnit") and node["flexSSOUserUnit"].kind != JNull:
+      result.flexSSOUserUnit = some(to(node["flexSSOUserUnit"], typeof(result.flexSSOUserUnit.get())))
+    if node.hasKey("flexAPICreditCostCents") and node["flexAPICreditCostCents"].kind != JNull:
+      result.flexAPICreditCostCents = some(to(node["flexAPICreditCostCents"], typeof(result.flexAPICreditCostCents.get())))
+    if node.hasKey("flexAPICreditUnit") and node["flexAPICreditUnit"].kind != JNull:
+      result.flexAPICreditUnit = some(to(node["flexAPICreditUnit"], typeof(result.flexAPICreditUnit.get())))
+    if node.hasKey("flexSmallWidgetsCreditCostCents") and node["flexSmallWidgetsCreditCostCents"].kind != JNull:
+      result.flexSmallWidgetsCreditCostCents = some(to(node["flexSmallWidgetsCreditCostCents"], typeof(result.flexSmallWidgetsCreditCostCents.get())))
+    if node.hasKey("flexSmallWidgetsCreditUnit") and node["flexSmallWidgetsCreditUnit"].kind != JNull:
+      result.flexSmallWidgetsCreditUnit = some(to(node["flexSmallWidgetsCreditUnit"], typeof(result.flexSmallWidgetsCreditUnit.get())))
+    if node.hasKey("flexModeratorCostCents") and node["flexModeratorCostCents"].kind != JNull:
+      result.flexModeratorCostCents = some(to(node["flexModeratorCostCents"], typeof(result.flexModeratorCostCents.get())))
+    if node.hasKey("flexModeratorUnit") and node["flexModeratorUnit"].kind != JNull:
+      result.flexModeratorUnit = some(to(node["flexModeratorUnit"], typeof(result.flexModeratorUnit.get())))
+    if node.hasKey("flexAdminCostCents") and node["flexAdminCostCents"].kind != JNull:
+      result.flexAdminCostCents = some(to(node["flexAdminCostCents"], typeof(result.flexAdminCostCents.get())))
+    if node.hasKey("flexAdminUnit") and node["flexAdminUnit"].kind != JNull:
+      result.flexAdminUnit = some(to(node["flexAdminUnit"], typeof(result.flexAdminUnit.get())))
+    if node.hasKey("flexDomainCostCents") and node["flexDomainCostCents"].kind != JNull:
+      result.flexDomainCostCents = some(to(node["flexDomainCostCents"], typeof(result.flexDomainCostCents.get())))
+    if node.hasKey("flexDomainUnit") and node["flexDomainUnit"].kind != JNull:
+      result.flexDomainUnit = some(to(node["flexDomainUnit"], typeof(result.flexDomainUnit.get())))
+    if node.hasKey("flexLLMCostCents") and node["flexLLMCostCents"].kind != JNull:
+      result.flexLLMCostCents = some(to(node["flexLLMCostCents"], typeof(result.flexLLMCostCents.get())))
+    if node.hasKey("flexLLMUnit") and node["flexLLMUnit"].kind != JNull:
+      result.flexLLMUnit = some(to(node["flexLLMUnit"], typeof(result.flexLLMUnit.get())))
+    if node.hasKey("flexMinimumCostCents") and node["flexMinimumCostCents"].kind != JNull:
+      result.flexMinimumCostCents = some(to(node["flexMinimumCostCents"], typeof(result.flexMinimumCostCents.get())))
+    if node.hasKey("flexManagedTenantCostCents") and node["flexManagedTenantCostCents"].kind != JNull:
+      result.flexManagedTenantCostCents = some(to(node["flexManagedTenantCostCents"], typeof(result.flexManagedTenantCostCents.get())))
+    if node.hasKey("flexSSOAdminCostCents") and node["flexSSOAdminCostCents"].kind != JNull:
+      result.flexSSOAdminCostCents = some(to(node["flexSSOAdminCostCents"], typeof(result.flexSSOAdminCostCents.get())))
+    if node.hasKey("flexSSOAdminUnit") and node["flexSSOAdminUnit"].kind != JNull:
+      result.flexSSOAdminUnit = some(to(node["flexSSOAdminUnit"], typeof(result.flexSSOAdminUnit.get())))
+    if node.hasKey("flexSSOModeratorCostCents") and node["flexSSOModeratorCostCents"].kind != JNull:
+      result.flexSSOModeratorCostCents = some(to(node["flexSSOModeratorCostCents"], typeof(result.flexSSOModeratorCostCents.get())))
+    if node.hasKey("flexSSOModeratorUnit") and node["flexSSOModeratorUnit"].kind != JNull:
+      result.flexSSOModeratorUnit = some(to(node["flexSSOModeratorUnit"], typeof(result.flexSSOModeratorUnit.get())))
+
+# Custom JSON serialization for CreateTenantPackageBody with custom field names
+proc `%`*(obj: CreateTenantPackageBody): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  if obj.monthlyCostUSD.isSome():
+    result["monthlyCostUSD"] = %obj.monthlyCostUSD.get()
+  if obj.yearlyCostUSD.isSome():
+    result["yearlyCostUSD"] = %obj.yearlyCostUSD.get()
+  if obj.monthlyStripePlanId.isSome():
+    result["monthlyStripePlanId"] = %obj.monthlyStripePlanId.get()
+  if obj.yearlyStripePlanId.isSome():
+    result["yearlyStripePlanId"] = %obj.yearlyStripePlanId.get()
+  result["maxMonthlyPageLoads"] = %obj.maxMonthlyPageLoads
+  result["maxMonthlyAPICredits"] = %obj.maxMonthlyAPICredits
+  if obj.maxMonthlySmallWidgetsCredits.isSome():
+    result["maxMonthlySmallWidgetsCredits"] = %obj.maxMonthlySmallWidgetsCredits.get()
+  result["maxMonthlyComments"] = %obj.maxMonthlyComments
+  result["maxConcurrentUsers"] = %obj.maxConcurrentUsers
+  result["maxTenantUsers"] = %obj.maxTenantUsers
+  result["maxSSOUsers"] = %obj.maxSSOUsers
+  result["maxModerators"] = %obj.maxModerators
+  result["maxDomains"] = %obj.maxDomains
+  if obj.maxWhiteLabeledTenants.isSome():
+    result["maxWhiteLabeledTenants"] = %obj.maxWhiteLabeledTenants.get()
+  if obj.maxMonthlyEventLogRequests.isSome():
+    result["maxMonthlyEventLogRequests"] = %obj.maxMonthlyEventLogRequests.get()
+  if obj.maxCustomCollectionSize.isSome():
+    result["maxCustomCollectionSize"] = %obj.maxCustomCollectionSize.get()
+  if obj.hasWhiteLabeling.isSome():
+    result["hasWhiteLabeling"] = %obj.hasWhiteLabeling.get()
+  result["hasDebranding"] = %obj.hasDebranding
+  if obj.hasLLMSpamDetection.isSome():
+    result["hasLLMSpamDetection"] = %obj.hasLLMSpamDetection.get()
+  result["forWhoText"] = %obj.forWhoText
+  result["featureTaglines"] = %obj.featureTaglines
+  if obj.hasAuditing.isSome():
+    result["hasAuditing"] = %obj.hasAuditing.get()
+  result["hasFlexPricing"] = %obj.hasFlexPricing
+  if obj.enableSAML.isSome():
+    result["enableSAML"] = %obj.enableSAML.get()
+  if obj.flexPageLoadCostCents.isSome():
+    result["flexPageLoadCostCents"] = %obj.flexPageLoadCostCents.get()
+  if obj.flexPageLoadUnit.isSome():
+    result["flexPageLoadUnit"] = %obj.flexPageLoadUnit.get()
+  if obj.flexCommentCostCents.isSome():
+    result["flexCommentCostCents"] = %obj.flexCommentCostCents.get()
+  if obj.flexCommentUnit.isSome():
+    result["flexCommentUnit"] = %obj.flexCommentUnit.get()
+  if obj.flexSSOUserCostCents.isSome():
+    result["flexSSOUserCostCents"] = %obj.flexSSOUserCostCents.get()
+  if obj.flexSSOUserUnit.isSome():
+    result["flexSSOUserUnit"] = %obj.flexSSOUserUnit.get()
+  if obj.flexAPICreditCostCents.isSome():
+    result["flexAPICreditCostCents"] = %obj.flexAPICreditCostCents.get()
+  if obj.flexAPICreditUnit.isSome():
+    result["flexAPICreditUnit"] = %obj.flexAPICreditUnit.get()
+  if obj.flexSmallWidgetsCreditCostCents.isSome():
+    result["flexSmallWidgetsCreditCostCents"] = %obj.flexSmallWidgetsCreditCostCents.get()
+  if obj.flexSmallWidgetsCreditUnit.isSome():
+    result["flexSmallWidgetsCreditUnit"] = %obj.flexSmallWidgetsCreditUnit.get()
+  if obj.flexModeratorCostCents.isSome():
+    result["flexModeratorCostCents"] = %obj.flexModeratorCostCents.get()
+  if obj.flexModeratorUnit.isSome():
+    result["flexModeratorUnit"] = %obj.flexModeratorUnit.get()
+  if obj.flexAdminCostCents.isSome():
+    result["flexAdminCostCents"] = %obj.flexAdminCostCents.get()
+  if obj.flexAdminUnit.isSome():
+    result["flexAdminUnit"] = %obj.flexAdminUnit.get()
+  if obj.flexDomainCostCents.isSome():
+    result["flexDomainCostCents"] = %obj.flexDomainCostCents.get()
+  if obj.flexDomainUnit.isSome():
+    result["flexDomainUnit"] = %obj.flexDomainUnit.get()
+  if obj.flexLLMCostCents.isSome():
+    result["flexLLMCostCents"] = %obj.flexLLMCostCents.get()
+  if obj.flexLLMUnit.isSome():
+    result["flexLLMUnit"] = %obj.flexLLMUnit.get()
+  if obj.flexMinimumCostCents.isSome():
+    result["flexMinimumCostCents"] = %obj.flexMinimumCostCents.get()
+  if obj.flexManagedTenantCostCents.isSome():
+    result["flexManagedTenantCostCents"] = %obj.flexManagedTenantCostCents.get()
+  if obj.flexSSOAdminCostCents.isSome():
+    result["flexSSOAdminCostCents"] = %obj.flexSSOAdminCostCents.get()
+  if obj.flexSSOAdminUnit.isSome():
+    result["flexSSOAdminUnit"] = %obj.flexSSOAdminUnit.get()
+  if obj.flexSSOModeratorCostCents.isSome():
+    result["flexSSOModeratorCostCents"] = %obj.flexSSOModeratorCostCents.get()
+  if obj.flexSSOModeratorUnit.isSome():
+    result["flexSSOModeratorUnit"] = %obj.flexSSOModeratorUnit.get()
+

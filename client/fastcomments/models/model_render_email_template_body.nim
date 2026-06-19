@@ -21,3 +21,27 @@ type RenderEmailTemplateBody* = object
   testData*: Option[Table[string, JsonNode]] ## Construct a type with a set of properties K of type T
   translationOverridesByLocale*: Option[Table[string, Table[string, string]]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for RenderEmailTemplateBody with custom field names
+proc to*(node: JsonNode, T: typedesc[RenderEmailTemplateBody]): RenderEmailTemplateBody =
+  result = RenderEmailTemplateBody()
+  if node.kind == JObject:
+    if node.hasKey("emailTemplateId"):
+      result.emailTemplateId = to(node["emailTemplateId"], string)
+    if node.hasKey("ejs"):
+      result.ejs = to(node["ejs"], string)
+    if node.hasKey("testData") and node["testData"].kind != JNull:
+      result.testData = some(to(node["testData"], typeof(result.testData.get())))
+    if node.hasKey("translationOverridesByLocale") and node["translationOverridesByLocale"].kind != JNull:
+      result.translationOverridesByLocale = some(to(node["translationOverridesByLocale"], typeof(result.translationOverridesByLocale.get())))
+
+# Custom JSON serialization for RenderEmailTemplateBody with custom field names
+proc `%`*(obj: RenderEmailTemplateBody): JsonNode =
+  result = newJObject()
+  result["emailTemplateId"] = %obj.emailTemplateId
+  result["ejs"] = %obj.ejs
+  if obj.testData.isSome():
+    result["testData"] = %obj.testData.get()
+  if obj.translationOverridesByLocale.isSome():
+    result["translationOverridesByLocale"] = %obj.translationOverridesByLocale.get()
+

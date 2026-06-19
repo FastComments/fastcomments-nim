@@ -17,3 +17,16 @@ type CreateTicketBody* = object
   ## 
   subject*: string
 
+
+# Custom JSON deserialization for CreateTicketBody with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateTicketBody]): CreateTicketBody =
+  result = CreateTicketBody()
+  if node.kind == JObject:
+    if node.hasKey("subject"):
+      result.subject = to(node["subject"], string)
+
+# Custom JSON serialization for CreateTicketBody with custom field names
+proc `%`*(obj: CreateTicketBody): JsonNode =
+  result = newJObject()
+  result["subject"] = %obj.subject
+

@@ -18,3 +18,20 @@ type ModerationSiteSearchProjected* = object
   domain*: string
   logoSrc100px*: Option[string]
 
+
+# Custom JSON deserialization for ModerationSiteSearchProjected with custom field names
+proc to*(node: JsonNode, T: typedesc[ModerationSiteSearchProjected]): ModerationSiteSearchProjected =
+  result = ModerationSiteSearchProjected()
+  if node.kind == JObject:
+    if node.hasKey("domain"):
+      result.domain = to(node["domain"], string)
+    if node.hasKey("logoSrc100px") and node["logoSrc100px"].kind != JNull:
+      result.logoSrc100px = some(to(node["logoSrc100px"], typeof(result.logoSrc100px.get())))
+
+# Custom JSON serialization for ModerationSiteSearchProjected with custom field names
+proc `%`*(obj: ModerationSiteSearchProjected): JsonNode =
+  result = newJObject()
+  result["domain"] = %obj.domain
+  if obj.logoSrc100px.isSome():
+    result["logoSrc100px"] = %obj.logoSrc100px.get()
+

@@ -19,3 +19,21 @@ type AddDomainConfigResponseAnyOf* = object
   configuration*: Option[JsonNode]
   status*: Option[JsonNode]
 
+
+# Custom JSON deserialization for AddDomainConfigResponseAnyOf with custom field names
+proc to*(node: JsonNode, T: typedesc[AddDomainConfigResponseAnyOf]): AddDomainConfigResponseAnyOf =
+  result = AddDomainConfigResponseAnyOf()
+  if node.kind == JObject:
+    if node.hasKey("configuration") and node["configuration"].kind != JNull:
+      result.configuration = some(to(node["configuration"], typeof(result.configuration.get())))
+    if node.hasKey("status") and node["status"].kind != JNull:
+      result.status = some(to(node["status"], typeof(result.status.get())))
+
+# Custom JSON serialization for AddDomainConfigResponseAnyOf with custom field names
+proc `%`*(obj: AddDomainConfigResponseAnyOf): JsonNode =
+  result = newJObject()
+  if obj.configuration.isSome():
+    result["configuration"] = %obj.configuration.get()
+  if obj.status.isSome():
+    result["status"] = %obj.status.get()
+

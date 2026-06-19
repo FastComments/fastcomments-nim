@@ -22,3 +22,34 @@ type CreateAPIPageData* = object
   url*: string
   urlId*: string
 
+
+# Custom JSON deserialization for CreateAPIPageData with custom field names
+proc to*(node: JsonNode, T: typedesc[CreateAPIPageData]): CreateAPIPageData =
+  result = CreateAPIPageData()
+  if node.kind == JObject:
+    if node.hasKey("accessibleByGroupIds") and node["accessibleByGroupIds"].kind != JNull:
+      result.accessibleByGroupIds = some(to(node["accessibleByGroupIds"], typeof(result.accessibleByGroupIds.get())))
+    if node.hasKey("rootCommentCount") and node["rootCommentCount"].kind != JNull:
+      result.rootCommentCount = some(to(node["rootCommentCount"], typeof(result.rootCommentCount.get())))
+    if node.hasKey("commentCount") and node["commentCount"].kind != JNull:
+      result.commentCount = some(to(node["commentCount"], typeof(result.commentCount.get())))
+    if node.hasKey("title"):
+      result.title = to(node["title"], string)
+    if node.hasKey("url"):
+      result.url = to(node["url"], string)
+    if node.hasKey("urlId"):
+      result.urlId = to(node["urlId"], string)
+
+# Custom JSON serialization for CreateAPIPageData with custom field names
+proc `%`*(obj: CreateAPIPageData): JsonNode =
+  result = newJObject()
+  if obj.accessibleByGroupIds.isSome():
+    result["accessibleByGroupIds"] = %obj.accessibleByGroupIds.get()
+  if obj.rootCommentCount.isSome():
+    result["rootCommentCount"] = %obj.rootCommentCount.get()
+  if obj.commentCount.isSome():
+    result["commentCount"] = %obj.commentCount.get()
+  result["title"] = %obj.title
+  result["url"] = %obj.url
+  result["urlId"] = %obj.urlId
+

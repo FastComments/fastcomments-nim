@@ -17,3 +17,17 @@ type UpdateAPIUserSubscriptionData* = object
   ## 
   notificationFrequency*: Option[float64]
 
+
+# Custom JSON deserialization for UpdateAPIUserSubscriptionData with custom field names
+proc to*(node: JsonNode, T: typedesc[UpdateAPIUserSubscriptionData]): UpdateAPIUserSubscriptionData =
+  result = UpdateAPIUserSubscriptionData()
+  if node.kind == JObject:
+    if node.hasKey("notificationFrequency") and node["notificationFrequency"].kind != JNull:
+      result.notificationFrequency = some(to(node["notificationFrequency"], typeof(result.notificationFrequency.get())))
+
+# Custom JSON serialization for UpdateAPIUserSubscriptionData with custom field names
+proc `%`*(obj: UpdateAPIUserSubscriptionData): JsonNode =
+  result = newJObject()
+  if obj.notificationFrequency.isSome():
+    result["notificationFrequency"] = %obj.notificationFrequency.get()
+

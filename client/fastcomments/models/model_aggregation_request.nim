@@ -24,3 +24,31 @@ type AggregationRequest* = object
   operations*: seq[AggregationOperation]
   sort*: Option[AggregationRequestSort]
 
+
+# Custom JSON deserialization for AggregationRequest with custom field names
+proc to*(node: JsonNode, T: typedesc[AggregationRequest]): AggregationRequest =
+  result = AggregationRequest()
+  if node.kind == JObject:
+    if node.hasKey("query") and node["query"].kind != JNull:
+      result.query = some(to(node["query"], typeof(result.query.get())))
+    if node.hasKey("resourceName"):
+      result.resourceName = to(node["resourceName"], string)
+    if node.hasKey("groupBy") and node["groupBy"].kind != JNull:
+      result.groupBy = some(to(node["groupBy"], typeof(result.groupBy.get())))
+    if node.hasKey("operations"):
+      result.operations = to(node["operations"], seq[AggregationOperation])
+    if node.hasKey("sort") and node["sort"].kind != JNull:
+      result.sort = some(to(node["sort"], typeof(result.sort.get())))
+
+# Custom JSON serialization for AggregationRequest with custom field names
+proc `%`*(obj: AggregationRequest): JsonNode =
+  result = newJObject()
+  if obj.query.isSome():
+    result["query"] = %obj.query.get()
+  result["resourceName"] = %obj.resourceName
+  if obj.groupBy.isSome():
+    result["groupBy"] = %obj.groupBy.get()
+  result["operations"] = %obj.operations
+  if obj.sort.isSome():
+    result["sort"] = %obj.sort.get()
+

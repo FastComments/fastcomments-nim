@@ -18,3 +18,17 @@ type LiveEventExtraInfo* = object
   ## 
   commentPositions*: Option[Table[string, RecordStringBeforeStringOrNullAfterStringOrNullValue]] ## Construct a type with a set of properties K of type T
 
+
+# Custom JSON deserialization for LiveEventExtraInfo with custom field names
+proc to*(node: JsonNode, T: typedesc[LiveEventExtraInfo]): LiveEventExtraInfo =
+  result = LiveEventExtraInfo()
+  if node.kind == JObject:
+    if node.hasKey("commentPositions") and node["commentPositions"].kind != JNull:
+      result.commentPositions = some(to(node["commentPositions"], typeof(result.commentPositions.get())))
+
+# Custom JSON serialization for LiveEventExtraInfo with custom field names
+proc `%`*(obj: LiveEventExtraInfo): JsonNode =
+  result = newJObject()
+  if obj.commentPositions.isSome():
+    result["commentPositions"] = %obj.commentPositions.get()
+

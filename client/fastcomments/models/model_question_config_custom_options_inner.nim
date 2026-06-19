@@ -18,3 +18,19 @@ type QuestionConfigCustomOptionsInner* = object
   imageSrc*: string
   name*: string
 
+
+# Custom JSON deserialization for QuestionConfigCustomOptionsInner with custom field names
+proc to*(node: JsonNode, T: typedesc[QuestionConfigCustomOptionsInner]): QuestionConfigCustomOptionsInner =
+  result = QuestionConfigCustomOptionsInner()
+  if node.kind == JObject:
+    if node.hasKey("imageSrc"):
+      result.imageSrc = to(node["imageSrc"], string)
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+
+# Custom JSON serialization for QuestionConfigCustomOptionsInner with custom field names
+proc `%`*(obj: QuestionConfigCustomOptionsInner): JsonNode =
+  result = newJObject()
+  result["imageSrc"] = %obj.imageSrc
+  result["name"] = %obj.name
+

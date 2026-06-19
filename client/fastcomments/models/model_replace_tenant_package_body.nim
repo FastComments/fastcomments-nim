@@ -47,3 +47,122 @@ type ReplaceTenantPackageBody* = object
   flexDomainUnit*: Option[float64]
   flexMinimumCostCents*: Option[float64]
 
+
+# Custom JSON deserialization for ReplaceTenantPackageBody with custom field names
+proc to*(node: JsonNode, T: typedesc[ReplaceTenantPackageBody]): ReplaceTenantPackageBody =
+  result = ReplaceTenantPackageBody()
+  if node.kind == JObject:
+    if node.hasKey("name"):
+      result.name = to(node["name"], string)
+    if node.hasKey("monthlyCostUSD"):
+      result.monthlyCostUSD = to(node["monthlyCostUSD"], float64)
+    if node.hasKey("yearlyCostUSD"):
+      result.yearlyCostUSD = to(node["yearlyCostUSD"], float64)
+    if node.hasKey("maxMonthlyPageLoads"):
+      result.maxMonthlyPageLoads = to(node["maxMonthlyPageLoads"], float64)
+    if node.hasKey("maxMonthlyAPICredits"):
+      result.maxMonthlyAPICredits = to(node["maxMonthlyAPICredits"], float64)
+    if node.hasKey("maxMonthlyComments"):
+      result.maxMonthlyComments = to(node["maxMonthlyComments"], float64)
+    if node.hasKey("maxConcurrentUsers"):
+      result.maxConcurrentUsers = to(node["maxConcurrentUsers"], float64)
+    if node.hasKey("maxTenantUsers"):
+      result.maxTenantUsers = to(node["maxTenantUsers"], float64)
+    if node.hasKey("maxSSOUsers"):
+      result.maxSSOUsers = to(node["maxSSOUsers"], float64)
+    if node.hasKey("maxModerators"):
+      result.maxModerators = to(node["maxModerators"], float64)
+    if node.hasKey("maxDomains"):
+      result.maxDomains = to(node["maxDomains"], float64)
+    if node.hasKey("maxCustomCollectionSize") and node["maxCustomCollectionSize"].kind != JNull:
+      result.maxCustomCollectionSize = some(to(node["maxCustomCollectionSize"], typeof(result.maxCustomCollectionSize.get())))
+    if node.hasKey("hasDebranding"):
+      result.hasDebranding = to(node["hasDebranding"], bool)
+    if node.hasKey("forWhoText"):
+      result.forWhoText = to(node["forWhoText"], string)
+    if node.hasKey("featureTaglines"):
+      result.featureTaglines = to(node["featureTaglines"], seq[string])
+    if node.hasKey("hasFlexPricing"):
+      result.hasFlexPricing = to(node["hasFlexPricing"], bool)
+    if node.hasKey("flexPageLoadCostCents") and node["flexPageLoadCostCents"].kind != JNull:
+      result.flexPageLoadCostCents = some(to(node["flexPageLoadCostCents"], typeof(result.flexPageLoadCostCents.get())))
+    if node.hasKey("flexPageLoadUnit") and node["flexPageLoadUnit"].kind != JNull:
+      result.flexPageLoadUnit = some(to(node["flexPageLoadUnit"], typeof(result.flexPageLoadUnit.get())))
+    if node.hasKey("flexCommentCostCents") and node["flexCommentCostCents"].kind != JNull:
+      result.flexCommentCostCents = some(to(node["flexCommentCostCents"], typeof(result.flexCommentCostCents.get())))
+    if node.hasKey("flexCommentUnit") and node["flexCommentUnit"].kind != JNull:
+      result.flexCommentUnit = some(to(node["flexCommentUnit"], typeof(result.flexCommentUnit.get())))
+    if node.hasKey("flexSSOUserCostCents") and node["flexSSOUserCostCents"].kind != JNull:
+      result.flexSSOUserCostCents = some(to(node["flexSSOUserCostCents"], typeof(result.flexSSOUserCostCents.get())))
+    if node.hasKey("flexSSOUserUnit") and node["flexSSOUserUnit"].kind != JNull:
+      result.flexSSOUserUnit = some(to(node["flexSSOUserUnit"], typeof(result.flexSSOUserUnit.get())))
+    if node.hasKey("flexAPICreditCostCents") and node["flexAPICreditCostCents"].kind != JNull:
+      result.flexAPICreditCostCents = some(to(node["flexAPICreditCostCents"], typeof(result.flexAPICreditCostCents.get())))
+    if node.hasKey("flexAPICreditUnit") and node["flexAPICreditUnit"].kind != JNull:
+      result.flexAPICreditUnit = some(to(node["flexAPICreditUnit"], typeof(result.flexAPICreditUnit.get())))
+    if node.hasKey("flexModeratorCostCents") and node["flexModeratorCostCents"].kind != JNull:
+      result.flexModeratorCostCents = some(to(node["flexModeratorCostCents"], typeof(result.flexModeratorCostCents.get())))
+    if node.hasKey("flexModeratorUnit") and node["flexModeratorUnit"].kind != JNull:
+      result.flexModeratorUnit = some(to(node["flexModeratorUnit"], typeof(result.flexModeratorUnit.get())))
+    if node.hasKey("flexAdminCostCents") and node["flexAdminCostCents"].kind != JNull:
+      result.flexAdminCostCents = some(to(node["flexAdminCostCents"], typeof(result.flexAdminCostCents.get())))
+    if node.hasKey("flexAdminUnit") and node["flexAdminUnit"].kind != JNull:
+      result.flexAdminUnit = some(to(node["flexAdminUnit"], typeof(result.flexAdminUnit.get())))
+    if node.hasKey("flexDomainCostCents") and node["flexDomainCostCents"].kind != JNull:
+      result.flexDomainCostCents = some(to(node["flexDomainCostCents"], typeof(result.flexDomainCostCents.get())))
+    if node.hasKey("flexDomainUnit") and node["flexDomainUnit"].kind != JNull:
+      result.flexDomainUnit = some(to(node["flexDomainUnit"], typeof(result.flexDomainUnit.get())))
+    if node.hasKey("flexMinimumCostCents") and node["flexMinimumCostCents"].kind != JNull:
+      result.flexMinimumCostCents = some(to(node["flexMinimumCostCents"], typeof(result.flexMinimumCostCents.get())))
+
+# Custom JSON serialization for ReplaceTenantPackageBody with custom field names
+proc `%`*(obj: ReplaceTenantPackageBody): JsonNode =
+  result = newJObject()
+  result["name"] = %obj.name
+  result["monthlyCostUSD"] = %obj.monthlyCostUSD
+  result["yearlyCostUSD"] = %obj.yearlyCostUSD
+  result["maxMonthlyPageLoads"] = %obj.maxMonthlyPageLoads
+  result["maxMonthlyAPICredits"] = %obj.maxMonthlyAPICredits
+  result["maxMonthlyComments"] = %obj.maxMonthlyComments
+  result["maxConcurrentUsers"] = %obj.maxConcurrentUsers
+  result["maxTenantUsers"] = %obj.maxTenantUsers
+  result["maxSSOUsers"] = %obj.maxSSOUsers
+  result["maxModerators"] = %obj.maxModerators
+  result["maxDomains"] = %obj.maxDomains
+  if obj.maxCustomCollectionSize.isSome():
+    result["maxCustomCollectionSize"] = %obj.maxCustomCollectionSize.get()
+  result["hasDebranding"] = %obj.hasDebranding
+  result["forWhoText"] = %obj.forWhoText
+  result["featureTaglines"] = %obj.featureTaglines
+  result["hasFlexPricing"] = %obj.hasFlexPricing
+  if obj.flexPageLoadCostCents.isSome():
+    result["flexPageLoadCostCents"] = %obj.flexPageLoadCostCents.get()
+  if obj.flexPageLoadUnit.isSome():
+    result["flexPageLoadUnit"] = %obj.flexPageLoadUnit.get()
+  if obj.flexCommentCostCents.isSome():
+    result["flexCommentCostCents"] = %obj.flexCommentCostCents.get()
+  if obj.flexCommentUnit.isSome():
+    result["flexCommentUnit"] = %obj.flexCommentUnit.get()
+  if obj.flexSSOUserCostCents.isSome():
+    result["flexSSOUserCostCents"] = %obj.flexSSOUserCostCents.get()
+  if obj.flexSSOUserUnit.isSome():
+    result["flexSSOUserUnit"] = %obj.flexSSOUserUnit.get()
+  if obj.flexAPICreditCostCents.isSome():
+    result["flexAPICreditCostCents"] = %obj.flexAPICreditCostCents.get()
+  if obj.flexAPICreditUnit.isSome():
+    result["flexAPICreditUnit"] = %obj.flexAPICreditUnit.get()
+  if obj.flexModeratorCostCents.isSome():
+    result["flexModeratorCostCents"] = %obj.flexModeratorCostCents.get()
+  if obj.flexModeratorUnit.isSome():
+    result["flexModeratorUnit"] = %obj.flexModeratorUnit.get()
+  if obj.flexAdminCostCents.isSome():
+    result["flexAdminCostCents"] = %obj.flexAdminCostCents.get()
+  if obj.flexAdminUnit.isSome():
+    result["flexAdminUnit"] = %obj.flexAdminUnit.get()
+  if obj.flexDomainCostCents.isSome():
+    result["flexDomainCostCents"] = %obj.flexDomainCostCents.get()
+  if obj.flexDomainUnit.isSome():
+    result["flexDomainUnit"] = %obj.flexDomainUnit.get()
+  if obj.flexMinimumCostCents.isSome():
+    result["flexMinimumCostCents"] = %obj.flexMinimumCostCents.get()
+
