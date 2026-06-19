@@ -20,24 +20,3 @@ type APIGetCommentsResponse* = object
   status*: APIStatus
   comments*: seq[APIComment]
 
-
-# Custom JSON deserialization for APIGetCommentsResponse with custom field names
-proc to*(node: JsonNode, T: typedesc[APIGetCommentsResponse]): APIGetCommentsResponse =
-  result = APIGetCommentsResponse()
-  if node.kind == JObject:
-    if node.hasKey("status"):
-      result.status = to(node["status"], APIStatus)
-    if node.hasKey("comments"):
-      # Array of types with custom JSON - manually iterate and deserialize
-      let arrayNode = node["comments"]
-      if arrayNode.kind == JArray:
-        result.comments = @[]
-        for item in arrayNode.items:
-          result.comments.add(to(item, APIComment))
-
-# Custom JSON serialization for APIGetCommentsResponse with custom field names
-proc `%`*(obj: APIGetCommentsResponse): JsonNode =
-  result = newJObject()
-  result["status"] = %obj.status
-  result["comments"] = %obj.comments
-

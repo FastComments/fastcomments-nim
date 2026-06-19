@@ -27,6 +27,7 @@ import model_sort_directions
 import model_spam_rule
 import model_sso_security_level
 import model_tos_config
+import model_users_list_location
 import model_vote_style
 
 type CustomConfigParameters* = object
@@ -83,11 +84,14 @@ type CustomConfigParameters* = object
   noCustomConfig*: Option[bool]
   mentionAutoCompleteMode*: Option[MentionAutoCompleteMode]
   noImageUploads*: Option[bool]
+  allowEmbeds*: Option[bool]
+  allowedEmbedDomains*: Option[seq[string]]
   noStyles*: Option[bool]
   pageSize*: Option[int]
   readonly*: Option[bool]
   noNewRootComments*: Option[bool]
   requireSSO*: Option[bool]
+  enableFChat*: Option[bool]
   enableResizeHandle*: Option[bool]
   restrictedLinkDomains*: Option[seq[string]]
   showBadgesInTopBar*: Option[bool]
@@ -108,6 +112,8 @@ type CustomConfigParameters* = object
   widgetQuestionsRequired*: Option[CommentQuestionsRequired]
   widgetSubQuestionVisibility*: Option[QuestionSubQuestionVisibility]
   wrap*: Option[bool]
+  usersListLocation*: Option[UsersListLocation]
+  usersListIncludeOffline*: Option[bool]
   ticketBaseUrl*: Option[string]
   ticketKBSearchEndpoint*: Option[string]
   ticketFileUploadsEnabled*: Option[bool]

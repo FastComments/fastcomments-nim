@@ -19,6 +19,7 @@ type TenantPackage* = object
   name*: string
   tenantId*: string
   createdAt*: string
+  templateId*: Option[string]
   monthlyCostUSD*: Option[float64]
   yearlyCostUSD*: Option[float64]
   monthlyStripePlanId*: Option[string]
@@ -62,6 +63,8 @@ type TenantPackage* = object
   flexDomainUnit*: Option[float64]
   flexChatGPTCostCents*: Option[float64]
   flexChatGPTUnit*: Option[float64]
+  flexLLMCostCents*: Option[float64]
+  flexLLMUnit*: Option[float64]
   flexMinimumCostCents*: Option[float64]
   flexManagedTenantCostCents*: Option[float64]
   flexSSOAdminCostCents*: Option[float64]
@@ -69,6 +72,10 @@ type TenantPackage* = object
   flexSSOModeratorCostCents*: Option[float64]
   flexSSOModeratorUnit*: Option[float64]
   isSSOBillingMonthlyActiveUsers*: Option[bool]
+  hasAIAgents*: Option[bool]
+  maxAIAgents*: Option[float64]
+  aiAgentDailyBudgetCents*: Option[float64]
+  aiAgentMonthlyBudgetCents*: Option[float64]
 
 
 # Custom JSON deserialization for TenantPackage with custom field names
@@ -83,6 +90,8 @@ proc to*(node: JsonNode, T: typedesc[TenantPackage]): TenantPackage =
       result.tenantId = to(node["tenantId"], string)
     if node.hasKey("createdAt"):
       result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("templateId") and node["templateId"].kind != JNull:
+      result.templateId = some(to(node["templateId"], typeof(result.templateId.get())))
     if node.hasKey("monthlyCostUSD") and node["monthlyCostUSD"].kind != JNull:
       result.monthlyCostUSD = some(to(node["monthlyCostUSD"], typeof(result.monthlyCostUSD.get())))
     if node.hasKey("yearlyCostUSD") and node["yearlyCostUSD"].kind != JNull:
@@ -169,6 +178,10 @@ proc to*(node: JsonNode, T: typedesc[TenantPackage]): TenantPackage =
       result.flexChatGPTCostCents = some(to(node["flexChatGPTCostCents"], typeof(result.flexChatGPTCostCents.get())))
     if node.hasKey("flexChatGPTUnit") and node["flexChatGPTUnit"].kind != JNull:
       result.flexChatGPTUnit = some(to(node["flexChatGPTUnit"], typeof(result.flexChatGPTUnit.get())))
+    if node.hasKey("flexLLMCostCents") and node["flexLLMCostCents"].kind != JNull:
+      result.flexLLMCostCents = some(to(node["flexLLMCostCents"], typeof(result.flexLLMCostCents.get())))
+    if node.hasKey("flexLLMUnit") and node["flexLLMUnit"].kind != JNull:
+      result.flexLLMUnit = some(to(node["flexLLMUnit"], typeof(result.flexLLMUnit.get())))
     if node.hasKey("flexMinimumCostCents") and node["flexMinimumCostCents"].kind != JNull:
       result.flexMinimumCostCents = some(to(node["flexMinimumCostCents"], typeof(result.flexMinimumCostCents.get())))
     if node.hasKey("flexManagedTenantCostCents") and node["flexManagedTenantCostCents"].kind != JNull:
@@ -183,6 +196,14 @@ proc to*(node: JsonNode, T: typedesc[TenantPackage]): TenantPackage =
       result.flexSSOModeratorUnit = some(to(node["flexSSOModeratorUnit"], typeof(result.flexSSOModeratorUnit.get())))
     if node.hasKey("isSSOBillingMonthlyActiveUsers") and node["isSSOBillingMonthlyActiveUsers"].kind != JNull:
       result.isSSOBillingMonthlyActiveUsers = some(to(node["isSSOBillingMonthlyActiveUsers"], typeof(result.isSSOBillingMonthlyActiveUsers.get())))
+    if node.hasKey("hasAIAgents") and node["hasAIAgents"].kind != JNull:
+      result.hasAIAgents = some(to(node["hasAIAgents"], typeof(result.hasAIAgents.get())))
+    if node.hasKey("maxAIAgents") and node["maxAIAgents"].kind != JNull:
+      result.maxAIAgents = some(to(node["maxAIAgents"], typeof(result.maxAIAgents.get())))
+    if node.hasKey("aiAgentDailyBudgetCents") and node["aiAgentDailyBudgetCents"].kind != JNull:
+      result.aiAgentDailyBudgetCents = some(to(node["aiAgentDailyBudgetCents"], typeof(result.aiAgentDailyBudgetCents.get())))
+    if node.hasKey("aiAgentMonthlyBudgetCents") and node["aiAgentMonthlyBudgetCents"].kind != JNull:
+      result.aiAgentMonthlyBudgetCents = some(to(node["aiAgentMonthlyBudgetCents"], typeof(result.aiAgentMonthlyBudgetCents.get())))
 
 # Custom JSON serialization for TenantPackage with custom field names
 proc `%`*(obj: TenantPackage): JsonNode =
@@ -191,6 +212,8 @@ proc `%`*(obj: TenantPackage): JsonNode =
   result["name"] = %obj.name
   result["tenantId"] = %obj.tenantId
   result["createdAt"] = %obj.createdAt
+  if obj.templateId.isSome():
+    result["templateId"] = %obj.templateId.get()
   if obj.monthlyCostUSD.isSome():
     result["monthlyCostUSD"] = %obj.monthlyCostUSD.get()
   if obj.yearlyCostUSD.isSome():
@@ -258,6 +281,10 @@ proc `%`*(obj: TenantPackage): JsonNode =
     result["flexChatGPTCostCents"] = %obj.flexChatGPTCostCents.get()
   if obj.flexChatGPTUnit.isSome():
     result["flexChatGPTUnit"] = %obj.flexChatGPTUnit.get()
+  if obj.flexLLMCostCents.isSome():
+    result["flexLLMCostCents"] = %obj.flexLLMCostCents.get()
+  if obj.flexLLMUnit.isSome():
+    result["flexLLMUnit"] = %obj.flexLLMUnit.get()
   if obj.flexMinimumCostCents.isSome():
     result["flexMinimumCostCents"] = %obj.flexMinimumCostCents.get()
   if obj.flexManagedTenantCostCents.isSome():
@@ -272,4 +299,12 @@ proc `%`*(obj: TenantPackage): JsonNode =
     result["flexSSOModeratorUnit"] = %obj.flexSSOModeratorUnit.get()
   if obj.isSSOBillingMonthlyActiveUsers.isSome():
     result["isSSOBillingMonthlyActiveUsers"] = %obj.isSSOBillingMonthlyActiveUsers.get()
+  if obj.hasAIAgents.isSome():
+    result["hasAIAgents"] = %obj.hasAIAgents.get()
+  if obj.maxAIAgents.isSome():
+    result["maxAIAgents"] = %obj.maxAIAgents.get()
+  if obj.aiAgentDailyBudgetCents.isSome():
+    result["aiAgentDailyBudgetCents"] = %obj.aiAgentDailyBudgetCents.get()
+  if obj.aiAgentMonthlyBudgetCents.isSome():
+    result["aiAgentMonthlyBudgetCents"] = %obj.aiAgentMonthlyBudgetCents.get()
 

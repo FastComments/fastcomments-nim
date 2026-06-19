@@ -24,6 +24,7 @@ type HeaderAccountNotification* = object
   linkUrl*: Option[string]
   linkText*: Option[string]
   createdAt*: string
+  `type`*: Option[string] ## Discriminator for notifications with a special layout/click handler (e.g. \"feedback-offer\").
 
 
 # Custom JSON deserialization for HeaderAccountNotification with custom field names
@@ -48,6 +49,8 @@ proc to*(node: JsonNode, T: typedesc[HeaderAccountNotification]): HeaderAccountN
       result.linkText = some(to(node["linkText"], typeof(result.linkText.get())))
     if node.hasKey("createdAt"):
       result.createdAt = to(node["createdAt"], string)
+    if node.hasKey("type") and node["type"].kind != JNull:
+      result.`type` = some(to(node["type"], typeof(result.`type`.get())))
 
 # Custom JSON serialization for HeaderAccountNotification with custom field names
 proc `%`*(obj: HeaderAccountNotification): JsonNode =
@@ -65,4 +68,6 @@ proc `%`*(obj: HeaderAccountNotification): JsonNode =
   if obj.linkText.isSome():
     result["linkText"] = %obj.linkText.get()
   result["createdAt"] = %obj.createdAt
+  if obj.`type`.isSome():
+    result["type"] = %obj.`type`.get()
 

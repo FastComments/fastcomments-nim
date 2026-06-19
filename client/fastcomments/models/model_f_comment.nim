@@ -92,6 +92,7 @@ type FComment* = object
   requiresVerification*: Option[bool]
   editKey*: Option[string]
   tosAcceptedAt*: Option[string]
+  botId*: Option[string]
 
 
 # Custom JSON deserialization for FComment with custom field names
@@ -242,6 +243,8 @@ proc to*(node: JsonNode, T: typedesc[FComment]): FComment =
       result.editKey = some(to(node["editKey"], typeof(result.editKey.get())))
     if node.hasKey("tosAcceptedAt") and node["tosAcceptedAt"].kind != JNull:
       result.tosAcceptedAt = some(to(node["tosAcceptedAt"], typeof(result.tosAcceptedAt.get())))
+    if node.hasKey("botId") and node["botId"].kind != JNull:
+      result.botId = some(to(node["botId"], typeof(result.botId.get())))
 
 # Custom JSON serialization for FComment with custom field names
 proc `%`*(obj: FComment): JsonNode =
@@ -381,4 +384,6 @@ proc `%`*(obj: FComment): JsonNode =
     result["editKey"] = %obj.editKey.get()
   if obj.tosAcceptedAt.isSome():
     result["tosAcceptedAt"] = %obj.tosAcceptedAt.get()
+  if obj.botId.isSome():
+    result["botId"] = %obj.botId.get()
 

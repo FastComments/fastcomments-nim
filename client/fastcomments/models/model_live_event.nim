@@ -38,6 +38,7 @@ type LiveEvent* = object
   isClosed*: Option[bool]
   uj*: Option[seq[string]]
   ul*: Option[seq[string]]
+  sc*: Option[int]
   changes*: Option[Table[string, int]]
 
 
@@ -75,6 +76,8 @@ proc to*(node: JsonNode, T: typedesc[LiveEvent]): LiveEvent =
       result.uj = some(to(node["uj"], typeof(result.uj.get())))
     if node.hasKey("ul") and node["ul"].kind != JNull:
       result.ul = some(to(node["ul"], typeof(result.ul.get())))
+    if node.hasKey("sc") and node["sc"].kind != JNull:
+      result.sc = some(to(node["sc"], typeof(result.sc.get())))
     if node.hasKey("changes") and node["changes"].kind != JNull:
       result.changes = some(to(node["changes"], typeof(result.changes.get())))
 
@@ -110,6 +113,8 @@ proc `%`*(obj: LiveEvent): JsonNode =
     result["uj"] = %obj.uj.get()
   if obj.ul.isSome():
     result["ul"] = %obj.ul.get()
+  if obj.sc.isSome():
+    result["sc"] = %obj.sc.get()
   if obj.changes.isSome():
     result["changes"] = %obj.changes.get()
 

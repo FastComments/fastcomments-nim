@@ -13,6 +13,7 @@ import marshal
 import options
 
 import model_digest_email_frequency
+import model_imported_agent_approval_notification_frequency
 
 type User* = object
   ## 
@@ -55,6 +56,7 @@ type User* = object
   digestEmailFrequency*: Option[DigestEmailFrequency]
   notificationFrequency*: Option[float64]
   adminNotificationFrequency*: Option[float64]
+  agentApprovalNotificationFrequency*: Option[ImportedAgentApprovalNotificationFrequency]
   lastTenantNotificationSentDate*: Option[string]
   lastReplyNotificationSentDate*: Option[string]
   ignoredAddToMySiteMessages*: Option[bool]
@@ -159,6 +161,8 @@ proc to*(node: JsonNode, T: typedesc[User]): User =
       result.notificationFrequency = some(to(node["notificationFrequency"], typeof(result.notificationFrequency.get())))
     if node.hasKey("adminNotificationFrequency") and node["adminNotificationFrequency"].kind != JNull:
       result.adminNotificationFrequency = some(to(node["adminNotificationFrequency"], typeof(result.adminNotificationFrequency.get())))
+    if node.hasKey("agentApprovalNotificationFrequency") and node["agentApprovalNotificationFrequency"].kind != JNull:
+      result.agentApprovalNotificationFrequency = some(to(node["agentApprovalNotificationFrequency"], typeof(result.agentApprovalNotificationFrequency.get())))
     if node.hasKey("lastTenantNotificationSentDate") and node["lastTenantNotificationSentDate"].kind != JNull:
       result.lastTenantNotificationSentDate = some(to(node["lastTenantNotificationSentDate"], typeof(result.lastTenantNotificationSentDate.get())))
     if node.hasKey("lastReplyNotificationSentDate") and node["lastReplyNotificationSentDate"].kind != JNull:
@@ -274,6 +278,8 @@ proc `%`*(obj: User): JsonNode =
     result["notificationFrequency"] = %obj.notificationFrequency.get()
   if obj.adminNotificationFrequency.isSome():
     result["adminNotificationFrequency"] = %obj.adminNotificationFrequency.get()
+  if obj.agentApprovalNotificationFrequency.isSome():
+    result["agentApprovalNotificationFrequency"] = %obj.agentApprovalNotificationFrequency.get()
   if obj.lastTenantNotificationSentDate.isSome():
     result["lastTenantNotificationSentDate"] = %obj.lastTenantNotificationSentDate.get()
   if obj.lastReplyNotificationSentDate.isSome():

@@ -14,8 +14,8 @@ import options
 
 import model_comment_user_hash_tag_info
 import model_comment_user_mention_info
+import model_gif_search_response_images_inner_inner
 import model_object
-import model_record_string_string_or_number_value
 
 type CreateCommentParams* = object
   ## 
@@ -42,8 +42,9 @@ type CreateCommentParams* = object
   fromOfflineRestore*: Option[bool]
   autoplayDelayMS*: Option[int64]
   feedbackIds*: Option[seq[string]]
-  questionValues*: Option[Table[string, RecordStringStringOrNumberValue]] ## Construct a type with a set of properties K of type T
+  questionValues*: Option[Table[string, GifSearchResponse_images_inner_inner]] ## Construct a type with a set of properties K of type T
   tos*: Option[bool]
+  botId*: Option[string]
   approved*: Option[bool]
   domain*: Option[string]
   ip*: Option[string]

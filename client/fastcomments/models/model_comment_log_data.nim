@@ -37,6 +37,7 @@ type CommentLogData* = object
   engineResponse*: Option[string]
   engineTokens*: Option[float64]
   trustFactor*: Option[float64]
+  source*: Option[string]
   rule*: Option[SpamRule]
   userId*: Option[string]
   subscribers*: Option[float64]

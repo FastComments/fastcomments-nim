@@ -15,6 +15,6 @@ import options
 
 type RecordStringBeforeStringOrNullAfterStringOrNullValue* = object
   ## 
-  after*: string
-  before*: string
+  after*: Option[string]
+  before*: Option[string]
 

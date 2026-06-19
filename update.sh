@@ -18,6 +18,11 @@ java -jar ../openapi-generator/modules/openapi-generator-cli/target/openapi-gene
     -o ./client \
     -c config.json
 
+# The Nim generator renders generic schema names (e.g. GetCommentsResponseWithPresence<PublicComment>)
+# with trailing underscores in API method return types, which is invalid Nim and does not match the
+# stripped name used in the generated model. Normalize the reference to the model's declared type name.
+sed -i 's/GetCommentsResponseWithPresence_PublicComment_/GetCommentsResponseWithPresencePublicComment/g' ./client/fastcomments/apis/api_public.nim
+
 echo "Generated Nim client in ./client"
 
 # Generate markdown documentation

@@ -12,11 +12,11 @@ import tables
 import marshal
 import options
 
-import model_add_hash_tag200response
 import model_api_status
+import model_bulk_create_hash_tags_response_results_inner
 
 type BulkCreateHashTagsResponse* = object
   ## 
   status*: APIStatus
-  results*: seq[AddHashTag_200_response]
+  results*: seq[BulkCreateHashTagsResponse_results_inner]
 
