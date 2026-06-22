@@ -12,9 +12,7 @@ import tables
 import marshal
 import options
 
-import model_api_error
 import model_api_status
-import model_custom_config_parameters
 import model_ignored_response
 import model_user_notification_write_response
 
@@ -22,7 +20,6 @@ import model_user_notification_write_response
 type UpdateUserNotificationStatusResponseKind* {.pure.} = enum
   UserNotificationWriteResponseVariant
   IgnoredResponseVariant
-  APIErrorVariant
 
 type UpdateUserNotificationStatusResponse* = object
   ## 
@@ -31,8 +28,6 @@ type UpdateUserNotificationStatusResponse* = object
     UserNotificationWriteResponseValue*: UserNotificationWriteResponse
   of UpdateUserNotificationStatusResponseKind.IgnoredResponseVariant:
     IgnoredResponseValue*: IgnoredResponse
-  of UpdateUserNotificationStatusResponseKind.APIErrorVariant:
-    APIErrorValue*: APIError
 
 proc to*(node: JsonNode, T: typedesc[UpdateUserNotificationStatusResponse]): UpdateUserNotificationStatusResponse =
   ## Custom deserializer for anyOf type - tries each variant
@@ -46,10 +41,5 @@ proc to*(node: JsonNode, T: typedesc[UpdateUserNotificationStatusResponse]): Upd
   except Exception as e:
     when defined(debug):
       echo "Failed to deserialize as IgnoredResponse: ", e.msg
-  try:
-    return UpdateUserNotificationStatusResponse(kind: UpdateUserNotificationStatusResponseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
-  except Exception as e:
-    when defined(debug):
-      echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of UpdateUserNotificationStatusResponse. JSON: " & $node)
 

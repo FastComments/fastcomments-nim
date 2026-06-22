@@ -12,35 +12,22 @@ import tables
 import marshal
 import options
 
-import model_api_error
 import model_api_status
-import model_custom_config_parameters
-import model_delete_feed_post_public_response_any_of
-
-# AnyOf type
-type DeleteFeedPostPublicResponseKind* {.pure.} = enum
-  DeleteFeedPostPublicResponseAnyOfVariant
-  APIErrorVariant
 
 type DeleteFeedPostPublicResponse* = object
   ## 
-  case kind*: DeleteFeedPostPublicResponseKind
-  of DeleteFeedPostPublicResponseKind.DeleteFeedPostPublicResponseAnyOfVariant:
-    DeleteFeedPostPublicResponse_anyOfValue*: DeleteFeedPostPublicResponseAnyOf
-  of DeleteFeedPostPublicResponseKind.APIErrorVariant:
-    APIErrorValue*: APIError
+  status*: APIStatus
 
+
+# Custom JSON deserialization for DeleteFeedPostPublicResponse with custom field names
 proc to*(node: JsonNode, T: typedesc[DeleteFeedPostPublicResponse]): DeleteFeedPostPublicResponse =
-  ## Custom deserializer for anyOf type - tries each variant
-  try:
-    return DeleteFeedPostPublicResponse(kind: DeleteFeedPostPublicResponseKind.DeleteFeedPostPublicResponseAnyOfVariant, DeleteFeedPostPublicResponse_anyOfValue: to(node, DeleteFeedPostPublicResponseAnyOf))
-  except Exception as e:
-    when defined(debug):
-      echo "Failed to deserialize as DeleteFeedPostPublicResponseAnyOf: ", e.msg
-  try:
-    return DeleteFeedPostPublicResponse(kind: DeleteFeedPostPublicResponseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
-  except Exception as e:
-    when defined(debug):
-      echo "Failed to deserialize as APIError: ", e.msg
-  raise newException(ValueError, "Unable to deserialize into any variant of DeleteFeedPostPublicResponse. JSON: " & $node)
+  result = DeleteFeedPostPublicResponse()
+  if node.kind == JObject:
+    if node.hasKey("status"):
+      result.status = to(node["status"], APIStatus)
+
+# Custom JSON serialization for DeleteFeedPostPublicResponse with custom field names
+proc `%`*(obj: DeleteFeedPostPublicResponse): JsonNode =
+  result = newJObject()
+  result["status"] = %obj.status
 

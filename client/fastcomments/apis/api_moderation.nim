@@ -18,54 +18,47 @@ import tables
 import typetraits
 import uri
 
+import ../models/model_api_empty_response
+import ../models/model_api_error
+import ../models/model_api_moderate_get_user_ban_preferences_response
 import ../models/model_adjust_comment_votes_params
+import ../models/model_adjust_votes_response
+import ../models/model_award_user_badge_response
+import ../models/model_ban_user_from_comment_result
 import ../models/model_ban_user_undo_params
 import ../models/model_bulk_pre_ban_params
+import ../models/model_bulk_pre_ban_summary
 import ../models/model_comments_by_ids_params
-import ../models/model_delete_moderation_vote_response
-import ../models/model_get_api_comments_response
-import ../models/model_get_api_export_status_response
-import ../models/model_get_api_ids_response
-import ../models/model_get_ban_users_from_comment_response
-import ../models/model_get_comment_ban_status_response1
-import ../models/model_get_comment_children_response
-import ../models/model_get_count_response
-import ../models/model_get_counts_response
-import ../models/model_get_logs_response
-import ../models/model_get_manual_badges_for_user_response
-import ../models/model_get_manual_badges_response
-import ../models/model_get_moderation_comment_response
-import ../models/model_get_moderation_comment_text_response
-import ../models/model_get_pre_ban_summary_response
-import ../models/model_get_search_comments_summary_response
-import ../models/model_get_search_pages_response
-import ../models/model_get_search_sites_response
-import ../models/model_get_search_suggest_response
-import ../models/model_get_search_users_response
-import ../models/model_get_trust_factor_response
-import ../models/model_get_user_ban_preference_response
-import ../models/model_get_user_internal_profile_response1
-import ../models/model_post_adjust_comment_votes_response
-import ../models/model_post_api_export_response
-import ../models/model_post_ban_user_from_comment_response
-import ../models/model_post_ban_user_undo_response
-import ../models/model_post_bulk_pre_ban_summary_response
-import ../models/model_post_comments_by_ids_response
-import ../models/model_post_flag_comment_response
+import ../models/model_get_banned_users_count_response
+import ../models/model_get_banned_users_from_comment_response
+import ../models/model_get_comment_ban_status_response
+import ../models/model_get_comment_text_response
+import ../models/model_get_tenant_manual_badges_response
+import ../models/model_get_user_internal_profile_response
+import ../models/model_get_user_manual_badges_response
+import ../models/model_get_user_trust_factor_response
+import ../models/model_moderation_api_child_comments_response
+import ../models/model_moderation_api_comment_response
+import ../models/model_moderation_api_count_comments_response
+import ../models/model_moderation_api_get_comment_ids_response
+import ../models/model_moderation_api_get_comments_response
+import ../models/model_moderation_api_get_logs_response
+import ../models/model_moderation_comment_search_response
+import ../models/model_moderation_export_response
+import ../models/model_moderation_export_status_response
+import ../models/model_moderation_page_search_response
+import ../models/model_moderation_site_search_response
+import ../models/model_moderation_suggest_response
+import ../models/model_moderation_user_search_response
 import ../models/model_post_remove_comment_response
-import ../models/model_post_restore_deleted_comment_response
-import ../models/model_post_set_comment_approval_status_response
-import ../models/model_post_set_comment_review_status_response
-import ../models/model_post_set_comment_spam_status_response
-import ../models/model_post_set_comment_text_response
-import ../models/model_post_un_flag_comment_response
-import ../models/model_post_vote_response
-import ../models/model_put_award_badge_response
-import ../models/model_put_close_thread_response
-import ../models/model_put_remove_badge_response
-import ../models/model_put_reopen_thread_response
+import ../models/model_pre_ban_summary
+import ../models/model_remove_user_badge_response
+import ../models/model_set_comment_approved_response
 import ../models/model_set_comment_text_params
-import ../models/model_set_trust_factor_response
+import ../models/model_set_comment_text_response
+import ../models/model_set_user_trust_factor_response
+import ../models/model_vote_delete_response
+import ../models/model_vote_response
 
 const basepath = "https://fastcomments.com"
 
@@ -82,7 +75,7 @@ template constructResult[T](response: Response): untyped =
     (none(T.typedesc), response)
 
 
-proc deleteModerationVote*(httpClient: HttpClient, commentId: string, voteId: string, broadcastId: string, tenantId: string, sso: string): (Option[DeleteModerationVoteResponse], Response) =
+proc deleteModerationVote*(httpClient: HttpClient, commentId: string, voteId: string, broadcastId: string, tenantId: string, sso: string): (Option[VoteDeleteResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $broadcastId != "":
@@ -94,10 +87,10 @@ proc deleteModerationVote*(httpClient: HttpClient, commentId: string, voteId: st
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.delete(basepath & fmt"/auth/my-account/moderate-comments/vote/{commentId}/{voteId}" & "?" & url_encoded_query_params)
-  constructResult[DeleteModerationVoteResponse](response)
+  constructResult[VoteDeleteResponse](response)
 
 
-proc getApiComments*(httpClient: HttpClient, page: float64, count: float64, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, sorts: string, demo: bool, tenantId: string, sso: string): (Option[GetApiCommentsResponse], Response) =
+proc getApiComments*(httpClient: HttpClient, page: float64, count: float64, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, sorts: string, demo: bool, tenantId: string, sso: string): (Option[ModerationAPIGetCommentsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $page != "":
@@ -123,10 +116,10 @@ proc getApiComments*(httpClient: HttpClient, page: float64, count: float64, text
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/api/comments" & "?" & url_encoded_query_params)
-  constructResult[GetApiCommentsResponse](response)
+  constructResult[ModerationAPIGetCommentsResponse](response)
 
 
-proc getApiExportStatus*(httpClient: HttpClient, batchJobId: string, tenantId: string, sso: string): (Option[GetApiExportStatusResponse], Response) =
+proc getApiExportStatus*(httpClient: HttpClient, batchJobId: string, tenantId: string, sso: string): (Option[ModerationExportStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $batchJobId != "":
@@ -138,10 +131,10 @@ proc getApiExportStatus*(httpClient: HttpClient, batchJobId: string, tenantId: s
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/api/export/status" & "?" & url_encoded_query_params)
-  constructResult[GetApiExportStatusResponse](response)
+  constructResult[ModerationExportStatusResponse](response)
 
 
-proc getApiIds*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, afterId: string, demo: bool, tenantId: string, sso: string): (Option[GetApiIdsResponse], Response) =
+proc getApiIds*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, afterId: string, demo: bool, tenantId: string, sso: string): (Option[ModerationAPIGetCommentIdsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -163,10 +156,10 @@ proc getApiIds*(httpClient: HttpClient, textSearch: string, byIPFromComment: str
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/api/ids" & "?" & url_encoded_query_params)
-  constructResult[GetApiIdsResponse](response)
+  constructResult[ModerationAPIGetCommentIdsResponse](response)
 
 
-proc getBanUsersFromComment*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetBanUsersFromCommentResponse], Response) =
+proc getBanUsersFromComment*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetBannedUsersFromCommentResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -176,10 +169,10 @@ proc getBanUsersFromComment*(httpClient: HttpClient, commentId: string, tenantId
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/ban-users/from-comment/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetBanUsersFromCommentResponse](response)
+  constructResult[GetBannedUsersFromCommentResponse](response)
 
 
-proc getCommentBanStatus*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetCommentBanStatusResponse1], Response) =
+proc getCommentBanStatus*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetCommentBanStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -189,10 +182,10 @@ proc getCommentBanStatus*(httpClient: HttpClient, commentId: string, tenantId: s
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/get-comment-ban-status/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetCommentBanStatusResponse1](response)
+  constructResult[GetCommentBanStatusResponse](response)
 
 
-proc getCommentChildren*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetCommentChildrenResponse], Response) =
+proc getCommentChildren*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[ModerationAPIChildCommentsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -202,10 +195,10 @@ proc getCommentChildren*(httpClient: HttpClient, commentId: string, tenantId: st
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/comment-children/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetCommentChildrenResponse](response)
+  constructResult[ModerationAPIChildCommentsResponse](response)
 
 
-proc getCount*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filter: string, searchFilters: string, demo: bool, tenantId: string, sso: string): (Option[GetCountResponse], Response) =
+proc getCount*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filter: string, searchFilters: string, demo: bool, tenantId: string, sso: string): (Option[ModerationAPICountCommentsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -225,10 +218,10 @@ proc getCount*(httpClient: HttpClient, textSearch: string, byIPFromComment: stri
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/count" & "?" & url_encoded_query_params)
-  constructResult[GetCountResponse](response)
+  constructResult[ModerationAPICountCommentsResponse](response)
 
 
-proc getCounts*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetCountsResponse], Response) =
+proc getCounts*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetBannedUsersCountResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -238,10 +231,10 @@ proc getCounts*(httpClient: HttpClient, tenantId: string, sso: string): (Option[
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/banned-users/counts" & "?" & url_encoded_query_params)
-  constructResult[GetCountsResponse](response)
+  constructResult[GetBannedUsersCountResponse](response)
 
 
-proc getLogs*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetLogsResponse], Response) =
+proc getLogs*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[ModerationAPIGetLogsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -251,10 +244,10 @@ proc getLogs*(httpClient: HttpClient, commentId: string, tenantId: string, sso: 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/logs/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetLogsResponse](response)
+  constructResult[ModerationAPIGetLogsResponse](response)
 
 
-proc getManualBadges*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetManualBadgesResponse], Response) =
+proc getManualBadges*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetTenantManualBadgesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -264,10 +257,10 @@ proc getManualBadges*(httpClient: HttpClient, tenantId: string, sso: string): (O
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/get-manual-badges" & "?" & url_encoded_query_params)
-  constructResult[GetManualBadgesResponse](response)
+  constructResult[GetTenantManualBadgesResponse](response)
 
 
-proc getManualBadgesForUser*(httpClient: HttpClient, badgesUserId: string, commentId: string, tenantId: string, sso: string): (Option[GetManualBadgesForUserResponse], Response) =
+proc getManualBadgesForUser*(httpClient: HttpClient, badgesUserId: string, commentId: string, tenantId: string, sso: string): (Option[GetUserManualBadgesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $badgesUserId != "":
@@ -281,10 +274,10 @@ proc getManualBadgesForUser*(httpClient: HttpClient, badgesUserId: string, comme
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/get-manual-badges-for-user" & "?" & url_encoded_query_params)
-  constructResult[GetManualBadgesForUserResponse](response)
+  constructResult[GetUserManualBadgesResponse](response)
 
 
-proc getModerationComment*(httpClient: HttpClient, commentId: string, includeEmail: bool, includeIP: bool, tenantId: string, sso: string): (Option[GetModerationCommentResponse], Response) =
+proc getModerationComment*(httpClient: HttpClient, commentId: string, includeEmail: bool, includeIP: bool, tenantId: string, sso: string): (Option[ModerationAPICommentResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $includeEmail != "":
@@ -298,10 +291,10 @@ proc getModerationComment*(httpClient: HttpClient, commentId: string, includeEma
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/comment/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetModerationCommentResponse](response)
+  constructResult[ModerationAPICommentResponse](response)
 
 
-proc getModerationCommentText*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetModerationCommentTextResponse], Response) =
+proc getModerationCommentText*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetCommentTextResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -311,10 +304,10 @@ proc getModerationCommentText*(httpClient: HttpClient, commentId: string, tenant
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/get-comment-text/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetModerationCommentTextResponse](response)
+  constructResult[GetCommentTextResponse](response)
 
 
-proc getPreBanSummary*(httpClient: HttpClient, commentId: string, includeByUserIdAndEmail: bool, includeByIP: bool, includeByEmailDomain: bool, tenantId: string, sso: string): (Option[GetPreBanSummaryResponse], Response) =
+proc getPreBanSummary*(httpClient: HttpClient, commentId: string, includeByUserIdAndEmail: bool, includeByIP: bool, includeByEmailDomain: bool, tenantId: string, sso: string): (Option[PreBanSummary], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $includeByUserIdAndEmail != "":
@@ -330,10 +323,10 @@ proc getPreBanSummary*(httpClient: HttpClient, commentId: string, includeByUserI
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & fmt"/auth/my-account/moderate-comments/pre-ban-summary/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[GetPreBanSummaryResponse](response)
+  constructResult[PreBanSummary](response)
 
 
-proc getSearchCommentsSummary*(httpClient: HttpClient, value: string, filters: string, searchFilters: string, tenantId: string, sso: string): (Option[GetSearchCommentsSummaryResponse], Response) =
+proc getSearchCommentsSummary*(httpClient: HttpClient, value: string, filters: string, searchFilters: string, tenantId: string, sso: string): (Option[ModerationCommentSearchResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -349,10 +342,10 @@ proc getSearchCommentsSummary*(httpClient: HttpClient, value: string, filters: s
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/search/comments/summary" & "?" & url_encoded_query_params)
-  constructResult[GetSearchCommentsSummaryResponse](response)
+  constructResult[ModerationCommentSearchResponse](response)
 
 
-proc getSearchPages*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[GetSearchPagesResponse], Response) =
+proc getSearchPages*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[ModerationPageSearchResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -364,10 +357,10 @@ proc getSearchPages*(httpClient: HttpClient, value: string, tenantId: string, ss
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/search/pages" & "?" & url_encoded_query_params)
-  constructResult[GetSearchPagesResponse](response)
+  constructResult[ModerationPageSearchResponse](response)
 
 
-proc getSearchSites*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[GetSearchSitesResponse], Response) =
+proc getSearchSites*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[ModerationSiteSearchResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -379,10 +372,10 @@ proc getSearchSites*(httpClient: HttpClient, value: string, tenantId: string, ss
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/search/sites" & "?" & url_encoded_query_params)
-  constructResult[GetSearchSitesResponse](response)
+  constructResult[ModerationSiteSearchResponse](response)
 
 
-proc getSearchSuggest*(httpClient: HttpClient, textSearch: string, tenantId: string, sso: string): (Option[GetSearchSuggestResponse], Response) =
+proc getSearchSuggest*(httpClient: HttpClient, textSearch: string, tenantId: string, sso: string): (Option[ModerationSuggestResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -394,10 +387,10 @@ proc getSearchSuggest*(httpClient: HttpClient, textSearch: string, tenantId: str
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/search/suggest" & "?" & url_encoded_query_params)
-  constructResult[GetSearchSuggestResponse](response)
+  constructResult[ModerationSuggestResponse](response)
 
 
-proc getSearchUsers*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[GetSearchUsersResponse], Response) =
+proc getSearchUsers*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[ModerationUserSearchResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -409,10 +402,10 @@ proc getSearchUsers*(httpClient: HttpClient, value: string, tenantId: string, ss
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/search/users" & "?" & url_encoded_query_params)
-  constructResult[GetSearchUsersResponse](response)
+  constructResult[ModerationUserSearchResponse](response)
 
 
-proc getTrustFactor*(httpClient: HttpClient, userId: string, tenantId: string, sso: string): (Option[GetTrustFactorResponse], Response) =
+proc getTrustFactor*(httpClient: HttpClient, userId: string, tenantId: string, sso: string): (Option[GetUserTrustFactorResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $userId != "":
@@ -424,10 +417,10 @@ proc getTrustFactor*(httpClient: HttpClient, userId: string, tenantId: string, s
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/get-trust-factor" & "?" & url_encoded_query_params)
-  constructResult[GetTrustFactorResponse](response)
+  constructResult[GetUserTrustFactorResponse](response)
 
 
-proc getUserBanPreference*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetUserBanPreferenceResponse], Response) =
+proc getUserBanPreference*(httpClient: HttpClient, tenantId: string, sso: string): (Option[APIModerateGetUserBanPreferencesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -437,10 +430,10 @@ proc getUserBanPreference*(httpClient: HttpClient, tenantId: string, sso: string
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/user-ban-preference" & "?" & url_encoded_query_params)
-  constructResult[GetUserBanPreferenceResponse](response)
+  constructResult[APIModerateGetUserBanPreferencesResponse](response)
 
 
-proc getUserInternalProfile*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetUserInternalProfileResponse1], Response) =
+proc getUserInternalProfile*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetUserInternalProfileResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $commentId != "":
@@ -452,10 +445,10 @@ proc getUserInternalProfile*(httpClient: HttpClient, commentId: string, tenantId
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.get(basepath & "/auth/my-account/moderate-comments/get-user-internal-profile" & "?" & url_encoded_query_params)
-  constructResult[GetUserInternalProfileResponse1](response)
+  constructResult[GetUserInternalProfileResponse](response)
 
 
-proc postAdjustCommentVotes*(httpClient: HttpClient, commentId: string, adjustCommentVotesParams: AdjustCommentVotesParams, broadcastId: string, tenantId: string, sso: string): (Option[PostAdjustCommentVotesResponse], Response) =
+proc postAdjustCommentVotes*(httpClient: HttpClient, commentId: string, adjustCommentVotesParams: AdjustCommentVotesParams, broadcastId: string, tenantId: string, sso: string): (Option[AdjustVotesResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -468,10 +461,10 @@ proc postAdjustCommentVotes*(httpClient: HttpClient, commentId: string, adjustCo
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/adjust-comment-votes/{commentId}" & "?" & url_encoded_query_params, $(%adjustCommentVotesParams))
-  constructResult[PostAdjustCommentVotesResponse](response)
+  constructResult[AdjustVotesResponse](response)
 
 
-proc postApiExport*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, sorts: string, tenantId: string, sso: string): (Option[PostApiExportResponse], Response) =
+proc postApiExport*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, sorts: string, tenantId: string, sso: string): (Option[ModerationExportResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -491,10 +484,10 @@ proc postApiExport*(httpClient: HttpClient, textSearch: string, byIPFromComment:
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/auth/my-account/moderate-comments/api/export" & "?" & url_encoded_query_params)
-  constructResult[PostApiExportResponse](response)
+  constructResult[ModerationExportResponse](response)
 
 
-proc postBanUserFromComment*(httpClient: HttpClient, commentId: string, banEmail: bool, banEmailDomain: bool, banIP: bool, deleteAllUsersComments: bool, bannedUntil: string, isShadowBan: bool, updateId: string, banReason: string, tenantId: string, sso: string): (Option[PostBanUserFromCommentResponse], Response) =
+proc postBanUserFromComment*(httpClient: HttpClient, commentId: string, banEmail: bool, banEmailDomain: bool, banIP: bool, deleteAllUsersComments: bool, bannedUntil: string, isShadowBan: bool, updateId: string, banReason: string, tenantId: string, sso: string): (Option[BanUserFromCommentResult], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $banEmail != "":
@@ -520,10 +513,10 @@ proc postBanUserFromComment*(httpClient: HttpClient, commentId: string, banEmail
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/ban-user/from-comment/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostBanUserFromCommentResponse](response)
+  constructResult[BanUserFromCommentResult](response)
 
 
-proc postBanUserUndo*(httpClient: HttpClient, banUserUndoParams: BanUserUndoParams, tenantId: string, sso: string): (Option[PostBanUserUndoResponse], Response) =
+proc postBanUserUndo*(httpClient: HttpClient, banUserUndoParams: BanUserUndoParams, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -534,10 +527,10 @@ proc postBanUserUndo*(httpClient: HttpClient, banUserUndoParams: BanUserUndoPara
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/auth/my-account/moderate-comments/ban-user/undo" & "?" & url_encoded_query_params, $(%banUserUndoParams))
-  constructResult[PostBanUserUndoResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc postBulkPreBanSummary*(httpClient: HttpClient, bulkPreBanParams: BulkPreBanParams, includeByUserIdAndEmail: bool, includeByIP: bool, includeByEmailDomain: bool, tenantId: string, sso: string): (Option[PostBulkPreBanSummaryResponse], Response) =
+proc postBulkPreBanSummary*(httpClient: HttpClient, bulkPreBanParams: BulkPreBanParams, includeByUserIdAndEmail: bool, includeByIP: bool, includeByEmailDomain: bool, tenantId: string, sso: string): (Option[BulkPreBanSummary], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -554,10 +547,10 @@ proc postBulkPreBanSummary*(httpClient: HttpClient, bulkPreBanParams: BulkPreBan
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/auth/my-account/moderate-comments/bulk-pre-ban-summary" & "?" & url_encoded_query_params, $(%bulkPreBanParams))
-  constructResult[PostBulkPreBanSummaryResponse](response)
+  constructResult[BulkPreBanSummary](response)
 
 
-proc postCommentsByIds*(httpClient: HttpClient, commentsByIdsParams: CommentsByIdsParams, tenantId: string, sso: string): (Option[PostCommentsByIdsResponse], Response) =
+proc postCommentsByIds*(httpClient: HttpClient, commentsByIdsParams: CommentsByIdsParams, tenantId: string, sso: string): (Option[ModerationAPIChildCommentsResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -568,10 +561,10 @@ proc postCommentsByIds*(httpClient: HttpClient, commentsByIdsParams: CommentsByI
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & "/auth/my-account/moderate-comments/comments-by-ids" & "?" & url_encoded_query_params, $(%commentsByIdsParams))
-  constructResult[PostCommentsByIdsResponse](response)
+  constructResult[ModerationAPIChildCommentsResponse](response)
 
 
-proc postFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PostFlagCommentResponse], Response) =
+proc postFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $broadcastId != "":
@@ -583,7 +576,7 @@ proc postFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: st
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/flag-comment/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostFlagCommentResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
 proc postRemoveComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PostRemoveCommentResponse], Response) =
@@ -601,7 +594,7 @@ proc postRemoveComment*(httpClient: HttpClient, commentId: string, broadcastId: 
   constructResult[PostRemoveCommentResponse](response)
 
 
-proc postRestoreDeletedComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PostRestoreDeletedCommentResponse], Response) =
+proc postRestoreDeletedComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $broadcastId != "":
@@ -613,10 +606,10 @@ proc postRestoreDeletedComment*(httpClient: HttpClient, commentId: string, broad
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/restore-deleted-comment/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostRestoreDeletedCommentResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc postSetCommentApprovalStatus*(httpClient: HttpClient, commentId: string, approved: bool, broadcastId: string, tenantId: string, sso: string): (Option[PostSetCommentApprovalStatusResponse], Response) =
+proc postSetCommentApprovalStatus*(httpClient: HttpClient, commentId: string, approved: bool, broadcastId: string, tenantId: string, sso: string): (Option[SetCommentApprovedResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $approved != "":
@@ -630,10 +623,10 @@ proc postSetCommentApprovalStatus*(httpClient: HttpClient, commentId: string, ap
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/set-comment-approval-status/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostSetCommentApprovalStatusResponse](response)
+  constructResult[SetCommentApprovedResponse](response)
 
 
-proc postSetCommentReviewStatus*(httpClient: HttpClient, commentId: string, reviewed: bool, broadcastId: string, tenantId: string, sso: string): (Option[PostSetCommentReviewStatusResponse], Response) =
+proc postSetCommentReviewStatus*(httpClient: HttpClient, commentId: string, reviewed: bool, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $reviewed != "":
@@ -647,10 +640,10 @@ proc postSetCommentReviewStatus*(httpClient: HttpClient, commentId: string, revi
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/set-comment-review-status/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostSetCommentReviewStatusResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc postSetCommentSpamStatus*(httpClient: HttpClient, commentId: string, spam: bool, permNotSpam: bool, broadcastId: string, tenantId: string, sso: string): (Option[PostSetCommentSpamStatusResponse], Response) =
+proc postSetCommentSpamStatus*(httpClient: HttpClient, commentId: string, spam: bool, permNotSpam: bool, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $spam != "":
@@ -666,10 +659,10 @@ proc postSetCommentSpamStatus*(httpClient: HttpClient, commentId: string, spam: 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/set-comment-spam-status/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostSetCommentSpamStatusResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc postSetCommentText*(httpClient: HttpClient, commentId: string, setCommentTextParams: SetCommentTextParams, broadcastId: string, tenantId: string, sso: string): (Option[PostSetCommentTextResponse], Response) =
+proc postSetCommentText*(httpClient: HttpClient, commentId: string, setCommentTextParams: SetCommentTextParams, broadcastId: string, tenantId: string, sso: string): (Option[SetCommentTextResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -682,10 +675,10 @@ proc postSetCommentText*(httpClient: HttpClient, commentId: string, setCommentTe
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/set-comment-text/{commentId}" & "?" & url_encoded_query_params, $(%setCommentTextParams))
-  constructResult[PostSetCommentTextResponse](response)
+  constructResult[SetCommentTextResponse](response)
 
 
-proc postUnFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PostUnFlagCommentResponse], Response) =
+proc postUnFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $broadcastId != "":
@@ -697,10 +690,10 @@ proc postUnFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: 
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/un-flag-comment/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostUnFlagCommentResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc postVote*(httpClient: HttpClient, commentId: string, direction: string, broadcastId: string, tenantId: string, sso: string): (Option[PostVoteResponse], Response) =
+proc postVote*(httpClient: HttpClient, commentId: string, direction: string, broadcastId: string, tenantId: string, sso: string): (Option[VoteResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $direction != "":
@@ -714,10 +707,10 @@ proc postVote*(httpClient: HttpClient, commentId: string, direction: string, bro
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.post(basepath & fmt"/auth/my-account/moderate-comments/vote/{commentId}" & "?" & url_encoded_query_params)
-  constructResult[PostVoteResponse](response)
+  constructResult[VoteResponse](response)
 
 
-proc putAwardBadge*(httpClient: HttpClient, badgeId: string, userId: string, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PutAwardBadgeResponse], Response) =
+proc putAwardBadge*(httpClient: HttpClient, badgeId: string, userId: string, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[AwardUserBadgeResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("badgeId", $badgeId))
@@ -734,10 +727,10 @@ proc putAwardBadge*(httpClient: HttpClient, badgeId: string, userId: string, com
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & "/auth/my-account/moderate-comments/award-badge" & "?" & url_encoded_query_params)
-  constructResult[PutAwardBadgeResponse](response)
+  constructResult[AwardUserBadgeResponse](response)
 
 
-proc putCloseThread*(httpClient: HttpClient, urlId: string, tenantId: string, sso: string): (Option[PutCloseThreadResponse], Response) =
+proc putCloseThread*(httpClient: HttpClient, urlId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -748,10 +741,10 @@ proc putCloseThread*(httpClient: HttpClient, urlId: string, tenantId: string, ss
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & "/auth/my-account/moderate-comments/close-thread" & "?" & url_encoded_query_params)
-  constructResult[PutCloseThreadResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc putRemoveBadge*(httpClient: HttpClient, badgeId: string, userId: string, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PutRemoveBadgeResponse], Response) =
+proc putRemoveBadge*(httpClient: HttpClient, badgeId: string, userId: string, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[RemoveUserBadgeResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("badgeId", $badgeId))
@@ -768,10 +761,10 @@ proc putRemoveBadge*(httpClient: HttpClient, badgeId: string, userId: string, co
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & "/auth/my-account/moderate-comments/remove-badge" & "?" & url_encoded_query_params)
-  constructResult[PutRemoveBadgeResponse](response)
+  constructResult[RemoveUserBadgeResponse](response)
 
 
-proc putReopenThread*(httpClient: HttpClient, urlId: string, tenantId: string, sso: string): (Option[PutReopenThreadResponse], Response) =
+proc putReopenThread*(httpClient: HttpClient, urlId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -782,10 +775,10 @@ proc putReopenThread*(httpClient: HttpClient, urlId: string, tenantId: string, s
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & "/auth/my-account/moderate-comments/reopen-thread" & "?" & url_encoded_query_params)
-  constructResult[PutReopenThreadResponse](response)
+  constructResult[APIEmptyResponse](response)
 
 
-proc setTrustFactor*(httpClient: HttpClient, userId: string, trustFactor: string, tenantId: string, sso: string): (Option[SetTrustFactorResponse], Response) =
+proc setTrustFactor*(httpClient: HttpClient, userId: string, trustFactor: string, tenantId: string, sso: string): (Option[SetUserTrustFactorResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $userId != "":
@@ -799,5 +792,5 @@ proc setTrustFactor*(httpClient: HttpClient, userId: string, trustFactor: string
   let url_encoded_query_params = encodeQuery(query_params_list)
 
   let response = httpClient.put(basepath & "/auth/my-account/moderate-comments/set-trust-factor" & "?" & url_encoded_query_params)
-  constructResult[SetTrustFactorResponse](response)
+  constructResult[SetUserTrustFactorResponse](response)
 
