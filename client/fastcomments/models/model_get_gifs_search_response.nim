@@ -12,7 +12,9 @@ import tables
 import marshal
 import options
 
+import model_api_error
 import model_api_status
+import model_custom_config_parameters
 import model_gif_search_internal_error
 import model_gif_search_response
 import model_gif_search_response_images_inner_inner
@@ -21,6 +23,7 @@ import model_gif_search_response_images_inner_inner
 type GetGifsSearchResponseKind* {.pure.} = enum
   GifSearchResponseVariant
   GifSearchInternalErrorVariant
+  APIErrorVariant
 
 type GetGifsSearchResponse* = object
   ## 
@@ -29,6 +32,8 @@ type GetGifsSearchResponse* = object
     GifSearchResponseValue*: GifSearchResponse
   of GetGifsSearchResponseKind.GifSearchInternalErrorVariant:
     GifSearchInternalErrorValue*: GifSearchInternalError
+  of GetGifsSearchResponseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
 proc to*(node: JsonNode, T: typedesc[GetGifsSearchResponse]): GetGifsSearchResponse =
   ## Custom deserializer for anyOf type - tries each variant
@@ -42,5 +47,10 @@ proc to*(node: JsonNode, T: typedesc[GetGifsSearchResponse]): GetGifsSearchRespo
   except Exception as e:
     when defined(debug):
       echo "Failed to deserialize as GifSearchInternalError: ", e.msg
+  try:
+    return GetGifsSearchResponse(kind: GetGifsSearchResponseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of GetGifsSearchResponse. JSON: " & $node)
 

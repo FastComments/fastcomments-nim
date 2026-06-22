@@ -12,6 +12,9 @@ import tables
 import marshal
 import options
 
+import model_api_error
+import model_api_status
+import model_custom_config_parameters
 import model_delete_comment_result
 import model_remove_comment_action_response
 
@@ -19,6 +22,7 @@ import model_remove_comment_action_response
 type PostRemoveCommentResponseKind* {.pure.} = enum
   DeleteCommentResultVariant
   RemoveCommentActionResponseVariant
+  APIErrorVariant
 
 type PostRemoveCommentResponse* = object
   ## 
@@ -27,6 +31,8 @@ type PostRemoveCommentResponse* = object
     DeleteCommentResultValue*: DeleteCommentResult
   of PostRemoveCommentResponseKind.RemoveCommentActionResponseVariant:
     RemoveCommentActionResponseValue*: RemoveCommentActionResponse
+  of PostRemoveCommentResponseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
 proc to*(node: JsonNode, T: typedesc[PostRemoveCommentResponse]): PostRemoveCommentResponse =
   ## Custom deserializer for anyOf type - tries each variant
@@ -40,5 +46,10 @@ proc to*(node: JsonNode, T: typedesc[PostRemoveCommentResponse]): PostRemoveComm
   except Exception as e:
     when defined(debug):
       echo "Failed to deserialize as RemoveCommentActionResponse: ", e.msg
+  try:
+    return PostRemoveCommentResponse(kind: PostRemoveCommentResponseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of PostRemoveCommentResponse. JSON: " & $node)
 

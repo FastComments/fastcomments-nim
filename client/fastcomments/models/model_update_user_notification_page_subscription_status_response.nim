@@ -12,7 +12,9 @@ import tables
 import marshal
 import options
 
+import model_api_error
 import model_api_status
+import model_custom_config_parameters
 import model_ignored_response
 import model_user_notification_write_response
 
@@ -20,6 +22,7 @@ import model_user_notification_write_response
 type UpdateUserNotificationPageSubscriptionStatusResponseKind* {.pure.} = enum
   UserNotificationWriteResponseVariant
   IgnoredResponseVariant
+  APIErrorVariant
 
 type UpdateUserNotificationPageSubscriptionStatusResponse* = object
   ## 
@@ -28,6 +31,8 @@ type UpdateUserNotificationPageSubscriptionStatusResponse* = object
     UserNotificationWriteResponseValue*: UserNotificationWriteResponse
   of UpdateUserNotificationPageSubscriptionStatusResponseKind.IgnoredResponseVariant:
     IgnoredResponseValue*: IgnoredResponse
+  of UpdateUserNotificationPageSubscriptionStatusResponseKind.APIErrorVariant:
+    APIErrorValue*: APIError
 
 proc to*(node: JsonNode, T: typedesc[UpdateUserNotificationPageSubscriptionStatusResponse]): UpdateUserNotificationPageSubscriptionStatusResponse =
   ## Custom deserializer for anyOf type - tries each variant
@@ -41,5 +46,10 @@ proc to*(node: JsonNode, T: typedesc[UpdateUserNotificationPageSubscriptionStatu
   except Exception as e:
     when defined(debug):
       echo "Failed to deserialize as IgnoredResponse: ", e.msg
+  try:
+    return UpdateUserNotificationPageSubscriptionStatusResponse(kind: UpdateUserNotificationPageSubscriptionStatusResponseKind.APIErrorVariant, APIErrorValue: to(node, APIError))
+  except Exception as e:
+    when defined(debug):
+      echo "Failed to deserialize as APIError: ", e.msg
   raise newException(ValueError, "Unable to deserialize into any variant of UpdateUserNotificationPageSubscriptionStatusResponse. JSON: " & $node)
 
