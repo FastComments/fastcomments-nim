@@ -48,24 +48,14 @@ import fastcomments/models/model_comment_data
 let client = newHttpClient()
 client.headers["x-api-key"] = "your-api-key"
 
-# Make authenticated API calls
+# Make authenticated API calls.
+# Required parameters (and the request body) are positional; optional
+# parameters are passed via the operation's options object.
 let (response, httpResponse) = getComments(
   httpClient = client,
-  params = ApiGetCommentsRequest(
-    tenantId: "your-tenant-id",
-    page: 0,
-    limit: 0,
-    skip: 0,
-    asTree: false,
-    skipChildren: 0,
-    limitChildren: 0,
-    maxTreeDepth: 0,
+  tenantId = "your-tenant-id",
+  options = ApiGetCommentsOptions(
     urlId: "your-url-id",
-    userId: "",
-    anonUserId: "",
-    contextUserId: "",
-    hashTag: "",
-    parentId: "",
     direction: SortDirections.DESC
   )
 )
@@ -87,38 +77,14 @@ import fastcomments/apis/api_public
 
 let client = newHttpClient()
 
-# Make public API calls
+# Make public API calls.
+# tenantId and urlId are required (positional); everything else is optional.
 let (response, httpResponse) = getCommentsPublic(
   httpClient = client,
-  params = ApiGetCommentsPublicRequest(
-    tenantId: "your-tenant-id",
-    urlId: "your-url-id",
-    page: 0,
-    direction: SortDirections.DESC,
-    sso: "",
-    skip: 0,
-    skipChildren: 0,
-    limit: 0,
-    limitChildren: 0,
-    countChildren: false,
-    fetchPageForCommentId: "",
-    includeConfig: false,
-    countAll: false,
-    includei10n: false,
-    locale: "",
-    modules: "",
-    isCrawler: false,
-    includeNotificationCount: false,
-    asTree: false,
-    maxTreeDepth: 0,
-    useFullTranslationIds: false,
-    parentId: "",
-    searchText: "",
-    hashTags: @[],
-    userId: "",
-    customConfigStr: "",
-    afterCommentId: "",
-    beforeCommentId: ""
+  tenantId = "your-tenant-id",
+  urlId = "your-url-id",
+  options = ApiGetCommentsPublicOptions(
+    direction: SortDirections.DESC
   )
 )
 
@@ -139,18 +105,12 @@ import fastcomments/apis/api_moderation
 
 let client = newHttpClient()
 
-# List comments in the moderation dashboard
+# List comments in the moderation dashboard.
+# This operation has no required parameters, so everything is optional.
 let (response, httpResponse) = getApiComments(
   httpClient = client,
-  params = ApiGetApiCommentsRequest(
-    page: 0,
+  options = ApiGetApiCommentsOptions(
     count: 30,
-    textSearch: "",
-    byIPFromComment: "",
-    filters: "",
-    searchFilters: "",
-    sorts: "",
-    demo: false,
     tenantId: "your-tenant-id",
     sso: "your-sso-token"
   )
@@ -170,6 +130,8 @@ if response.isSome:
 
 All API methods in this SDK return tuples of `(Option[ResponseType], Response)`. The first element contains the parsed response if successful, and the second element is the raw HTTP response.
 
+Required parameters and the request body are passed positionally. The remaining optional parameters are collected into a single `Api<Operation>Options` object, which is the last argument. Operations with no optional parameters take no options object.
+
 ### Example: Fetching Comments
 
 ```nim
@@ -183,21 +145,9 @@ client.headers["x-api-key"] = "your-api-key"
 
 let (response, httpResponse) = getComments(
   httpClient = client,
-  params = ApiGetCommentsRequest(
-    tenantId: "your-tenant-id",
-    page: 0,
-    limit: 0,
-    skip: 0,
-    asTree: false,
-    skipChildren: 0,
-    limitChildren: 0,
-    maxTreeDepth: 0,
+  tenantId = "your-tenant-id",
+  options = ApiGetCommentsOptions(
     urlId: "your-url-id",
-    userId: "",
-    anonUserId: "",
-    contextUserId: "",
-    hashTag: "",
-    parentId: "",
     direction: SortDirections.DESC
   )
 )
