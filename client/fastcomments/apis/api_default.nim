@@ -168,7 +168,13 @@ template constructResult[T](response: Response): untyped =
     (none(T.typedesc), response)
 
 
-proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigParams: AddDomainConfigParams): (Option[AddDomainConfigResponse], Response) =
+type ApiAddDomainConfigRequest* = object
+  tenantId*: string
+  addDomainConfigParams*: AddDomainConfigParams
+
+proc addDomainConfig*(httpClient: HttpClient, params: ApiAddDomainConfigRequest): (Option[AddDomainConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let addDomainConfigParams = params.addDomainConfigParams
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -179,7 +185,13 @@ proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigP
   constructResult[AddDomainConfigResponse](response)
 
 
-proc addHashTag*(httpClient: HttpClient, tenantId: string, createHashTagBody: CreateHashTagBody): (Option[CreateHashTagResponse], Response) =
+type ApiAddHashTagRequest* = object
+  tenantId*: string
+  createHashTagBody*: CreateHashTagBody
+
+proc addHashTag*(httpClient: HttpClient, params: ApiAddHashTagRequest): (Option[CreateHashTagResponse], Response) =
+  let tenantId = params.tenantId
+  let createHashTagBody = params.createHashTagBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -191,7 +203,13 @@ proc addHashTag*(httpClient: HttpClient, tenantId: string, createHashTagBody: Cr
   constructResult[CreateHashTagResponse](response)
 
 
-proc addHashTagsBulk*(httpClient: HttpClient, tenantId: string, bulkCreateHashTagsBody: BulkCreateHashTagsBody): (Option[BulkCreateHashTagsResponse], Response) =
+type ApiAddHashTagsBulkRequest* = object
+  tenantId*: string
+  bulkCreateHashTagsBody*: BulkCreateHashTagsBody
+
+proc addHashTagsBulk*(httpClient: HttpClient, params: ApiAddHashTagsBulkRequest): (Option[BulkCreateHashTagsResponse], Response) =
+  let tenantId = params.tenantId
+  let bulkCreateHashTagsBody = params.bulkCreateHashTagsBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -203,7 +221,13 @@ proc addHashTagsBulk*(httpClient: HttpClient, tenantId: string, bulkCreateHashTa
   constructResult[BulkCreateHashTagsResponse](response)
 
 
-proc addPage*(httpClient: HttpClient, tenantId: string, createAPIPageData: CreateAPIPageData): (Option[AddPageAPIResponse], Response) =
+type ApiAddPageRequest* = object
+  tenantId*: string
+  createAPIPageData*: CreateAPIPageData
+
+proc addPage*(httpClient: HttpClient, params: ApiAddPageRequest): (Option[AddPageAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let createAPIPageData = params.createAPIPageData
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -214,7 +238,13 @@ proc addPage*(httpClient: HttpClient, tenantId: string, createAPIPageData: Creat
   constructResult[AddPageAPIResponse](response)
 
 
-proc addSSOUser*(httpClient: HttpClient, tenantId: string, createAPISSOUserData: CreateAPISSOUserData): (Option[AddSSOUserAPIResponse], Response) =
+type ApiAddSSOUserRequest* = object
+  tenantId*: string
+  createAPISSOUserData*: CreateAPISSOUserData
+
+proc addSSOUser*(httpClient: HttpClient, params: ApiAddSSOUserRequest): (Option[AddSSOUserAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let createAPISSOUserData = params.createAPISSOUserData
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -225,7 +255,17 @@ proc addSSOUser*(httpClient: HttpClient, tenantId: string, createAPISSOUserData:
   constructResult[AddSSOUserAPIResponse](response)
 
 
-proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: AggregationRequest, parentTenantId: string, includeStats: bool): (Option[AggregateResponse], Response) =
+type ApiAggregateRequest* = object
+  tenantId*: string
+  aggregationRequest*: AggregationRequest
+  parentTenantId*: string
+  includeStats*: bool
+
+proc aggregate*(httpClient: HttpClient, params: ApiAggregateRequest): (Option[AggregateResponse], Response) =
+  let tenantId = params.tenantId
+  let aggregationRequest = params.aggregationRequest
+  let parentTenantId = params.parentTenantId
+  let includeStats = params.includeStats
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -240,7 +280,23 @@ proc aggregate*(httpClient: HttpClient, tenantId: string, aggregationRequest: Ag
   constructResult[AggregateResponse](response)
 
 
-proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, timeBucket: AggregateTimeBucket, startDate: string, forceRecalculate: bool): (Option[AggregateQuestionResultsResponse], Response) =
+type ApiAggregateQuestionResultsRequest* = object
+  tenantId*: string
+  questionId*: string
+  questionIds*: seq[string]
+  urlId*: string
+  timeBucket*: AggregateTimeBucket
+  startDate*: string
+  forceRecalculate*: bool
+
+proc aggregateQuestionResults*(httpClient: HttpClient, params: ApiAggregateQuestionResultsRequest): (Option[AggregateQuestionResultsResponse], Response) =
+  let tenantId = params.tenantId
+  let questionId = params.questionId
+  let questionIds = params.questionIds
+  let urlId = params.urlId
+  let timeBucket = params.timeBucket
+  let startDate = params.startDate
+  let forceRecalculate = params.forceRecalculate
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -262,7 +318,19 @@ proc aggregateQuestionResults*(httpClient: HttpClient, tenantId: string, questio
   constructResult[AggregateQuestionResultsResponse](response)
 
 
-proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, blockFromCommentParams: BlockFromCommentParams, userId: string, anonUserId: string): (Option[BlockSuccess], Response) =
+type ApiBlockUserFromCommentRequest* = object
+  tenantId*: string
+  id*: string
+  blockFromCommentParams*: BlockFromCommentParams
+  userId*: string
+  anonUserId*: string
+
+proc blockUserFromComment*(httpClient: HttpClient, params: ApiBlockUserFromCommentRequest): (Option[BlockSuccess], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let blockFromCommentParams = params.blockFromCommentParams
+  let userId = params.userId
+  let anonUserId = params.anonUserId
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -277,7 +345,15 @@ proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[BlockSuccess](response)
 
 
-proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bulkAggregateQuestionResultsRequest: BulkAggregateQuestionResultsRequest, forceRecalculate: bool): (Option[BulkAggregateQuestionResultsResponse], Response) =
+type ApiBulkAggregateQuestionResultsRequest* = object
+  tenantId*: string
+  bulkAggregateQuestionResultsRequest*: BulkAggregateQuestionResultsRequest
+  forceRecalculate*: bool
+
+proc bulkAggregateQuestionResults*(httpClient: HttpClient, params: ApiBulkAggregateQuestionResultsRequest): (Option[BulkAggregateQuestionResultsResponse], Response) =
+  let tenantId = params.tenantId
+  let bulkAggregateQuestionResultsRequest = params.bulkAggregateQuestionResultsRequest
+  let forceRecalculate = params.forceRecalculate
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -290,7 +366,17 @@ proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bul
   constructResult[BulkAggregateQuestionResultsResponse](response)
 
 
-proc changeTicketState*(httpClient: HttpClient, tenantId: string, userId: string, id: string, changeTicketStateBody: ChangeTicketStateBody): (Option[ChangeTicketStateResponse], Response) =
+type ApiChangeTicketStateRequest* = object
+  tenantId*: string
+  userId*: string
+  id*: string
+  changeTicketStateBody*: ChangeTicketStateBody
+
+proc changeTicketState*(httpClient: HttpClient, params: ApiChangeTicketStateRequest): (Option[ChangeTicketStateResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let id = params.id
+  let changeTicketStateBody = params.changeTicketStateBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -302,7 +388,27 @@ proc changeTicketState*(httpClient: HttpClient, tenantId: string, userId: string
   constructResult[ChangeTicketStateResponse](response)
 
 
-proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: string, questionId: string, questionIds: seq[string], urlId: string, startDate: string, forceRecalculate: bool, minValue: float64, maxValue: float64, limit: float64): (Option[CombineQuestionResultsWithCommentsResponse], Response) =
+type ApiCombineCommentsWithQuestionResultsRequest* = object
+  tenantId*: string
+  questionId*: string
+  questionIds*: seq[string]
+  urlId*: string
+  startDate*: string
+  forceRecalculate*: bool
+  minValue*: float64
+  maxValue*: float64
+  limit*: float64
+
+proc combineCommentsWithQuestionResults*(httpClient: HttpClient, params: ApiCombineCommentsWithQuestionResultsRequest): (Option[CombineQuestionResultsWithCommentsResponse], Response) =
+  let tenantId = params.tenantId
+  let questionId = params.questionId
+  let questionIds = params.questionIds
+  let urlId = params.urlId
+  let startDate = params.startDate
+  let forceRecalculate = params.forceRecalculate
+  let minValue = params.minValue
+  let maxValue = params.maxValue
+  let limit = params.limit
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -328,7 +434,13 @@ proc combineCommentsWithQuestionResults*(httpClient: HttpClient, tenantId: strin
   constructResult[CombineQuestionResultsWithCommentsResponse](response)
 
 
-proc createEmailTemplate*(httpClient: HttpClient, tenantId: string, createEmailTemplateBody: CreateEmailTemplateBody): (Option[CreateEmailTemplateResponse], Response) =
+type ApiCreateEmailTemplateRequest* = object
+  tenantId*: string
+  createEmailTemplateBody*: CreateEmailTemplateBody
+
+proc createEmailTemplate*(httpClient: HttpClient, params: ApiCreateEmailTemplateRequest): (Option[CreateEmailTemplateResponse], Response) =
+  let tenantId = params.tenantId
+  let createEmailTemplateBody = params.createEmailTemplateBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -339,7 +451,21 @@ proc createEmailTemplate*(httpClient: HttpClient, tenantId: string, createEmailT
   constructResult[CreateEmailTemplateResponse](response)
 
 
-proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, broadcastId: string, isLive: bool, doSpamCheck: bool, skipDupCheck: bool): (Option[CreateFeedPostsResponse], Response) =
+type ApiCreateFeedPostRequest* = object
+  tenantId*: string
+  createFeedPostParams*: CreateFeedPostParams
+  broadcastId*: string
+  isLive*: bool
+  doSpamCheck*: bool
+  skipDupCheck*: bool
+
+proc createFeedPost*(httpClient: HttpClient, params: ApiCreateFeedPostRequest): (Option[CreateFeedPostsResponse], Response) =
+  let tenantId = params.tenantId
+  let createFeedPostParams = params.createFeedPostParams
+  let broadcastId = params.broadcastId
+  let isLive = params.isLive
+  let doSpamCheck = params.doSpamCheck
+  let skipDupCheck = params.skipDupCheck
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -358,7 +484,13 @@ proc createFeedPost*(httpClient: HttpClient, tenantId: string, createFeedPostPar
   constructResult[CreateFeedPostsResponse](response)
 
 
-proc createModerator*(httpClient: HttpClient, tenantId: string, createModeratorBody: CreateModeratorBody): (Option[CreateModeratorResponse], Response) =
+type ApiCreateModeratorRequest* = object
+  tenantId*: string
+  createModeratorBody*: CreateModeratorBody
+
+proc createModerator*(httpClient: HttpClient, params: ApiCreateModeratorRequest): (Option[CreateModeratorResponse], Response) =
+  let tenantId = params.tenantId
+  let createModeratorBody = params.createModeratorBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -369,7 +501,13 @@ proc createModerator*(httpClient: HttpClient, tenantId: string, createModeratorB
   constructResult[CreateModeratorResponse](response)
 
 
-proc createQuestionConfig*(httpClient: HttpClient, tenantId: string, createQuestionConfigBody: CreateQuestionConfigBody): (Option[CreateQuestionConfigResponse], Response) =
+type ApiCreateQuestionConfigRequest* = object
+  tenantId*: string
+  createQuestionConfigBody*: CreateQuestionConfigBody
+
+proc createQuestionConfig*(httpClient: HttpClient, params: ApiCreateQuestionConfigRequest): (Option[CreateQuestionConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let createQuestionConfigBody = params.createQuestionConfigBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -380,7 +518,13 @@ proc createQuestionConfig*(httpClient: HttpClient, tenantId: string, createQuest
   constructResult[CreateQuestionConfigResponse](response)
 
 
-proc createQuestionResult*(httpClient: HttpClient, tenantId: string, createQuestionResultBody: CreateQuestionResultBody): (Option[CreateQuestionResultResponse], Response) =
+type ApiCreateQuestionResultRequest* = object
+  tenantId*: string
+  createQuestionResultBody*: CreateQuestionResultBody
+
+proc createQuestionResult*(httpClient: HttpClient, params: ApiCreateQuestionResultRequest): (Option[CreateQuestionResultResponse], Response) =
+  let tenantId = params.tenantId
+  let createQuestionResultBody = params.createQuestionResultBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -391,7 +535,13 @@ proc createQuestionResult*(httpClient: HttpClient, tenantId: string, createQuest
   constructResult[CreateQuestionResultResponse](response)
 
 
-proc createSubscription*(httpClient: HttpClient, tenantId: string, createAPIUserSubscriptionData: CreateAPIUserSubscriptionData): (Option[CreateSubscriptionAPIResponse], Response) =
+type ApiCreateSubscriptionRequest* = object
+  tenantId*: string
+  createAPIUserSubscriptionData*: CreateAPIUserSubscriptionData
+
+proc createSubscription*(httpClient: HttpClient, params: ApiCreateSubscriptionRequest): (Option[CreateSubscriptionAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let createAPIUserSubscriptionData = params.createAPIUserSubscriptionData
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -402,7 +552,13 @@ proc createSubscription*(httpClient: HttpClient, tenantId: string, createAPIUser
   constructResult[CreateSubscriptionAPIResponse](response)
 
 
-proc createTenant*(httpClient: HttpClient, tenantId: string, createTenantBody: CreateTenantBody): (Option[CreateTenantResponse], Response) =
+type ApiCreateTenantRequest* = object
+  tenantId*: string
+  createTenantBody*: CreateTenantBody
+
+proc createTenant*(httpClient: HttpClient, params: ApiCreateTenantRequest): (Option[CreateTenantResponse], Response) =
+  let tenantId = params.tenantId
+  let createTenantBody = params.createTenantBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -413,7 +569,13 @@ proc createTenant*(httpClient: HttpClient, tenantId: string, createTenantBody: C
   constructResult[CreateTenantResponse](response)
 
 
-proc createTenantPackage*(httpClient: HttpClient, tenantId: string, createTenantPackageBody: CreateTenantPackageBody): (Option[CreateTenantPackageResponse], Response) =
+type ApiCreateTenantPackageRequest* = object
+  tenantId*: string
+  createTenantPackageBody*: CreateTenantPackageBody
+
+proc createTenantPackage*(httpClient: HttpClient, params: ApiCreateTenantPackageRequest): (Option[CreateTenantPackageResponse], Response) =
+  let tenantId = params.tenantId
+  let createTenantPackageBody = params.createTenantPackageBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -424,7 +586,13 @@ proc createTenantPackage*(httpClient: HttpClient, tenantId: string, createTenant
   constructResult[CreateTenantPackageResponse](response)
 
 
-proc createTenantUser*(httpClient: HttpClient, tenantId: string, createTenantUserBody: CreateTenantUserBody): (Option[CreateTenantUserResponse], Response) =
+type ApiCreateTenantUserRequest* = object
+  tenantId*: string
+  createTenantUserBody*: CreateTenantUserBody
+
+proc createTenantUser*(httpClient: HttpClient, params: ApiCreateTenantUserRequest): (Option[CreateTenantUserResponse], Response) =
+  let tenantId = params.tenantId
+  let createTenantUserBody = params.createTenantUserBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -435,7 +603,15 @@ proc createTenantUser*(httpClient: HttpClient, tenantId: string, createTenantUse
   constructResult[CreateTenantUserResponse](response)
 
 
-proc createTicket*(httpClient: HttpClient, tenantId: string, userId: string, createTicketBody: CreateTicketBody): (Option[CreateTicketResponse], Response) =
+type ApiCreateTicketRequest* = object
+  tenantId*: string
+  userId*: string
+  createTicketBody*: CreateTicketBody
+
+proc createTicket*(httpClient: HttpClient, params: ApiCreateTicketRequest): (Option[CreateTicketResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let createTicketBody = params.createTicketBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -447,7 +623,13 @@ proc createTicket*(httpClient: HttpClient, tenantId: string, userId: string, cre
   constructResult[CreateTicketResponse](response)
 
 
-proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeParams: CreateUserBadgeParams): (Option[APICreateUserBadgeResponse], Response) =
+type ApiCreateUserBadgeRequest* = object
+  tenantId*: string
+  createUserBadgeParams*: CreateUserBadgeParams
+
+proc createUserBadge*(httpClient: HttpClient, params: ApiCreateUserBadgeRequest): (Option[APICreateUserBadgeResponse], Response) =
+  let tenantId = params.tenantId
+  let createUserBadgeParams = params.createUserBadgeParams
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -458,7 +640,19 @@ proc createUserBadge*(httpClient: HttpClient, tenantId: string, createUserBadgeP
   constructResult[APICreateUserBadgeResponse](response)
 
 
-proc createVote*(httpClient: HttpClient, tenantId: string, commentId: string, direction: string, userId: string, anonUserId: string): (Option[VoteResponse], Response) =
+type ApiCreateVoteRequest* = object
+  tenantId*: string
+  commentId*: string
+  direction*: string
+  userId*: string
+  anonUserId*: string
+
+proc createVote*(httpClient: HttpClient, params: ApiCreateVoteRequest): (Option[VoteResponse], Response) =
+  let tenantId = params.tenantId
+  let commentId = params.commentId
+  let direction = params.direction
+  let userId = params.userId
+  let anonUserId = params.anonUserId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -474,7 +668,17 @@ proc createVote*(httpClient: HttpClient, tenantId: string, commentId: string, di
   constructResult[VoteResponse](response)
 
 
-proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contextUserId: string, isLive: bool): (Option[DeleteCommentResult], Response) =
+type ApiDeleteCommentRequest* = object
+  tenantId*: string
+  id*: string
+  contextUserId*: string
+  isLive*: bool
+
+proc deleteComment*(httpClient: HttpClient, params: ApiDeleteCommentRequest): (Option[DeleteCommentResult], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let contextUserId = params.contextUserId
+  let isLive = params.isLive
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -488,7 +692,13 @@ proc deleteComment*(httpClient: HttpClient, tenantId: string, id: string, contex
   constructResult[DeleteCommentResult](response)
 
 
-proc deleteDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[DeleteDomainConfigResponse], Response) =
+type ApiDeleteDomainConfigRequest* = object
+  tenantId*: string
+  domain*: string
+
+proc deleteDomainConfig*(httpClient: HttpClient, params: ApiDeleteDomainConfigRequest): (Option[DeleteDomainConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let domain = params.domain
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -498,7 +708,13 @@ proc deleteDomainConfig*(httpClient: HttpClient, tenantId: string, domain: strin
   constructResult[DeleteDomainConfigResponse](response)
 
 
-proc deleteEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteEmailTemplateRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deleteEmailTemplate*(httpClient: HttpClient, params: ApiDeleteEmailTemplateRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -508,7 +724,15 @@ proc deleteEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string):
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteEmailTemplateRenderError*(httpClient: HttpClient, tenantId: string, id: string, errorId: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteEmailTemplateRenderErrorRequest* = object
+  tenantId*: string
+  id*: string
+  errorId*: string
+
+proc deleteEmailTemplateRenderError*(httpClient: HttpClient, params: ApiDeleteEmailTemplateRenderErrorRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let errorId = params.errorId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -518,7 +742,15 @@ proc deleteEmailTemplateRenderError*(httpClient: HttpClient, tenantId: string, i
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteHashTag*(httpClient: HttpClient, tag: string, tenantId: string, deleteHashTagRequestBody: DeleteHashTagRequestBody): (Option[APIEmptyResponse], Response) =
+type ApiDeleteHashTagRequest* = object
+  tag*: string
+  tenantId*: string
+  deleteHashTagRequestBody*: DeleteHashTagRequestBody
+
+proc deleteHashTag*(httpClient: HttpClient, params: ApiDeleteHashTagRequest): (Option[APIEmptyResponse], Response) =
+  let tag = params.tag
+  let tenantId = params.tenantId
+  let deleteHashTagRequestBody = params.deleteHashTagRequestBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -529,7 +761,15 @@ proc deleteHashTag*(httpClient: HttpClient, tag: string, tenantId: string, delet
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, sendEmail: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteModeratorRequest* = object
+  tenantId*: string
+  id*: string
+  sendEmail*: string
+
+proc deleteModerator*(httpClient: HttpClient, params: ApiDeleteModeratorRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let sendEmail = params.sendEmail
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -541,7 +781,13 @@ proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, send
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteNotificationCount*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteNotificationCountRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deleteNotificationCount*(httpClient: HttpClient, params: ApiDeleteNotificationCountRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -551,7 +797,13 @@ proc deleteNotificationCount*(httpClient: HttpClient, tenantId: string, id: stri
   constructResult[APIEmptyResponse](response)
 
 
-proc deletePage*(httpClient: HttpClient, tenantId: string, id: string): (Option[DeletePageAPIResponse], Response) =
+type ApiDeletePageRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deletePage*(httpClient: HttpClient, params: ApiDeletePageRequest): (Option[DeletePageAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -561,7 +813,13 @@ proc deletePage*(httpClient: HttpClient, tenantId: string, id: string): (Option[
   constructResult[DeletePageAPIResponse](response)
 
 
-proc deletePendingWebhookEvent*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
+type ApiDeletePendingWebhookEventRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deletePendingWebhookEvent*(httpClient: HttpClient, params: ApiDeletePendingWebhookEventRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -571,7 +829,13 @@ proc deletePendingWebhookEvent*(httpClient: HttpClient, tenantId: string, id: st
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteQuestionConfigRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deleteQuestionConfig*(httpClient: HttpClient, params: ApiDeleteQuestionConfigRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -581,7 +845,13 @@ proc deleteQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string)
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteQuestionResultRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deleteQuestionResult*(httpClient: HttpClient, params: ApiDeleteQuestionResultRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -591,7 +861,17 @@ proc deleteQuestionResult*(httpClient: HttpClient, tenantId: string, id: string)
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteSSOUser*(httpClient: HttpClient, tenantId: string, id: string, deleteComments: bool, commentDeleteMode: string): (Option[DeleteSSOUserAPIResponse], Response) =
+type ApiDeleteSSOUserRequest* = object
+  tenantId*: string
+  id*: string
+  deleteComments*: bool
+  commentDeleteMode*: string
+
+proc deleteSSOUser*(httpClient: HttpClient, params: ApiDeleteSSOUserRequest): (Option[DeleteSSOUserAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let deleteComments = params.deleteComments
+  let commentDeleteMode = params.commentDeleteMode
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -605,7 +885,15 @@ proc deleteSSOUser*(httpClient: HttpClient, tenantId: string, id: string, delete
   constructResult[DeleteSSOUserAPIResponse](response)
 
 
-proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, userId: string): (Option[DeleteSubscriptionAPIResponse], Response) =
+type ApiDeleteSubscriptionRequest* = object
+  tenantId*: string
+  id*: string
+  userId*: string
+
+proc deleteSubscription*(httpClient: HttpClient, params: ApiDeleteSubscriptionRequest): (Option[DeleteSubscriptionAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let userId = params.userId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -617,7 +905,15 @@ proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, u
   constructResult[DeleteSubscriptionAPIResponse](response)
 
 
-proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, sure: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteTenantRequest* = object
+  tenantId*: string
+  id*: string
+  sure*: string
+
+proc deleteTenant*(httpClient: HttpClient, params: ApiDeleteTenantRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let sure = params.sure
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -629,7 +925,13 @@ proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, sure: s
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteTenantPackageRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deleteTenantPackage*(httpClient: HttpClient, params: ApiDeleteTenantPackageRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -639,7 +941,17 @@ proc deleteTenantPackage*(httpClient: HttpClient, tenantId: string, id: string):
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteTenantUser*(httpClient: HttpClient, tenantId: string, id: string, deleteComments: string, commentDeleteMode: string): (Option[APIEmptyResponse], Response) =
+type ApiDeleteTenantUserRequest* = object
+  tenantId*: string
+  id*: string
+  deleteComments*: string
+  commentDeleteMode*: string
+
+proc deleteTenantUser*(httpClient: HttpClient, params: ApiDeleteTenantUserRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let deleteComments = params.deleteComments
+  let commentDeleteMode = params.commentDeleteMode
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -653,7 +965,13 @@ proc deleteTenantUser*(httpClient: HttpClient, tenantId: string, id: string, del
   constructResult[APIEmptyResponse](response)
 
 
-proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIEmptySuccessResponse], Response) =
+type ApiDeleteUserBadgeRequest* = object
+  tenantId*: string
+  id*: string
+
+proc deleteUserBadge*(httpClient: HttpClient, params: ApiDeleteUserBadgeRequest): (Option[APIEmptySuccessResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -663,7 +981,15 @@ proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Op
   constructResult[APIEmptySuccessResponse](response)
 
 
-proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, editKey: string): (Option[VoteDeleteResponse], Response) =
+type ApiDeleteVoteRequest* = object
+  tenantId*: string
+  id*: string
+  editKey*: string
+
+proc deleteVote*(httpClient: HttpClient, params: ApiDeleteVoteRequest): (Option[VoteDeleteResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let editKey = params.editKey
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -675,7 +1001,17 @@ proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, editKey: 
   constructResult[VoteDeleteResponse](response)
 
 
-proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagCommentResponse], Response) =
+type ApiFlagCommentRequest* = object
+  tenantId*: string
+  id*: string
+  userId*: string
+  anonUserId*: string
+
+proc flagComment*(httpClient: HttpClient, params: ApiFlagCommentRequest): (Option[FlagCommentResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let userId = params.userId
+  let anonUserId = params.anonUserId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -689,7 +1025,21 @@ proc flagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: 
   constructResult[FlagCommentResponse](response)
 
 
-proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, skip: float64, order: SORTDIR, after: float64, before: float64): (Option[GetAuditLogsResponse], Response) =
+type ApiGetAuditLogsRequest* = object
+  tenantId*: string
+  limit*: float64
+  skip*: float64
+  order*: SORTDIR
+  after*: float64
+  before*: float64
+
+proc getAuditLogs*(httpClient: HttpClient, params: ApiGetAuditLogsRequest): (Option[GetAuditLogsResponse], Response) =
+  let tenantId = params.tenantId
+  let limit = params.limit
+  let skip = params.skip
+  let order = params.order
+  let after = params.after
+  let before = params.before
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -709,7 +1059,13 @@ proc getAuditLogs*(httpClient: HttpClient, tenantId: string, limit: float64, ski
   constructResult[GetAuditLogsResponse](response)
 
 
-proc getCachedNotificationCount*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetCachedNotificationCountResponse], Response) =
+type ApiGetCachedNotificationCountRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getCachedNotificationCount*(httpClient: HttpClient, params: ApiGetCachedNotificationCountRequest): (Option[GetCachedNotificationCountResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -719,7 +1075,13 @@ proc getCachedNotificationCount*(httpClient: HttpClient, tenantId: string, id: s
   constructResult[GetCachedNotificationCountResponse](response)
 
 
-proc getComment*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIGetCommentResponse], Response) =
+type ApiGetCommentRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getComment*(httpClient: HttpClient, params: ApiGetCommentRequest): (Option[APIGetCommentResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -729,7 +1091,43 @@ proc getComment*(httpClient: HttpClient, tenantId: string, id: string): (Option[
   constructResult[APIGetCommentResponse](response)
 
 
-proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: int, skip: int, asTree: bool, skipChildren: int, limitChildren: int, maxTreeDepth: int, urlId: string, userId: string, anonUserId: string, contextUserId: string, hashTag: string, parentId: string, direction: SortDirections, fromDate: int64, toDate: int64): (Option[APIGetCommentsResponse], Response) =
+type ApiGetCommentsRequest* = object
+  tenantId*: string
+  page*: int
+  limit*: int
+  skip*: int
+  asTree*: bool
+  skipChildren*: int
+  limitChildren*: int
+  maxTreeDepth*: int
+  urlId*: string
+  userId*: string
+  anonUserId*: string
+  contextUserId*: string
+  hashTag*: string
+  parentId*: string
+  direction*: SortDirections
+  fromDate*: int64
+  toDate*: int64
+
+proc getComments*(httpClient: HttpClient, params: ApiGetCommentsRequest): (Option[APIGetCommentsResponse], Response) =
+  let tenantId = params.tenantId
+  let page = params.page
+  let limit = params.limit
+  let skip = params.skip
+  let asTree = params.asTree
+  let skipChildren = params.skipChildren
+  let limitChildren = params.limitChildren
+  let maxTreeDepth = params.maxTreeDepth
+  let urlId = params.urlId
+  let userId = params.userId
+  let anonUserId = params.anonUserId
+  let contextUserId = params.contextUserId
+  let hashTag = params.hashTag
+  let parentId = params.parentId
+  let direction = params.direction
+  let fromDate = params.fromDate
+  let toDate = params.toDate
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -771,7 +1169,13 @@ proc getComments*(httpClient: HttpClient, tenantId: string, page: int, limit: in
   constructResult[APIGetCommentsResponse](response)
 
 
-proc getDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string): (Option[GetDomainConfigResponse], Response) =
+type ApiGetDomainConfigRequest* = object
+  tenantId*: string
+  domain*: string
+
+proc getDomainConfig*(httpClient: HttpClient, params: ApiGetDomainConfigRequest): (Option[GetDomainConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let domain = params.domain
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -781,7 +1185,11 @@ proc getDomainConfig*(httpClient: HttpClient, tenantId: string, domain: string):
   constructResult[GetDomainConfigResponse](response)
 
 
-proc getDomainConfigs*(httpClient: HttpClient, tenantId: string): (Option[GetDomainConfigsResponse], Response) =
+type ApiGetDomainConfigsRequest* = object
+  tenantId*: string
+
+proc getDomainConfigs*(httpClient: HttpClient, params: ApiGetDomainConfigsRequest): (Option[GetDomainConfigsResponse], Response) =
+  let tenantId = params.tenantId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -791,7 +1199,13 @@ proc getDomainConfigs*(httpClient: HttpClient, tenantId: string): (Option[GetDom
   constructResult[GetDomainConfigsResponse](response)
 
 
-proc getEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetEmailTemplateResponse], Response) =
+type ApiGetEmailTemplateRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getEmailTemplate*(httpClient: HttpClient, params: ApiGetEmailTemplateRequest): (Option[GetEmailTemplateResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -801,7 +1215,11 @@ proc getEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string): (O
   constructResult[GetEmailTemplateResponse](response)
 
 
-proc getEmailTemplateDefinitions*(httpClient: HttpClient, tenantId: string): (Option[GetEmailTemplateDefinitionsResponse], Response) =
+type ApiGetEmailTemplateDefinitionsRequest* = object
+  tenantId*: string
+
+proc getEmailTemplateDefinitions*(httpClient: HttpClient, params: ApiGetEmailTemplateDefinitionsRequest): (Option[GetEmailTemplateDefinitionsResponse], Response) =
+  let tenantId = params.tenantId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -811,7 +1229,15 @@ proc getEmailTemplateDefinitions*(httpClient: HttpClient, tenantId: string): (Op
   constructResult[GetEmailTemplateDefinitionsResponse](response)
 
 
-proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id: string, skip: float64): (Option[GetEmailTemplateRenderErrorsResponse], Response) =
+type ApiGetEmailTemplateRenderErrorsRequest* = object
+  tenantId*: string
+  id*: string
+  skip*: float64
+
+proc getEmailTemplateRenderErrors*(httpClient: HttpClient, params: ApiGetEmailTemplateRenderErrorsRequest): (Option[GetEmailTemplateRenderErrorsResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -823,7 +1249,13 @@ proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id:
   constructResult[GetEmailTemplateRenderErrorsResponse](response)
 
 
-proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetEmailTemplatesResponse], Response) =
+type ApiGetEmailTemplatesRequest* = object
+  tenantId*: string
+  skip*: float64
+
+proc getEmailTemplates*(httpClient: HttpClient, params: ApiGetEmailTemplatesRequest): (Option[GetEmailTemplatesResponse], Response) =
+  let tenantId = params.tenantId
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -835,7 +1267,17 @@ proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, skip: float64)
   constructResult[GetEmailTemplatesResponse](response)
 
 
-proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, limit: int, tags: seq[string]): (Option[GetFeedPostsResponse], Response) =
+type ApiGetFeedPostsRequest* = object
+  tenantId*: string
+  afterId*: string
+  limit*: int
+  tags*: seq[string]
+
+proc getFeedPosts*(httpClient: HttpClient, params: ApiGetFeedPostsRequest): (Option[GetFeedPostsResponse], Response) =
+  let tenantId = params.tenantId
+  let afterId = params.afterId
+  let limit = params.limit
+  let tags = params.tags
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -851,7 +1293,13 @@ proc getFeedPosts*(httpClient: HttpClient, tenantId: string, afterId: string, li
   constructResult[GetFeedPostsResponse](response)
 
 
-proc getHashTags*(httpClient: HttpClient, tenantId: string, page: float64): (Option[GetHashTagsResponse], Response) =
+type ApiGetHashTagsRequest* = object
+  tenantId*: string
+  page*: float64
+
+proc getHashTags*(httpClient: HttpClient, params: ApiGetHashTagsRequest): (Option[GetHashTagsResponse], Response) =
+  let tenantId = params.tenantId
+  let page = params.page
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -863,7 +1311,13 @@ proc getHashTags*(httpClient: HttpClient, tenantId: string, page: float64): (Opt
   constructResult[GetHashTagsResponse](response)
 
 
-proc getModerator*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetModeratorResponse], Response) =
+type ApiGetModeratorRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getModerator*(httpClient: HttpClient, params: ApiGetModeratorRequest): (Option[GetModeratorResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -873,7 +1327,13 @@ proc getModerator*(httpClient: HttpClient, tenantId: string, id: string): (Optio
   constructResult[GetModeratorResponse](response)
 
 
-proc getModerators*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetModeratorsResponse], Response) =
+type ApiGetModeratorsRequest* = object
+  tenantId*: string
+  skip*: float64
+
+proc getModerators*(httpClient: HttpClient, params: ApiGetModeratorsRequest): (Option[GetModeratorsResponse], Response) =
+  let tenantId = params.tenantId
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -885,7 +1345,21 @@ proc getModerators*(httpClient: HttpClient, tenantId: string, skip: float64): (O
   constructResult[GetModeratorsResponse](response)
 
 
-proc getNotificationCount*(httpClient: HttpClient, tenantId: string, userId: string, urlId: string, fromCommentId: string, viewed: bool, `type`: string): (Option[GetNotificationCountResponse], Response) =
+type ApiGetNotificationCountRequest* = object
+  tenantId*: string
+  userId*: string
+  urlId*: string
+  fromCommentId*: string
+  viewed*: bool
+  `type`*: string
+
+proc getNotificationCount*(httpClient: HttpClient, params: ApiGetNotificationCountRequest): (Option[GetNotificationCountResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let urlId = params.urlId
+  let fromCommentId = params.fromCommentId
+  let viewed = params.viewed
+  let `type` = params.`type`
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -905,7 +1379,23 @@ proc getNotificationCount*(httpClient: HttpClient, tenantId: string, userId: str
   constructResult[GetNotificationCountResponse](response)
 
 
-proc getNotifications*(httpClient: HttpClient, tenantId: string, userId: string, urlId: string, fromCommentId: string, viewed: bool, `type`: string, skip: float64): (Option[GetNotificationsResponse], Response) =
+type ApiGetNotificationsRequest* = object
+  tenantId*: string
+  userId*: string
+  urlId*: string
+  fromCommentId*: string
+  viewed*: bool
+  `type`*: string
+  skip*: float64
+
+proc getNotifications*(httpClient: HttpClient, params: ApiGetNotificationsRequest): (Option[GetNotificationsResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let urlId = params.urlId
+  let fromCommentId = params.fromCommentId
+  let viewed = params.viewed
+  let `type` = params.`type`
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -927,7 +1417,13 @@ proc getNotifications*(httpClient: HttpClient, tenantId: string, userId: string,
   constructResult[GetNotificationsResponse](response)
 
 
-proc getPageByURLId*(httpClient: HttpClient, tenantId: string, urlId: string): (Option[GetPageByURLIdAPIResponse], Response) =
+type ApiGetPageByURLIdRequest* = object
+  tenantId*: string
+  urlId*: string
+
+proc getPageByURLId*(httpClient: HttpClient, params: ApiGetPageByURLIdRequest): (Option[GetPageByURLIdAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let urlId = params.urlId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -938,7 +1434,11 @@ proc getPageByURLId*(httpClient: HttpClient, tenantId: string, urlId: string): (
   constructResult[GetPageByURLIdAPIResponse](response)
 
 
-proc getPages*(httpClient: HttpClient, tenantId: string): (Option[GetPagesAPIResponse], Response) =
+type ApiGetPagesRequest* = object
+  tenantId*: string
+
+proc getPages*(httpClient: HttpClient, params: ApiGetPagesRequest): (Option[GetPagesAPIResponse], Response) =
+  let tenantId = params.tenantId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -948,7 +1448,23 @@ proc getPages*(httpClient: HttpClient, tenantId: string): (Option[GetPagesAPIRes
   constructResult[GetPagesAPIResponse](response)
 
 
-proc getPendingWebhookEventCount*(httpClient: HttpClient, tenantId: string, commentId: string, externalId: string, eventType: string, `type`: string, domain: string, attemptCountGT: float64): (Option[GetPendingWebhookEventCountResponse], Response) =
+type ApiGetPendingWebhookEventCountRequest* = object
+  tenantId*: string
+  commentId*: string
+  externalId*: string
+  eventType*: string
+  `type`*: string
+  domain*: string
+  attemptCountGT*: float64
+
+proc getPendingWebhookEventCount*(httpClient: HttpClient, params: ApiGetPendingWebhookEventCountRequest): (Option[GetPendingWebhookEventCountResponse], Response) =
+  let tenantId = params.tenantId
+  let commentId = params.commentId
+  let externalId = params.externalId
+  let eventType = params.eventType
+  let `type` = params.`type`
+  let domain = params.domain
+  let attemptCountGT = params.attemptCountGT
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -970,7 +1486,25 @@ proc getPendingWebhookEventCount*(httpClient: HttpClient, tenantId: string, comm
   constructResult[GetPendingWebhookEventCountResponse](response)
 
 
-proc getPendingWebhookEvents*(httpClient: HttpClient, tenantId: string, commentId: string, externalId: string, eventType: string, `type`: string, domain: string, attemptCountGT: float64, skip: float64): (Option[GetPendingWebhookEventsResponse], Response) =
+type ApiGetPendingWebhookEventsRequest* = object
+  tenantId*: string
+  commentId*: string
+  externalId*: string
+  eventType*: string
+  `type`*: string
+  domain*: string
+  attemptCountGT*: float64
+  skip*: float64
+
+proc getPendingWebhookEvents*(httpClient: HttpClient, params: ApiGetPendingWebhookEventsRequest): (Option[GetPendingWebhookEventsResponse], Response) =
+  let tenantId = params.tenantId
+  let commentId = params.commentId
+  let externalId = params.externalId
+  let eventType = params.eventType
+  let `type` = params.`type`
+  let domain = params.domain
+  let attemptCountGT = params.attemptCountGT
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -994,7 +1528,13 @@ proc getPendingWebhookEvents*(httpClient: HttpClient, tenantId: string, commentI
   constructResult[GetPendingWebhookEventsResponse](response)
 
 
-proc getQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetQuestionConfigResponse], Response) =
+type ApiGetQuestionConfigRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getQuestionConfig*(httpClient: HttpClient, params: ApiGetQuestionConfigRequest): (Option[GetQuestionConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1004,7 +1544,13 @@ proc getQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (
   constructResult[GetQuestionConfigResponse](response)
 
 
-proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetQuestionConfigsResponse], Response) =
+type ApiGetQuestionConfigsRequest* = object
+  tenantId*: string
+  skip*: float64
+
+proc getQuestionConfigs*(httpClient: HttpClient, params: ApiGetQuestionConfigsRequest): (Option[GetQuestionConfigsResponse], Response) =
+  let tenantId = params.tenantId
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1016,7 +1562,13 @@ proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, skip: float64
   constructResult[GetQuestionConfigsResponse](response)
 
 
-proc getQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetQuestionResultResponse], Response) =
+type ApiGetQuestionResultRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getQuestionResult*(httpClient: HttpClient, params: ApiGetQuestionResultRequest): (Option[GetQuestionResultResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1026,7 +1578,23 @@ proc getQuestionResult*(httpClient: HttpClient, tenantId: string, id: string): (
   constructResult[GetQuestionResultResponse](response)
 
 
-proc getQuestionResults*(httpClient: HttpClient, tenantId: string, urlId: string, userId: string, startDate: string, questionId: string, questionIds: string, skip: float64): (Option[GetQuestionResultsResponse], Response) =
+type ApiGetQuestionResultsRequest* = object
+  tenantId*: string
+  urlId*: string
+  userId*: string
+  startDate*: string
+  questionId*: string
+  questionIds*: string
+  skip*: float64
+
+proc getQuestionResults*(httpClient: HttpClient, params: ApiGetQuestionResultsRequest): (Option[GetQuestionResultsResponse], Response) =
+  let tenantId = params.tenantId
+  let urlId = params.urlId
+  let userId = params.userId
+  let startDate = params.startDate
+  let questionId = params.questionId
+  let questionIds = params.questionIds
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1048,7 +1616,13 @@ proc getQuestionResults*(httpClient: HttpClient, tenantId: string, urlId: string
   constructResult[GetQuestionResultsResponse](response)
 
 
-proc getSSOUserByEmail*(httpClient: HttpClient, tenantId: string, email: string): (Option[GetSSOUserByEmailAPIResponse], Response) =
+type ApiGetSSOUserByEmailRequest* = object
+  tenantId*: string
+  email*: string
+
+proc getSSOUserByEmail*(httpClient: HttpClient, params: ApiGetSSOUserByEmailRequest): (Option[GetSSOUserByEmailAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let email = params.email
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1058,7 +1632,13 @@ proc getSSOUserByEmail*(httpClient: HttpClient, tenantId: string, email: string)
   constructResult[GetSSOUserByEmailAPIResponse](response)
 
 
-proc getSSOUserById*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetSSOUserByIdAPIResponse], Response) =
+type ApiGetSSOUserByIdRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getSSOUserById*(httpClient: HttpClient, params: ApiGetSSOUserByIdRequest): (Option[GetSSOUserByIdAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1068,7 +1648,13 @@ proc getSSOUserById*(httpClient: HttpClient, tenantId: string, id: string): (Opt
   constructResult[GetSSOUserByIdAPIResponse](response)
 
 
-proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[GetSSOUsersResponse], Response) =
+type ApiGetSSOUsersRequest* = object
+  tenantId*: string
+  skip*: int
+
+proc getSSOUsers*(httpClient: HttpClient, params: ApiGetSSOUsersRequest): (Option[GetSSOUsersResponse], Response) =
+  let tenantId = params.tenantId
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1080,7 +1666,13 @@ proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[
   constructResult[GetSSOUsersResponse](response)
 
 
-proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string): (Option[GetSubscriptionsAPIResponse], Response) =
+type ApiGetSubscriptionsRequest* = object
+  tenantId*: string
+  userId*: string
+
+proc getSubscriptions*(httpClient: HttpClient, params: ApiGetSubscriptionsRequest): (Option[GetSubscriptionsAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1092,7 +1684,13 @@ proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string)
   constructResult[GetSubscriptionsAPIResponse](response)
 
 
-proc getTenant*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantResponse], Response) =
+type ApiGetTenantRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getTenant*(httpClient: HttpClient, params: ApiGetTenantRequest): (Option[GetTenantResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1102,7 +1700,19 @@ proc getTenant*(httpClient: HttpClient, tenantId: string, id: string): (Option[G
   constructResult[GetTenantResponse](response)
 
 
-proc getTenantDailyUsages*(httpClient: HttpClient, tenantId: string, yearNumber: float64, monthNumber: float64, dayNumber: float64, skip: float64): (Option[GetTenantDailyUsagesResponse], Response) =
+type ApiGetTenantDailyUsagesRequest* = object
+  tenantId*: string
+  yearNumber*: float64
+  monthNumber*: float64
+  dayNumber*: float64
+  skip*: float64
+
+proc getTenantDailyUsages*(httpClient: HttpClient, params: ApiGetTenantDailyUsagesRequest): (Option[GetTenantDailyUsagesResponse], Response) =
+  let tenantId = params.tenantId
+  let yearNumber = params.yearNumber
+  let monthNumber = params.monthNumber
+  let dayNumber = params.dayNumber
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1120,7 +1730,13 @@ proc getTenantDailyUsages*(httpClient: HttpClient, tenantId: string, yearNumber:
   constructResult[GetTenantDailyUsagesResponse](response)
 
 
-proc getTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantPackageResponse], Response) =
+type ApiGetTenantPackageRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getTenantPackage*(httpClient: HttpClient, params: ApiGetTenantPackageRequest): (Option[GetTenantPackageResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1130,7 +1746,13 @@ proc getTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (O
   constructResult[GetTenantPackageResponse](response)
 
 
-proc getTenantPackages*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantPackagesResponse], Response) =
+type ApiGetTenantPackagesRequest* = object
+  tenantId*: string
+  skip*: float64
+
+proc getTenantPackages*(httpClient: HttpClient, params: ApiGetTenantPackagesRequest): (Option[GetTenantPackagesResponse], Response) =
+  let tenantId = params.tenantId
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1142,7 +1764,13 @@ proc getTenantPackages*(httpClient: HttpClient, tenantId: string, skip: float64)
   constructResult[GetTenantPackagesResponse](response)
 
 
-proc getTenantUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetTenantUserResponse], Response) =
+type ApiGetTenantUserRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getTenantUser*(httpClient: HttpClient, params: ApiGetTenantUserRequest): (Option[GetTenantUserResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1152,7 +1780,13 @@ proc getTenantUser*(httpClient: HttpClient, tenantId: string, id: string): (Opti
   constructResult[GetTenantUserResponse](response)
 
 
-proc getTenantUsers*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantUsersResponse], Response) =
+type ApiGetTenantUsersRequest* = object
+  tenantId*: string
+  skip*: float64
+
+proc getTenantUsers*(httpClient: HttpClient, params: ApiGetTenantUsersRequest): (Option[GetTenantUsersResponse], Response) =
+  let tenantId = params.tenantId
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1164,7 +1798,15 @@ proc getTenantUsers*(httpClient: HttpClient, tenantId: string, skip: float64): (
   constructResult[GetTenantUsersResponse](response)
 
 
-proc getTenants*(httpClient: HttpClient, tenantId: string, meta: string, skip: float64): (Option[GetTenantsResponse], Response) =
+type ApiGetTenantsRequest* = object
+  tenantId*: string
+  meta*: string
+  skip*: float64
+
+proc getTenants*(httpClient: HttpClient, params: ApiGetTenantsRequest): (Option[GetTenantsResponse], Response) =
+  let tenantId = params.tenantId
+  let meta = params.meta
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1178,7 +1820,15 @@ proc getTenants*(httpClient: HttpClient, tenantId: string, meta: string, skip: f
   constructResult[GetTenantsResponse](response)
 
 
-proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: string): (Option[GetTicketResponse], Response) =
+type ApiGetTicketRequest* = object
+  tenantId*: string
+  id*: string
+  userId*: string
+
+proc getTicket*(httpClient: HttpClient, params: ApiGetTicketRequest): (Option[GetTicketResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let userId = params.userId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1190,7 +1840,19 @@ proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: st
   constructResult[GetTicketResponse](response)
 
 
-proc getTickets*(httpClient: HttpClient, tenantId: string, userId: string, state: float64, skip: float64, limit: float64): (Option[GetTicketsResponse], Response) =
+type ApiGetTicketsRequest* = object
+  tenantId*: string
+  userId*: string
+  state*: float64
+  skip*: float64
+  limit*: float64
+
+proc getTickets*(httpClient: HttpClient, params: ApiGetTicketsRequest): (Option[GetTicketsResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let state = params.state
+  let skip = params.skip
+  let limit = params.limit
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1208,7 +1870,13 @@ proc getTickets*(httpClient: HttpClient, tenantId: string, userId: string, state
   constructResult[GetTicketsResponse](response)
 
 
-proc getUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[GetUserResponse], Response) =
+type ApiGetUserRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getUser*(httpClient: HttpClient, params: ApiGetUserRequest): (Option[GetUserResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1218,7 +1886,13 @@ proc getUser*(httpClient: HttpClient, tenantId: string, id: string): (Option[Get
   constructResult[GetUserResponse](response)
 
 
-proc getUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIGetUserBadgeResponse], Response) =
+type ApiGetUserBadgeRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getUserBadge*(httpClient: HttpClient, params: ApiGetUserBadgeRequest): (Option[APIGetUserBadgeResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1228,7 +1902,13 @@ proc getUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Optio
   constructResult[APIGetUserBadgeResponse](response)
 
 
-proc getUserBadgeProgressById*(httpClient: HttpClient, tenantId: string, id: string): (Option[APIGetUserBadgeProgressResponse], Response) =
+type ApiGetUserBadgeProgressByIdRequest* = object
+  tenantId*: string
+  id*: string
+
+proc getUserBadgeProgressById*(httpClient: HttpClient, params: ApiGetUserBadgeProgressByIdRequest): (Option[APIGetUserBadgeProgressResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1238,7 +1918,13 @@ proc getUserBadgeProgressById*(httpClient: HttpClient, tenantId: string, id: str
   constructResult[APIGetUserBadgeProgressResponse](response)
 
 
-proc getUserBadgeProgressByUserId*(httpClient: HttpClient, tenantId: string, userId: string): (Option[APIGetUserBadgeProgressResponse], Response) =
+type ApiGetUserBadgeProgressByUserIdRequest* = object
+  tenantId*: string
+  userId*: string
+
+proc getUserBadgeProgressByUserId*(httpClient: HttpClient, params: ApiGetUserBadgeProgressByUserIdRequest): (Option[APIGetUserBadgeProgressResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1248,7 +1934,17 @@ proc getUserBadgeProgressByUserId*(httpClient: HttpClient, tenantId: string, use
   constructResult[APIGetUserBadgeProgressResponse](response)
 
 
-proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId: string, limit: float64, skip: float64): (Option[APIGetUserBadgeProgressListResponse], Response) =
+type ApiGetUserBadgeProgressListRequest* = object
+  tenantId*: string
+  userId*: string
+  limit*: float64
+  skip*: float64
+
+proc getUserBadgeProgressList*(httpClient: HttpClient, params: ApiGetUserBadgeProgressListRequest): (Option[APIGetUserBadgeProgressListResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let limit = params.limit
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1264,7 +1960,23 @@ proc getUserBadgeProgressList*(httpClient: HttpClient, tenantId: string, userId:
   constructResult[APIGetUserBadgeProgressListResponse](response)
 
 
-proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, badgeId: string, `type`: float64, displayedOnComments: bool, limit: float64, skip: float64): (Option[APIGetUserBadgesResponse], Response) =
+type ApiGetUserBadgesRequest* = object
+  tenantId*: string
+  userId*: string
+  badgeId*: string
+  `type`*: float64
+  displayedOnComments*: bool
+  limit*: float64
+  skip*: float64
+
+proc getUserBadges*(httpClient: HttpClient, params: ApiGetUserBadgesRequest): (Option[APIGetUserBadgesResponse], Response) =
+  let tenantId = params.tenantId
+  let userId = params.userId
+  let badgeId = params.badgeId
+  let `type` = params.`type`
+  let displayedOnComments = params.displayedOnComments
+  let limit = params.limit
+  let skip = params.skip
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1286,7 +1998,13 @@ proc getUserBadges*(httpClient: HttpClient, tenantId: string, userId: string, ba
   constructResult[APIGetUserBadgesResponse](response)
 
 
-proc getVotes*(httpClient: HttpClient, tenantId: string, urlId: string): (Option[GetVotesResponse], Response) =
+type ApiGetVotesRequest* = object
+  tenantId*: string
+  urlId*: string
+
+proc getVotes*(httpClient: HttpClient, params: ApiGetVotesRequest): (Option[GetVotesResponse], Response) =
+  let tenantId = params.tenantId
+  let urlId = params.urlId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1297,7 +2015,17 @@ proc getVotes*(httpClient: HttpClient, tenantId: string, urlId: string): (Option
   constructResult[GetVotesResponse](response)
 
 
-proc getVotesForUser*(httpClient: HttpClient, tenantId: string, urlId: string, userId: string, anonUserId: string): (Option[GetVotesForUserResponse], Response) =
+type ApiGetVotesForUserRequest* = object
+  tenantId*: string
+  urlId*: string
+  userId*: string
+  anonUserId*: string
+
+proc getVotesForUser*(httpClient: HttpClient, params: ApiGetVotesForUserRequest): (Option[GetVotesForUserResponse], Response) =
+  let tenantId = params.tenantId
+  let urlId = params.urlId
+  let userId = params.userId
+  let anonUserId = params.anonUserId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1312,7 +2040,15 @@ proc getVotesForUser*(httpClient: HttpClient, tenantId: string, urlId: string, u
   constructResult[GetVotesForUserResponse](response)
 
 
-proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, patchDomainConfigParams: PatchDomainConfigParams): (Option[PatchDomainConfigResponse], Response) =
+type ApiPatchDomainConfigRequest* = object
+  tenantId*: string
+  domainToUpdate*: string
+  patchDomainConfigParams*: PatchDomainConfigParams
+
+proc patchDomainConfig*(httpClient: HttpClient, params: ApiPatchDomainConfigRequest): (Option[PatchDomainConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let domainToUpdate = params.domainToUpdate
+  let patchDomainConfigParams = params.patchDomainConfigParams
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1323,7 +2059,15 @@ proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate
   constructResult[PatchDomainConfigResponse](response)
 
 
-proc patchHashTag*(httpClient: HttpClient, tag: string, tenantId: string, updateHashTagBody: UpdateHashTagBody): (Option[UpdateHashTagResponse], Response) =
+type ApiPatchHashTagRequest* = object
+  tag*: string
+  tenantId*: string
+  updateHashTagBody*: UpdateHashTagBody
+
+proc patchHashTag*(httpClient: HttpClient, params: ApiPatchHashTagRequest): (Option[UpdateHashTagResponse], Response) =
+  let tag = params.tag
+  let tenantId = params.tenantId
+  let updateHashTagBody = params.updateHashTagBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1335,7 +2079,15 @@ proc patchHashTag*(httpClient: HttpClient, tag: string, tenantId: string, update
   constructResult[UpdateHashTagResponse](response)
 
 
-proc patchPage*(httpClient: HttpClient, tenantId: string, id: string, updateAPIPageData: UpdateAPIPageData): (Option[PatchPageAPIResponse], Response) =
+type ApiPatchPageRequest* = object
+  tenantId*: string
+  id*: string
+  updateAPIPageData*: UpdateAPIPageData
+
+proc patchPage*(httpClient: HttpClient, params: ApiPatchPageRequest): (Option[PatchPageAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateAPIPageData = params.updateAPIPageData
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1346,7 +2098,17 @@ proc patchPage*(httpClient: HttpClient, tenantId: string, id: string, updateAPIP
   constructResult[PatchPageAPIResponse](response)
 
 
-proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PatchSSOUserAPIResponse], Response) =
+type ApiPatchSSOUserRequest* = object
+  tenantId*: string
+  id*: string
+  updateAPISSOUserData*: UpdateAPISSOUserData
+  updateComments*: bool
+
+proc patchSSOUser*(httpClient: HttpClient, params: ApiPatchSSOUserRequest): (Option[PatchSSOUserAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateAPISSOUserData = params.updateAPISSOUserData
+  let updateComments = params.updateComments
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1359,7 +2121,15 @@ proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateA
   constructResult[PatchSSOUserAPIResponse](response)
 
 
-proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: string, updateDomainConfigParams: UpdateDomainConfigParams): (Option[PutDomainConfigResponse], Response) =
+type ApiPutDomainConfigRequest* = object
+  tenantId*: string
+  domainToUpdate*: string
+  updateDomainConfigParams*: UpdateDomainConfigParams
+
+proc putDomainConfig*(httpClient: HttpClient, params: ApiPutDomainConfigRequest): (Option[PutDomainConfigResponse], Response) =
+  let tenantId = params.tenantId
+  let domainToUpdate = params.domainToUpdate
+  let updateDomainConfigParams = params.updateDomainConfigParams
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1370,7 +2140,17 @@ proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: 
   constructResult[PutDomainConfigResponse](response)
 
 
-proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PutSSOUserAPIResponse], Response) =
+type ApiPutSSOUserRequest* = object
+  tenantId*: string
+  id*: string
+  updateAPISSOUserData*: UpdateAPISSOUserData
+  updateComments*: bool
+
+proc putSSOUser*(httpClient: HttpClient, params: ApiPutSSOUserRequest): (Option[PutSSOUserAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateAPISSOUserData = params.updateAPISSOUserData
+  let updateComments = params.updateComments
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1383,7 +2163,15 @@ proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPI
   constructResult[PutSSOUserAPIResponse](response)
 
 
-proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailTemplateBody: RenderEmailTemplateBody, locale: string): (Option[RenderEmailTemplateResponse], Response) =
+type ApiRenderEmailTemplateRequest* = object
+  tenantId*: string
+  renderEmailTemplateBody*: RenderEmailTemplateBody
+  locale*: string
+
+proc renderEmailTemplate*(httpClient: HttpClient, params: ApiRenderEmailTemplateRequest): (Option[RenderEmailTemplateResponse], Response) =
+  let tenantId = params.tenantId
+  let renderEmailTemplateBody = params.renderEmailTemplateBody
+  let locale = params.locale
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1396,7 +2184,15 @@ proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailT
   constructResult[RenderEmailTemplateResponse](response)
 
 
-proc replaceTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantPackageBody: ReplaceTenantPackageBody): (Option[APIEmptyResponse], Response) =
+type ApiReplaceTenantPackageRequest* = object
+  tenantId*: string
+  id*: string
+  replaceTenantPackageBody*: ReplaceTenantPackageBody
+
+proc replaceTenantPackage*(httpClient: HttpClient, params: ApiReplaceTenantPackageRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let replaceTenantPackageBody = params.replaceTenantPackageBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1407,7 +2203,17 @@ proc replaceTenantPackage*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[APIEmptyResponse](response)
 
 
-proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantUserBody: ReplaceTenantUserBody, updateComments: string): (Option[APIEmptyResponse], Response) =
+type ApiReplaceTenantUserRequest* = object
+  tenantId*: string
+  id*: string
+  replaceTenantUserBody*: ReplaceTenantUserBody
+  updateComments*: string
+
+proc replaceTenantUser*(httpClient: HttpClient, params: ApiReplaceTenantUserRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let replaceTenantUserBody = params.replaceTenantUserBody
+  let updateComments = params.updateComments
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1420,7 +2226,21 @@ proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, re
   constructResult[APIEmptyResponse](response)
 
 
-proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams: CreateCommentParams, isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[APISaveCommentResponse], Response) =
+type ApiSaveCommentRequest* = object
+  tenantId*: string
+  createCommentParams*: CreateCommentParams
+  isLive*: bool
+  doSpamCheck*: bool
+  sendEmails*: bool
+  populateNotifications*: bool
+
+proc saveComment*(httpClient: HttpClient, params: ApiSaveCommentRequest): (Option[APISaveCommentResponse], Response) =
+  let tenantId = params.tenantId
+  let createCommentParams = params.createCommentParams
+  let isLive = params.isLive
+  let doSpamCheck = params.doSpamCheck
+  let sendEmails = params.sendEmails
+  let populateNotifications = params.populateNotifications
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1439,7 +2259,21 @@ proc saveComment*(httpClient: HttpClient, tenantId: string, createCommentParams:
   constructResult[APISaveCommentResponse](response)
 
 
-proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentParams: seq[CreateCommentParams], isLive: bool, doSpamCheck: bool, sendEmails: bool, populateNotifications: bool): (Option[seq[SaveCommentsBulkResponse]], Response) =
+type ApiSaveCommentsBulkRequest* = object
+  tenantId*: string
+  createCommentParams*: seq[CreateCommentParams]
+  isLive*: bool
+  doSpamCheck*: bool
+  sendEmails*: bool
+  populateNotifications*: bool
+
+proc saveCommentsBulk*(httpClient: HttpClient, params: ApiSaveCommentsBulkRequest): (Option[seq[SaveCommentsBulkResponse]], Response) =
+  let tenantId = params.tenantId
+  let createCommentParams = params.createCommentParams
+  let isLive = params.isLive
+  let doSpamCheck = params.doSpamCheck
+  let sendEmails = params.sendEmails
+  let populateNotifications = params.populateNotifications
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1458,7 +2292,15 @@ proc saveCommentsBulk*(httpClient: HttpClient, tenantId: string, createCommentPa
   constructResult[seq[SaveCommentsBulkResponse]](response)
 
 
-proc sendInvite*(httpClient: HttpClient, tenantId: string, id: string, fromName: string): (Option[APIEmptyResponse], Response) =
+type ApiSendInviteRequest* = object
+  tenantId*: string
+  id*: string
+  fromName*: string
+
+proc sendInvite*(httpClient: HttpClient, params: ApiSendInviteRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let fromName = params.fromName
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1469,7 +2311,15 @@ proc sendInvite*(httpClient: HttpClient, tenantId: string, id: string, fromName:
   constructResult[APIEmptyResponse](response)
 
 
-proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, redirectURL: string): (Option[APIEmptyResponse], Response) =
+type ApiSendLoginLinkRequest* = object
+  tenantId*: string
+  id*: string
+  redirectURL*: string
+
+proc sendLoginLink*(httpClient: HttpClient, params: ApiSendLoginLinkRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let redirectURL = params.redirectURL
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1481,7 +2331,19 @@ proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, redire
   constructResult[APIEmptyResponse](response)
 
 
-proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string, unBlockFromCommentParams: UnBlockFromCommentParams, userId: string, anonUserId: string): (Option[UnblockSuccess], Response) =
+type ApiUnBlockUserFromCommentRequest* = object
+  tenantId*: string
+  id*: string
+  unBlockFromCommentParams*: UnBlockFromCommentParams
+  userId*: string
+  anonUserId*: string
+
+proc unBlockUserFromComment*(httpClient: HttpClient, params: ApiUnBlockUserFromCommentRequest): (Option[UnblockSuccess], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let unBlockFromCommentParams = params.unBlockFromCommentParams
+  let userId = params.userId
+  let anonUserId = params.anonUserId
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1496,7 +2358,17 @@ proc unBlockUserFromComment*(httpClient: HttpClient, tenantId: string, id: strin
   constructResult[UnblockSuccess](response)
 
 
-proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId: string, anonUserId: string): (Option[FlagCommentResponse], Response) =
+type ApiUnFlagCommentRequest* = object
+  tenantId*: string
+  id*: string
+  userId*: string
+  anonUserId*: string
+
+proc unFlagComment*(httpClient: HttpClient, params: ApiUnFlagCommentRequest): (Option[FlagCommentResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let userId = params.userId
+  let anonUserId = params.anonUserId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1510,7 +2382,21 @@ proc unFlagComment*(httpClient: HttpClient, tenantId: string, id: string, userId
   constructResult[FlagCommentResponse](response)
 
 
-proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updatableCommentParams: UpdatableCommentParams, contextUserId: string, doSpamCheck: bool, isLive: bool): (Option[APIEmptyResponse], Response) =
+type ApiUpdateCommentRequest* = object
+  tenantId*: string
+  id*: string
+  updatableCommentParams*: UpdatableCommentParams
+  contextUserId*: string
+  doSpamCheck*: bool
+  isLive*: bool
+
+proc updateComment*(httpClient: HttpClient, params: ApiUpdateCommentRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updatableCommentParams = params.updatableCommentParams
+  let contextUserId = params.contextUserId
+  let doSpamCheck = params.doSpamCheck
+  let isLive = params.isLive
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1527,7 +2413,15 @@ proc updateComment*(httpClient: HttpClient, tenantId: string, id: string, updata
   constructResult[APIEmptyResponse](response)
 
 
-proc updateEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string, updateEmailTemplateBody: UpdateEmailTemplateBody): (Option[APIEmptyResponse], Response) =
+type ApiUpdateEmailTemplateRequest* = object
+  tenantId*: string
+  id*: string
+  updateEmailTemplateBody*: UpdateEmailTemplateBody
+
+proc updateEmailTemplate*(httpClient: HttpClient, params: ApiUpdateEmailTemplateRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateEmailTemplateBody = params.updateEmailTemplateBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1538,7 +2432,15 @@ proc updateEmailTemplate*(httpClient: HttpClient, tenantId: string, id: string, 
   constructResult[APIEmptyResponse](response)
 
 
-proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedPost: FeedPost): (Option[APIEmptyResponse], Response) =
+type ApiUpdateFeedPostRequest* = object
+  tenantId*: string
+  id*: string
+  feedPost*: FeedPost
+
+proc updateFeedPost*(httpClient: HttpClient, params: ApiUpdateFeedPostRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let feedPost = params.feedPost
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1549,7 +2451,15 @@ proc updateFeedPost*(httpClient: HttpClient, tenantId: string, id: string, feedP
   constructResult[APIEmptyResponse](response)
 
 
-proc updateModerator*(httpClient: HttpClient, tenantId: string, id: string, updateModeratorBody: UpdateModeratorBody): (Option[APIEmptyResponse], Response) =
+type ApiUpdateModeratorRequest* = object
+  tenantId*: string
+  id*: string
+  updateModeratorBody*: UpdateModeratorBody
+
+proc updateModerator*(httpClient: HttpClient, params: ApiUpdateModeratorRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateModeratorBody = params.updateModeratorBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1560,7 +2470,17 @@ proc updateModerator*(httpClient: HttpClient, tenantId: string, id: string, upda
   constructResult[APIEmptyResponse](response)
 
 
-proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, updateNotificationBody: UpdateNotificationBody, userId: string): (Option[APIEmptyResponse], Response) =
+type ApiUpdateNotificationRequest* = object
+  tenantId*: string
+  id*: string
+  updateNotificationBody*: UpdateNotificationBody
+  userId*: string
+
+proc updateNotification*(httpClient: HttpClient, params: ApiUpdateNotificationRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateNotificationBody = params.updateNotificationBody
+  let userId = params.userId
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1573,7 +2493,15 @@ proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, u
   constructResult[APIEmptyResponse](response)
 
 
-proc updateQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string, updateQuestionConfigBody: UpdateQuestionConfigBody): (Option[APIEmptyResponse], Response) =
+type ApiUpdateQuestionConfigRequest* = object
+  tenantId*: string
+  id*: string
+  updateQuestionConfigBody*: UpdateQuestionConfigBody
+
+proc updateQuestionConfig*(httpClient: HttpClient, params: ApiUpdateQuestionConfigRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateQuestionConfigBody = params.updateQuestionConfigBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1584,7 +2512,15 @@ proc updateQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[APIEmptyResponse](response)
 
 
-proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string, updateQuestionResultBody: UpdateQuestionResultBody): (Option[APIEmptyResponse], Response) =
+type ApiUpdateQuestionResultRequest* = object
+  tenantId*: string
+  id*: string
+  updateQuestionResultBody*: UpdateQuestionResultBody
+
+proc updateQuestionResult*(httpClient: HttpClient, params: ApiUpdateQuestionResultRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateQuestionResultBody = params.updateQuestionResultBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1595,7 +2531,17 @@ proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[APIEmptyResponse](response)
 
 
-proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, updateAPIUserSubscriptionData: UpdateAPIUserSubscriptionData, userId: string): (Option[UpdateSubscriptionAPIResponse], Response) =
+type ApiUpdateSubscriptionRequest* = object
+  tenantId*: string
+  id*: string
+  updateAPIUserSubscriptionData*: UpdateAPIUserSubscriptionData
+  userId*: string
+
+proc updateSubscription*(httpClient: HttpClient, params: ApiUpdateSubscriptionRequest): (Option[UpdateSubscriptionAPIResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateAPIUserSubscriptionData = params.updateAPIUserSubscriptionData
+  let userId = params.userId
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1608,7 +2554,15 @@ proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, u
   constructResult[UpdateSubscriptionAPIResponse](response)
 
 
-proc updateTenant*(httpClient: HttpClient, tenantId: string, id: string, updateTenantBody: UpdateTenantBody): (Option[APIEmptyResponse], Response) =
+type ApiUpdateTenantRequest* = object
+  tenantId*: string
+  id*: string
+  updateTenantBody*: UpdateTenantBody
+
+proc updateTenant*(httpClient: HttpClient, params: ApiUpdateTenantRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateTenantBody = params.updateTenantBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1619,7 +2573,15 @@ proc updateTenant*(httpClient: HttpClient, tenantId: string, id: string, updateT
   constructResult[APIEmptyResponse](response)
 
 
-proc updateTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, updateTenantPackageBody: UpdateTenantPackageBody): (Option[APIEmptyResponse], Response) =
+type ApiUpdateTenantPackageRequest* = object
+  tenantId*: string
+  id*: string
+  updateTenantPackageBody*: UpdateTenantPackageBody
+
+proc updateTenantPackage*(httpClient: HttpClient, params: ApiUpdateTenantPackageRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateTenantPackageBody = params.updateTenantPackageBody
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1630,7 +2592,17 @@ proc updateTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, 
   constructResult[APIEmptyResponse](response)
 
 
-proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, updateTenantUserBody: UpdateTenantUserBody, updateComments: string): (Option[APIEmptyResponse], Response) =
+type ApiUpdateTenantUserRequest* = object
+  tenantId*: string
+  id*: string
+  updateTenantUserBody*: UpdateTenantUserBody
+  updateComments*: string
+
+proc updateTenantUser*(httpClient: HttpClient, params: ApiUpdateTenantUserRequest): (Option[APIEmptyResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateTenantUserBody = params.updateTenantUserBody
+  let updateComments = params.updateComments
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1643,7 +2615,15 @@ proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, upd
   constructResult[APIEmptyResponse](response)
 
 
-proc updateUserBadge*(httpClient: HttpClient, tenantId: string, id: string, updateUserBadgeParams: UpdateUserBadgeParams): (Option[APIEmptySuccessResponse], Response) =
+type ApiUpdateUserBadgeRequest* = object
+  tenantId*: string
+  id*: string
+  updateUserBadgeParams*: UpdateUserBadgeParams
+
+proc updateUserBadge*(httpClient: HttpClient, params: ApiUpdateUserBadgeRequest): (Option[APIEmptySuccessResponse], Response) =
+  let tenantId = params.tenantId
+  let id = params.id
+  let updateUserBadgeParams = params.updateUserBadgeParams
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]

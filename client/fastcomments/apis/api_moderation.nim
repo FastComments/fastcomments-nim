@@ -75,13 +75,25 @@ template constructResult[T](response: Response): untyped =
     (none(T.typedesc), response)
 
 
-proc deleteModerationVote*(httpClient: HttpClient, commentId: string, voteId: string, broadcastId: string, tenantId: string, sso: string): (Option[VoteDeleteResponse], Response) =
+type ApiDeleteModerationVoteRequest* = object
+  commentId*: string
+  voteId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc deleteModerationVote*(httpClient: HttpClient, params: ApiDeleteModerationVoteRequest): (Option[VoteDeleteResponse], Response) =
+  let commentId = params.commentId
+  let voteId = params.voteId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -90,7 +102,29 @@ proc deleteModerationVote*(httpClient: HttpClient, commentId: string, voteId: st
   constructResult[VoteDeleteResponse](response)
 
 
-proc getApiComments*(httpClient: HttpClient, page: float64, count: float64, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, sorts: string, demo: bool, tenantId: string, sso: string): (Option[ModerationAPIGetCommentsResponse], Response) =
+type ApiGetApiCommentsRequest* = object
+  page*: float64
+  count*: float64
+  textSearch*: string
+  byIPFromComment*: string
+  filters*: string
+  searchFilters*: string
+  sorts*: string
+  demo*: bool
+  tenantId*: string
+  sso*: string
+
+proc getApiComments*(httpClient: HttpClient, params: ApiGetApiCommentsRequest): (Option[ModerationAPIGetCommentsResponse], Response) =
+  let page = params.page
+  let count = params.count
+  let textSearch = params.textSearch
+  let byIPFromComment = params.byIPFromComment
+  let filters = params.filters
+  let searchFilters = params.searchFilters
+  let sorts = params.sorts
+  let demo = params.demo
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $page != "":
@@ -119,7 +153,15 @@ proc getApiComments*(httpClient: HttpClient, page: float64, count: float64, text
   constructResult[ModerationAPIGetCommentsResponse](response)
 
 
-proc getApiExportStatus*(httpClient: HttpClient, batchJobId: string, tenantId: string, sso: string): (Option[ModerationExportStatusResponse], Response) =
+type ApiGetApiExportStatusRequest* = object
+  batchJobId*: string
+  tenantId*: string
+  sso*: string
+
+proc getApiExportStatus*(httpClient: HttpClient, params: ApiGetApiExportStatusRequest): (Option[ModerationExportStatusResponse], Response) =
+  let batchJobId = params.batchJobId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $batchJobId != "":
@@ -134,7 +176,25 @@ proc getApiExportStatus*(httpClient: HttpClient, batchJobId: string, tenantId: s
   constructResult[ModerationExportStatusResponse](response)
 
 
-proc getApiIds*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, afterId: string, demo: bool, tenantId: string, sso: string): (Option[ModerationAPIGetCommentIdsResponse], Response) =
+type ApiGetApiIdsRequest* = object
+  textSearch*: string
+  byIPFromComment*: string
+  filters*: string
+  searchFilters*: string
+  afterId*: string
+  demo*: bool
+  tenantId*: string
+  sso*: string
+
+proc getApiIds*(httpClient: HttpClient, params: ApiGetApiIdsRequest): (Option[ModerationAPIGetCommentIdsResponse], Response) =
+  let textSearch = params.textSearch
+  let byIPFromComment = params.byIPFromComment
+  let filters = params.filters
+  let searchFilters = params.searchFilters
+  let afterId = params.afterId
+  let demo = params.demo
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -159,7 +219,15 @@ proc getApiIds*(httpClient: HttpClient, textSearch: string, byIPFromComment: str
   constructResult[ModerationAPIGetCommentIdsResponse](response)
 
 
-proc getBanUsersFromComment*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetBannedUsersFromCommentResponse], Response) =
+type ApiGetBanUsersFromCommentRequest* = object
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getBanUsersFromComment*(httpClient: HttpClient, params: ApiGetBanUsersFromCommentRequest): (Option[GetBannedUsersFromCommentResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -172,7 +240,15 @@ proc getBanUsersFromComment*(httpClient: HttpClient, commentId: string, tenantId
   constructResult[GetBannedUsersFromCommentResponse](response)
 
 
-proc getCommentBanStatus*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetCommentBanStatusResponse], Response) =
+type ApiGetCommentBanStatusRequest* = object
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getCommentBanStatus*(httpClient: HttpClient, params: ApiGetCommentBanStatusRequest): (Option[GetCommentBanStatusResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -185,7 +261,15 @@ proc getCommentBanStatus*(httpClient: HttpClient, commentId: string, tenantId: s
   constructResult[GetCommentBanStatusResponse](response)
 
 
-proc getCommentChildren*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[ModerationAPIChildCommentsResponse], Response) =
+type ApiGetCommentChildrenRequest* = object
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getCommentChildren*(httpClient: HttpClient, params: ApiGetCommentChildrenRequest): (Option[ModerationAPIChildCommentsResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -198,7 +282,23 @@ proc getCommentChildren*(httpClient: HttpClient, commentId: string, tenantId: st
   constructResult[ModerationAPIChildCommentsResponse](response)
 
 
-proc getCount*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filter: string, searchFilters: string, demo: bool, tenantId: string, sso: string): (Option[ModerationAPICountCommentsResponse], Response) =
+type ApiGetCountRequest* = object
+  textSearch*: string
+  byIPFromComment*: string
+  filter*: string
+  searchFilters*: string
+  demo*: bool
+  tenantId*: string
+  sso*: string
+
+proc getCount*(httpClient: HttpClient, params: ApiGetCountRequest): (Option[ModerationAPICountCommentsResponse], Response) =
+  let textSearch = params.textSearch
+  let byIPFromComment = params.byIPFromComment
+  let filter = params.filter
+  let searchFilters = params.searchFilters
+  let demo = params.demo
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -221,7 +321,13 @@ proc getCount*(httpClient: HttpClient, textSearch: string, byIPFromComment: stri
   constructResult[ModerationAPICountCommentsResponse](response)
 
 
-proc getCounts*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetBannedUsersCountResponse], Response) =
+type ApiGetCountsRequest* = object
+  tenantId*: string
+  sso*: string
+
+proc getCounts*(httpClient: HttpClient, params: ApiGetCountsRequest): (Option[GetBannedUsersCountResponse], Response) =
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -234,7 +340,15 @@ proc getCounts*(httpClient: HttpClient, tenantId: string, sso: string): (Option[
   constructResult[GetBannedUsersCountResponse](response)
 
 
-proc getLogs*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[ModerationAPIGetLogsResponse], Response) =
+type ApiGetLogsRequest* = object
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getLogs*(httpClient: HttpClient, params: ApiGetLogsRequest): (Option[ModerationAPIGetLogsResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -247,7 +361,13 @@ proc getLogs*(httpClient: HttpClient, commentId: string, tenantId: string, sso: 
   constructResult[ModerationAPIGetLogsResponse](response)
 
 
-proc getManualBadges*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetTenantManualBadgesResponse], Response) =
+type ApiGetManualBadgesRequest* = object
+  tenantId*: string
+  sso*: string
+
+proc getManualBadges*(httpClient: HttpClient, params: ApiGetManualBadgesRequest): (Option[GetTenantManualBadgesResponse], Response) =
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -260,7 +380,17 @@ proc getManualBadges*(httpClient: HttpClient, tenantId: string, sso: string): (O
   constructResult[GetTenantManualBadgesResponse](response)
 
 
-proc getManualBadgesForUser*(httpClient: HttpClient, badgesUserId: string, commentId: string, tenantId: string, sso: string): (Option[GetUserManualBadgesResponse], Response) =
+type ApiGetManualBadgesForUserRequest* = object
+  badgesUserId*: string
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getManualBadgesForUser*(httpClient: HttpClient, params: ApiGetManualBadgesForUserRequest): (Option[GetUserManualBadgesResponse], Response) =
+  let badgesUserId = params.badgesUserId
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $badgesUserId != "":
@@ -277,7 +407,19 @@ proc getManualBadgesForUser*(httpClient: HttpClient, badgesUserId: string, comme
   constructResult[GetUserManualBadgesResponse](response)
 
 
-proc getModerationComment*(httpClient: HttpClient, commentId: string, includeEmail: bool, includeIP: bool, tenantId: string, sso: string): (Option[ModerationAPICommentResponse], Response) =
+type ApiGetModerationCommentRequest* = object
+  commentId*: string
+  includeEmail*: bool
+  includeIP*: bool
+  tenantId*: string
+  sso*: string
+
+proc getModerationComment*(httpClient: HttpClient, params: ApiGetModerationCommentRequest): (Option[ModerationAPICommentResponse], Response) =
+  let commentId = params.commentId
+  let includeEmail = params.includeEmail
+  let includeIP = params.includeIP
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $includeEmail != "":
@@ -294,7 +436,15 @@ proc getModerationComment*(httpClient: HttpClient, commentId: string, includeEma
   constructResult[ModerationAPICommentResponse](response)
 
 
-proc getModerationCommentText*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetCommentTextResponse], Response) =
+type ApiGetModerationCommentTextRequest* = object
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getModerationCommentText*(httpClient: HttpClient, params: ApiGetModerationCommentTextRequest): (Option[GetCommentTextResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -307,7 +457,21 @@ proc getModerationCommentText*(httpClient: HttpClient, commentId: string, tenant
   constructResult[GetCommentTextResponse](response)
 
 
-proc getPreBanSummary*(httpClient: HttpClient, commentId: string, includeByUserIdAndEmail: bool, includeByIP: bool, includeByEmailDomain: bool, tenantId: string, sso: string): (Option[PreBanSummary], Response) =
+type ApiGetPreBanSummaryRequest* = object
+  commentId*: string
+  includeByUserIdAndEmail*: bool
+  includeByIP*: bool
+  includeByEmailDomain*: bool
+  tenantId*: string
+  sso*: string
+
+proc getPreBanSummary*(httpClient: HttpClient, params: ApiGetPreBanSummaryRequest): (Option[PreBanSummary], Response) =
+  let commentId = params.commentId
+  let includeByUserIdAndEmail = params.includeByUserIdAndEmail
+  let includeByIP = params.includeByIP
+  let includeByEmailDomain = params.includeByEmailDomain
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $includeByUserIdAndEmail != "":
@@ -326,7 +490,19 @@ proc getPreBanSummary*(httpClient: HttpClient, commentId: string, includeByUserI
   constructResult[PreBanSummary](response)
 
 
-proc getSearchCommentsSummary*(httpClient: HttpClient, value: string, filters: string, searchFilters: string, tenantId: string, sso: string): (Option[ModerationCommentSearchResponse], Response) =
+type ApiGetSearchCommentsSummaryRequest* = object
+  value*: string
+  filters*: string
+  searchFilters*: string
+  tenantId*: string
+  sso*: string
+
+proc getSearchCommentsSummary*(httpClient: HttpClient, params: ApiGetSearchCommentsSummaryRequest): (Option[ModerationCommentSearchResponse], Response) =
+  let value = params.value
+  let filters = params.filters
+  let searchFilters = params.searchFilters
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -345,7 +521,15 @@ proc getSearchCommentsSummary*(httpClient: HttpClient, value: string, filters: s
   constructResult[ModerationCommentSearchResponse](response)
 
 
-proc getSearchPages*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[ModerationPageSearchResponse], Response) =
+type ApiGetSearchPagesRequest* = object
+  value*: string
+  tenantId*: string
+  sso*: string
+
+proc getSearchPages*(httpClient: HttpClient, params: ApiGetSearchPagesRequest): (Option[ModerationPageSearchResponse], Response) =
+  let value = params.value
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -360,7 +544,15 @@ proc getSearchPages*(httpClient: HttpClient, value: string, tenantId: string, ss
   constructResult[ModerationPageSearchResponse](response)
 
 
-proc getSearchSites*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[ModerationSiteSearchResponse], Response) =
+type ApiGetSearchSitesRequest* = object
+  value*: string
+  tenantId*: string
+  sso*: string
+
+proc getSearchSites*(httpClient: HttpClient, params: ApiGetSearchSitesRequest): (Option[ModerationSiteSearchResponse], Response) =
+  let value = params.value
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -375,7 +567,15 @@ proc getSearchSites*(httpClient: HttpClient, value: string, tenantId: string, ss
   constructResult[ModerationSiteSearchResponse](response)
 
 
-proc getSearchSuggest*(httpClient: HttpClient, textSearch: string, tenantId: string, sso: string): (Option[ModerationSuggestResponse], Response) =
+type ApiGetSearchSuggestRequest* = object
+  textSearch*: string
+  tenantId*: string
+  sso*: string
+
+proc getSearchSuggest*(httpClient: HttpClient, params: ApiGetSearchSuggestRequest): (Option[ModerationSuggestResponse], Response) =
+  let textSearch = params.textSearch
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -390,7 +590,15 @@ proc getSearchSuggest*(httpClient: HttpClient, textSearch: string, tenantId: str
   constructResult[ModerationSuggestResponse](response)
 
 
-proc getSearchUsers*(httpClient: HttpClient, value: string, tenantId: string, sso: string): (Option[ModerationUserSearchResponse], Response) =
+type ApiGetSearchUsersRequest* = object
+  value*: string
+  tenantId*: string
+  sso*: string
+
+proc getSearchUsers*(httpClient: HttpClient, params: ApiGetSearchUsersRequest): (Option[ModerationUserSearchResponse], Response) =
+  let value = params.value
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $value != "":
@@ -405,7 +613,15 @@ proc getSearchUsers*(httpClient: HttpClient, value: string, tenantId: string, ss
   constructResult[ModerationUserSearchResponse](response)
 
 
-proc getTrustFactor*(httpClient: HttpClient, userId: string, tenantId: string, sso: string): (Option[GetUserTrustFactorResponse], Response) =
+type ApiGetTrustFactorRequest* = object
+  userId*: string
+  tenantId*: string
+  sso*: string
+
+proc getTrustFactor*(httpClient: HttpClient, params: ApiGetTrustFactorRequest): (Option[GetUserTrustFactorResponse], Response) =
+  let userId = params.userId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $userId != "":
@@ -420,7 +636,13 @@ proc getTrustFactor*(httpClient: HttpClient, userId: string, tenantId: string, s
   constructResult[GetUserTrustFactorResponse](response)
 
 
-proc getUserBanPreference*(httpClient: HttpClient, tenantId: string, sso: string): (Option[APIModerateGetUserBanPreferencesResponse], Response) =
+type ApiGetUserBanPreferenceRequest* = object
+  tenantId*: string
+  sso*: string
+
+proc getUserBanPreference*(httpClient: HttpClient, params: ApiGetUserBanPreferenceRequest): (Option[APIModerateGetUserBanPreferencesResponse], Response) =
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $tenantId != "":
@@ -433,7 +655,15 @@ proc getUserBanPreference*(httpClient: HttpClient, tenantId: string, sso: string
   constructResult[APIModerateGetUserBanPreferencesResponse](response)
 
 
-proc getUserInternalProfile*(httpClient: HttpClient, commentId: string, tenantId: string, sso: string): (Option[GetUserInternalProfileResponse], Response) =
+type ApiGetUserInternalProfileRequest* = object
+  commentId*: string
+  tenantId*: string
+  sso*: string
+
+proc getUserInternalProfile*(httpClient: HttpClient, params: ApiGetUserInternalProfileRequest): (Option[GetUserInternalProfileResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $commentId != "":
@@ -448,14 +678,26 @@ proc getUserInternalProfile*(httpClient: HttpClient, commentId: string, tenantId
   constructResult[GetUserInternalProfileResponse](response)
 
 
-proc postAdjustCommentVotes*(httpClient: HttpClient, commentId: string, adjustCommentVotesParams: AdjustCommentVotesParams, broadcastId: string, tenantId: string, sso: string): (Option[AdjustVotesResponse], Response) =
+type ApiPostAdjustCommentVotesRequest* = object
+  commentId*: string
+  adjustCommentVotesParams*: AdjustCommentVotesParams
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postAdjustCommentVotes*(httpClient: HttpClient, params: ApiPostAdjustCommentVotesRequest): (Option[AdjustVotesResponse], Response) =
+  let commentId = params.commentId
+  let adjustCommentVotesParams = params.adjustCommentVotesParams
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -464,7 +706,23 @@ proc postAdjustCommentVotes*(httpClient: HttpClient, commentId: string, adjustCo
   constructResult[AdjustVotesResponse](response)
 
 
-proc postApiExport*(httpClient: HttpClient, textSearch: string, byIPFromComment: string, filters: string, searchFilters: string, sorts: string, tenantId: string, sso: string): (Option[ModerationExportResponse], Response) =
+type ApiPostApiExportRequest* = object
+  textSearch*: string
+  byIPFromComment*: string
+  filters*: string
+  searchFilters*: string
+  sorts*: string
+  tenantId*: string
+  sso*: string
+
+proc postApiExport*(httpClient: HttpClient, params: ApiPostApiExportRequest): (Option[ModerationExportResponse], Response) =
+  let textSearch = params.textSearch
+  let byIPFromComment = params.byIPFromComment
+  let filters = params.filters
+  let searchFilters = params.searchFilters
+  let sorts = params.sorts
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $textSearch != "":
@@ -487,7 +745,31 @@ proc postApiExport*(httpClient: HttpClient, textSearch: string, byIPFromComment:
   constructResult[ModerationExportResponse](response)
 
 
-proc postBanUserFromComment*(httpClient: HttpClient, commentId: string, banEmail: bool, banEmailDomain: bool, banIP: bool, deleteAllUsersComments: bool, bannedUntil: string, isShadowBan: bool, updateId: string, banReason: string, tenantId: string, sso: string): (Option[BanUserFromCommentResult], Response) =
+type ApiPostBanUserFromCommentRequest* = object
+  commentId*: string
+  banEmail*: bool
+  banEmailDomain*: bool
+  banIP*: bool
+  deleteAllUsersComments*: bool
+  bannedUntil*: string
+  isShadowBan*: bool
+  updateId*: string
+  banReason*: string
+  tenantId*: string
+  sso*: string
+
+proc postBanUserFromComment*(httpClient: HttpClient, params: ApiPostBanUserFromCommentRequest): (Option[BanUserFromCommentResult], Response) =
+  let commentId = params.commentId
+  let banEmail = params.banEmail
+  let banEmailDomain = params.banEmailDomain
+  let banIP = params.banIP
+  let deleteAllUsersComments = params.deleteAllUsersComments
+  let bannedUntil = params.bannedUntil
+  let isShadowBan = params.isShadowBan
+  let updateId = params.updateId
+  let banReason = params.banReason
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $banEmail != "":
@@ -516,7 +798,15 @@ proc postBanUserFromComment*(httpClient: HttpClient, commentId: string, banEmail
   constructResult[BanUserFromCommentResult](response)
 
 
-proc postBanUserUndo*(httpClient: HttpClient, banUserUndoParams: BanUserUndoParams, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPostBanUserUndoRequest* = object
+  banUserUndoParams*: BanUserUndoParams
+  tenantId*: string
+  sso*: string
+
+proc postBanUserUndo*(httpClient: HttpClient, params: ApiPostBanUserUndoRequest): (Option[APIEmptyResponse], Response) =
+  let banUserUndoParams = params.banUserUndoParams
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -530,7 +820,21 @@ proc postBanUserUndo*(httpClient: HttpClient, banUserUndoParams: BanUserUndoPara
   constructResult[APIEmptyResponse](response)
 
 
-proc postBulkPreBanSummary*(httpClient: HttpClient, bulkPreBanParams: BulkPreBanParams, includeByUserIdAndEmail: bool, includeByIP: bool, includeByEmailDomain: bool, tenantId: string, sso: string): (Option[BulkPreBanSummary], Response) =
+type ApiPostBulkPreBanSummaryRequest* = object
+  bulkPreBanParams*: BulkPreBanParams
+  includeByUserIdAndEmail*: bool
+  includeByIP*: bool
+  includeByEmailDomain*: bool
+  tenantId*: string
+  sso*: string
+
+proc postBulkPreBanSummary*(httpClient: HttpClient, params: ApiPostBulkPreBanSummaryRequest): (Option[BulkPreBanSummary], Response) =
+  let bulkPreBanParams = params.bulkPreBanParams
+  let includeByUserIdAndEmail = params.includeByUserIdAndEmail
+  let includeByIP = params.includeByIP
+  let includeByEmailDomain = params.includeByEmailDomain
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -550,7 +854,15 @@ proc postBulkPreBanSummary*(httpClient: HttpClient, bulkPreBanParams: BulkPreBan
   constructResult[BulkPreBanSummary](response)
 
 
-proc postCommentsByIds*(httpClient: HttpClient, commentsByIdsParams: CommentsByIdsParams, tenantId: string, sso: string): (Option[ModerationAPIChildCommentsResponse], Response) =
+type ApiPostCommentsByIdsRequest* = object
+  commentsByIdsParams*: CommentsByIdsParams
+  tenantId*: string
+  sso*: string
+
+proc postCommentsByIds*(httpClient: HttpClient, params: ApiPostCommentsByIdsRequest): (Option[ModerationAPIChildCommentsResponse], Response) =
+  let commentsByIdsParams = params.commentsByIdsParams
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -564,13 +876,23 @@ proc postCommentsByIds*(httpClient: HttpClient, commentsByIdsParams: CommentsByI
   constructResult[ModerationAPIChildCommentsResponse](response)
 
 
-proc postFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPostFlagCommentRequest* = object
+  commentId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postFlagComment*(httpClient: HttpClient, params: ApiPostFlagCommentRequest): (Option[APIEmptyResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -579,13 +901,23 @@ proc postFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: st
   constructResult[APIEmptyResponse](response)
 
 
-proc postRemoveComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[PostRemoveCommentResponse], Response) =
+type ApiPostRemoveCommentRequest* = object
+  commentId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postRemoveComment*(httpClient: HttpClient, params: ApiPostRemoveCommentRequest): (Option[PostRemoveCommentResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -594,13 +926,23 @@ proc postRemoveComment*(httpClient: HttpClient, commentId: string, broadcastId: 
   constructResult[PostRemoveCommentResponse](response)
 
 
-proc postRestoreDeletedComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPostRestoreDeletedCommentRequest* = object
+  commentId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postRestoreDeletedComment*(httpClient: HttpClient, params: ApiPostRestoreDeletedCommentRequest): (Option[APIEmptyResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -609,15 +951,27 @@ proc postRestoreDeletedComment*(httpClient: HttpClient, commentId: string, broad
   constructResult[APIEmptyResponse](response)
 
 
-proc postSetCommentApprovalStatus*(httpClient: HttpClient, commentId: string, approved: bool, broadcastId: string, tenantId: string, sso: string): (Option[SetCommentApprovedResponse], Response) =
+type ApiPostSetCommentApprovalStatusRequest* = object
+  commentId*: string
+  approved*: bool
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postSetCommentApprovalStatus*(httpClient: HttpClient, params: ApiPostSetCommentApprovalStatusRequest): (Option[SetCommentApprovedResponse], Response) =
+  let commentId = params.commentId
+  let approved = params.approved
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $approved != "":
     query_params_list.add(("approved", $approved))
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -626,15 +980,27 @@ proc postSetCommentApprovalStatus*(httpClient: HttpClient, commentId: string, ap
   constructResult[SetCommentApprovedResponse](response)
 
 
-proc postSetCommentReviewStatus*(httpClient: HttpClient, commentId: string, reviewed: bool, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPostSetCommentReviewStatusRequest* = object
+  commentId*: string
+  reviewed*: bool
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postSetCommentReviewStatus*(httpClient: HttpClient, params: ApiPostSetCommentReviewStatusRequest): (Option[APIEmptyResponse], Response) =
+  let commentId = params.commentId
+  let reviewed = params.reviewed
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $reviewed != "":
     query_params_list.add(("reviewed", $reviewed))
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -643,17 +1009,31 @@ proc postSetCommentReviewStatus*(httpClient: HttpClient, commentId: string, revi
   constructResult[APIEmptyResponse](response)
 
 
-proc postSetCommentSpamStatus*(httpClient: HttpClient, commentId: string, spam: bool, permNotSpam: bool, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPostSetCommentSpamStatusRequest* = object
+  commentId*: string
+  spam*: bool
+  permNotSpam*: bool
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postSetCommentSpamStatus*(httpClient: HttpClient, params: ApiPostSetCommentSpamStatusRequest): (Option[APIEmptyResponse], Response) =
+  let commentId = params.commentId
+  let spam = params.spam
+  let permNotSpam = params.permNotSpam
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $spam != "":
     query_params_list.add(("spam", $spam))
   if $permNotSpam != "":
     query_params_list.add(("permNotSpam", $permNotSpam))
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -662,14 +1042,26 @@ proc postSetCommentSpamStatus*(httpClient: HttpClient, commentId: string, spam: 
   constructResult[APIEmptyResponse](response)
 
 
-proc postSetCommentText*(httpClient: HttpClient, commentId: string, setCommentTextParams: SetCommentTextParams, broadcastId: string, tenantId: string, sso: string): (Option[SetCommentTextResponse], Response) =
+type ApiPostSetCommentTextRequest* = object
+  commentId*: string
+  setCommentTextParams*: SetCommentTextParams
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postSetCommentText*(httpClient: HttpClient, params: ApiPostSetCommentTextRequest): (Option[SetCommentTextResponse], Response) =
+  let commentId = params.commentId
+  let setCommentTextParams = params.setCommentTextParams
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -678,13 +1070,23 @@ proc postSetCommentText*(httpClient: HttpClient, commentId: string, setCommentTe
   constructResult[SetCommentTextResponse](response)
 
 
-proc postUnFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPostUnFlagCommentRequest* = object
+  commentId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postUnFlagComment*(httpClient: HttpClient, params: ApiPostUnFlagCommentRequest): (Option[APIEmptyResponse], Response) =
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -693,15 +1095,27 @@ proc postUnFlagComment*(httpClient: HttpClient, commentId: string, broadcastId: 
   constructResult[APIEmptyResponse](response)
 
 
-proc postVote*(httpClient: HttpClient, commentId: string, direction: string, broadcastId: string, tenantId: string, sso: string): (Option[VoteResponse], Response) =
+type ApiPostVoteRequest* = object
+  commentId*: string
+  direction*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc postVote*(httpClient: HttpClient, params: ApiPostVoteRequest): (Option[VoteResponse], Response) =
+  let commentId = params.commentId
+  let direction = params.direction
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $direction != "":
     query_params_list.add(("direction", $direction))
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -710,7 +1124,21 @@ proc postVote*(httpClient: HttpClient, commentId: string, direction: string, bro
   constructResult[VoteResponse](response)
 
 
-proc putAwardBadge*(httpClient: HttpClient, badgeId: string, userId: string, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[AwardUserBadgeResponse], Response) =
+type ApiPutAwardBadgeRequest* = object
+  badgeId*: string
+  userId*: string
+  commentId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc putAwardBadge*(httpClient: HttpClient, params: ApiPutAwardBadgeRequest): (Option[AwardUserBadgeResponse], Response) =
+  let badgeId = params.badgeId
+  let userId = params.userId
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("badgeId", $badgeId))
@@ -718,10 +1146,10 @@ proc putAwardBadge*(httpClient: HttpClient, badgeId: string, userId: string, com
     query_params_list.add(("userId", $userId))
   if $commentId != "":
     query_params_list.add(("commentId", $commentId))
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -730,7 +1158,15 @@ proc putAwardBadge*(httpClient: HttpClient, badgeId: string, userId: string, com
   constructResult[AwardUserBadgeResponse](response)
 
 
-proc putCloseThread*(httpClient: HttpClient, urlId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPutCloseThreadRequest* = object
+  urlId*: string
+  tenantId*: string
+  sso*: string
+
+proc putCloseThread*(httpClient: HttpClient, params: ApiPutCloseThreadRequest): (Option[APIEmptyResponse], Response) =
+  let urlId = params.urlId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -744,7 +1180,21 @@ proc putCloseThread*(httpClient: HttpClient, urlId: string, tenantId: string, ss
   constructResult[APIEmptyResponse](response)
 
 
-proc putRemoveBadge*(httpClient: HttpClient, badgeId: string, userId: string, commentId: string, broadcastId: string, tenantId: string, sso: string): (Option[RemoveUserBadgeResponse], Response) =
+type ApiPutRemoveBadgeRequest* = object
+  badgeId*: string
+  userId*: string
+  commentId*: string
+  tenantId*: string
+  broadcastId*: string
+  sso*: string
+
+proc putRemoveBadge*(httpClient: HttpClient, params: ApiPutRemoveBadgeRequest): (Option[RemoveUserBadgeResponse], Response) =
+  let badgeId = params.badgeId
+  let userId = params.userId
+  let commentId = params.commentId
+  let tenantId = params.tenantId
+  let broadcastId = params.broadcastId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("badgeId", $badgeId))
@@ -752,10 +1202,10 @@ proc putRemoveBadge*(httpClient: HttpClient, badgeId: string, userId: string, co
     query_params_list.add(("userId", $userId))
   if $commentId != "":
     query_params_list.add(("commentId", $commentId))
-  if $broadcastId != "":
-    query_params_list.add(("broadcastId", $broadcastId))
   if $tenantId != "":
     query_params_list.add(("tenantId", $tenantId))
+  if $broadcastId != "":
+    query_params_list.add(("broadcastId", $broadcastId))
   if $sso != "":
     query_params_list.add(("sso", $sso))
   let url_encoded_query_params = encodeQuery(query_params_list)
@@ -764,7 +1214,15 @@ proc putRemoveBadge*(httpClient: HttpClient, badgeId: string, userId: string, co
   constructResult[RemoveUserBadgeResponse](response)
 
 
-proc putReopenThread*(httpClient: HttpClient, urlId: string, tenantId: string, sso: string): (Option[APIEmptyResponse], Response) =
+type ApiPutReopenThreadRequest* = object
+  urlId*: string
+  tenantId*: string
+  sso*: string
+
+proc putReopenThread*(httpClient: HttpClient, params: ApiPutReopenThreadRequest): (Option[APIEmptyResponse], Response) =
+  let urlId = params.urlId
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -778,7 +1236,17 @@ proc putReopenThread*(httpClient: HttpClient, urlId: string, tenantId: string, s
   constructResult[APIEmptyResponse](response)
 
 
-proc setTrustFactor*(httpClient: HttpClient, userId: string, trustFactor: string, tenantId: string, sso: string): (Option[SetUserTrustFactorResponse], Response) =
+type ApiSetTrustFactorRequest* = object
+  userId*: string
+  trustFactor*: string
+  tenantId*: string
+  sso*: string
+
+proc setTrustFactor*(httpClient: HttpClient, params: ApiSetTrustFactorRequest): (Option[SetUserTrustFactorResponse], Response) =
+  let userId = params.userId
+  let trustFactor = params.trustFactor
+  let tenantId = params.tenantId
+  let sso = params.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $userId != "":

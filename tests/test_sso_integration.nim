@@ -38,34 +38,36 @@ suite "SSO Integration Tests":
 
     let (response, httpResponse) = getCommentsPublic(
       httpClient = client,
-      tenantId = tenantID,
-      urlId = "sdk-test-page",
-      page = 0,
-      direction = SortDirections.NF,
-      sso = "",
-      skip = 0,
-      skipChildren = 0,
-      limit = 0,
-      limitChildren = 0,
-      countChildren = false,
-      fetchPageForCommentId = "",
-      includeConfig = false,
-      countAll = false,
-      includei10n = false,
-      locale = "",
-      modules = "",
-      isCrawler = false,
-      includeNotificationCount = false,
-      asTree = false,
-      maxTreeDepth = 0,
-      useFullTranslationIds = false,
-      parentId = "",
-      searchText = "",
-      hashTags = @[],
-      userId = "",
-      customConfigStr = "",
-      afterCommentId = "",
-      beforeCommentId = ""
+      params = ApiGetCommentsPublicRequest(
+        tenantId: tenantID,
+        urlId: "sdk-test-page",
+        page: 0,
+        direction: SortDirections.NF,
+        sso: "",
+        skip: 0,
+        skipChildren: 0,
+        limit: 0,
+        limitChildren: 0,
+        countChildren: false,
+        fetchPageForCommentId: "",
+        includeConfig: false,
+        countAll: false,
+        includei10n: false,
+        locale: "",
+        modules: "",
+        isCrawler: false,
+        includeNotificationCount: false,
+        asTree: false,
+        maxTreeDepth: 0,
+        useFullTranslationIds: false,
+        parentId: "",
+        searchText: "",
+        hashTags: @[],
+        userId: "",
+        customConfigStr: "",
+        afterCommentId: "",
+        beforeCommentId: ""
+      )
     )
 
     check httpResponse.code == Http200
@@ -100,12 +102,14 @@ suite "SSO Integration Tests":
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
-      tenantId = tenantID,
-      urlId = "sdk-test-nim",
-      broadcastId = "test-" & $timestamp,
-      commentData = commentData,
-      sessionId = "",
-      sso = token
+      params = ApiCreateCommentPublicRequest(
+        tenantId: tenantID,
+        urlId: "sdk-test-nim",
+        broadcastId: "test-" & $timestamp,
+        commentData: commentData,
+        sessionId: "",
+        sso: token
+      )
     )
 
     check createHttpResponse.code == Http200
@@ -114,34 +118,36 @@ suite "SSO Integration Tests":
     # Fetch comments
     let (getResponse, getHttpResponse) = getCommentsPublic(
       httpClient = client,
-      tenantId = tenantID,
-      urlId = "sdk-test-nim",
-      page = 0,
-      direction = SortDirections.NF,
-      sso = token,
-      skip = 0,
-      skipChildren = 0,
-      limit = 0,
-      limitChildren = 0,
-      countChildren = false,
-      fetchPageForCommentId = "",
-      includeConfig = false,
-      countAll = false,
-      includei10n = false,
-      locale = "",
-      modules = "",
-      isCrawler = false,
-      includeNotificationCount = false,
-      asTree = false,
-      maxTreeDepth = 0,
-      useFullTranslationIds = false,
-      parentId = "",
-      searchText = "",
-      hashTags = @[],
-      userId = "",
-      customConfigStr = "",
-      afterCommentId = "",
-      beforeCommentId = ""
+      params = ApiGetCommentsPublicRequest(
+        tenantId: tenantID,
+        urlId: "sdk-test-nim",
+        page: 0,
+        direction: SortDirections.NF,
+        sso: token,
+        skip: 0,
+        skipChildren: 0,
+        limit: 0,
+        limitChildren: 0,
+        countChildren: false,
+        fetchPageForCommentId: "",
+        includeConfig: false,
+        countAll: false,
+        includei10n: false,
+        locale: "",
+        modules: "",
+        isCrawler: false,
+        includeNotificationCount: false,
+        asTree: false,
+        maxTreeDepth: 0,
+        useFullTranslationIds: false,
+        parentId: "",
+        searchText: "",
+        hashTags: @[],
+        userId: "",
+        customConfigStr: "",
+        afterCommentId: "",
+        beforeCommentId: ""
+      )
     )
 
     check getHttpResponse.code == Http200
@@ -179,12 +185,14 @@ suite "SSO Integration Tests":
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
-      tenantId = tenantID,
-      urlId = testUrlId,
-      broadcastId = "test-" & $timestamp,
-      commentData = commentData,
-      sessionId = "",
-      sso = token
+      params = ApiCreateCommentPublicRequest(
+        tenantId: tenantID,
+        urlId: testUrlId,
+        broadcastId: "test-" & $timestamp,
+        commentData: commentData,
+        sessionId: "",
+        sso: token
+      )
     )
 
     check createHttpResponse.code == Http200
@@ -199,23 +207,25 @@ suite "SSO Integration Tests":
 
     let (getResponse, getHttpResponse) = getComments(
       httpClient = authClient,
-      tenantId = tenantID,
-      page = 0,
-      limit = 0,
-      skip = 0,
-      asTree = false,
-      skipChildren = 0,
-      limitChildren = 0,
-      maxTreeDepth = 0,
-      urlId = testUrlId,
-      userId = "",
-      anonUserId = "",
-      contextUserId = "",
-      hashTag = "",
-      parentId = "",
-      direction = SortDirections.NF,
-      fromDate = 0,
-      toDate = 0
+      params = ApiGetCommentsRequest(
+        tenantId: tenantID,
+        page: 0,
+        limit: 0,
+        skip: 0,
+        asTree: false,
+        skipChildren: 0,
+        limitChildren: 0,
+        maxTreeDepth: 0,
+        urlId: testUrlId,
+        userId: "",
+        anonUserId: "",
+        contextUserId: "",
+        hashTag: "",
+        parentId: "",
+        direction: SortDirections.NF,
+        fromDate: 0,
+        toDate: 0
+      )
     )
 
     check getHttpResponse.code == Http200
@@ -258,12 +268,14 @@ suite "SSO Integration Tests":
 
     let (createResponse, createHttpResponse) = createCommentPublic(
       httpClient = client,
-      tenantId = tenantID,
-      urlId = testUrlId,
-      broadcastId = "test-" & $timestamp,
-      commentData = commentData,
-      sessionId = "",
-      sso = token
+      params = ApiCreateCommentPublicRequest(
+        tenantId: tenantID,
+        urlId: testUrlId,
+        broadcastId: "test-" & $timestamp,
+        commentData: commentData,
+        sessionId: "",
+        sso: token
+      )
     )
 
     check createHttpResponse.code == Http200
@@ -275,34 +287,36 @@ suite "SSO Integration Tests":
 
     let (getResponse, getHttpResponse) = getCommentsPublic(
       httpClient = client,
-      tenantId = tenantID,
-      urlId = testUrlId,
-      page = 0,
-      direction = SortDirections.NF,
-      sso = token,
-      skip = 0,
-      skipChildren = 0,
-      limit = 0,
-      limitChildren = 0,
-      countChildren = false,
-      fetchPageForCommentId = "",
-      includeConfig = false,
-      countAll = false,
-      includei10n = false,
-      locale = "",
-      modules = "",
-      isCrawler = false,
-      includeNotificationCount = false,
-      asTree = false,
-      maxTreeDepth = 0,
-      useFullTranslationIds = false,
-      parentId = "",
-      searchText = "",
-      hashTags = @[],
-      userId = "",
-      customConfigStr = "",
-      afterCommentId = "",
-      beforeCommentId = ""
+      params = ApiGetCommentsPublicRequest(
+        tenantId: tenantID,
+        urlId: testUrlId,
+        page: 0,
+        direction: SortDirections.NF,
+        sso: token,
+        skip: 0,
+        skipChildren: 0,
+        limit: 0,
+        limitChildren: 0,
+        countChildren: false,
+        fetchPageForCommentId: "",
+        includeConfig: false,
+        countAll: false,
+        includei10n: false,
+        locale: "",
+        modules: "",
+        isCrawler: false,
+        includeNotificationCount: false,
+        asTree: false,
+        maxTreeDepth: 0,
+        useFullTranslationIds: false,
+        parentId: "",
+        searchText: "",
+        hashTags: @[],
+        userId: "",
+        customConfigStr: "",
+        afterCommentId: "",
+        beforeCommentId: ""
+      )
     )
 
     check getHttpResponse.code == Http200

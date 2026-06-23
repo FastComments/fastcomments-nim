@@ -51,21 +51,23 @@ client.headers["x-api-key"] = "your-api-key"
 # Make authenticated API calls
 let (response, httpResponse) = getComments(
   httpClient = client,
-  tenantId = "your-tenant-id",
-  page = 0,
-  limit = 0,
-  skip = 0,
-  asTree = false,
-  skipChildren = 0,
-  limitChildren = 0,
-  maxTreeDepth = 0,
-  urlId = "your-url-id",
-  userId = "",
-  anonUserId = "",
-  contextUserId = "",
-  hashTag = "",
-  parentId = "",
-  direction = SortDirections.DESC
+  params = ApiGetCommentsRequest(
+    tenantId: "your-tenant-id",
+    page: 0,
+    limit: 0,
+    skip: 0,
+    asTree: false,
+    skipChildren: 0,
+    limitChildren: 0,
+    maxTreeDepth: 0,
+    urlId: "your-url-id",
+    userId: "",
+    anonUserId: "",
+    contextUserId: "",
+    hashTag: "",
+    parentId: "",
+    direction: SortDirections.DESC
+  )
 )
 
 if response.isSome:
@@ -88,34 +90,36 @@ let client = newHttpClient()
 # Make public API calls
 let (response, httpResponse) = getCommentsPublic(
   httpClient = client,
-  tenantId = "your-tenant-id",
-  urlId = "your-url-id",
-  page = 0,
-  direction = SortDirections.DESC,
-  sso = "",
-  skip = 0,
-  skipChildren = 0,
-  limit = 0,
-  limitChildren = 0,
-  countChildren = false,
-  fetchPageForCommentId = "",
-  includeConfig = false,
-  countAll = false,
-  includei10n = false,
-  locale = "",
-  modules = "",
-  isCrawler = false,
-  includeNotificationCount = false,
-  asTree = false,
-  maxTreeDepth = 0,
-  useFullTranslationIds = false,
-  parentId = "",
-  searchText = "",
-  hashTags = @[],
-  userId = "",
-  customConfigStr = "",
-  afterCommentId = "",
-  beforeCommentId = ""
+  params = ApiGetCommentsPublicRequest(
+    tenantId: "your-tenant-id",
+    urlId: "your-url-id",
+    page: 0,
+    direction: SortDirections.DESC,
+    sso: "",
+    skip: 0,
+    skipChildren: 0,
+    limit: 0,
+    limitChildren: 0,
+    countChildren: false,
+    fetchPageForCommentId: "",
+    includeConfig: false,
+    countAll: false,
+    includei10n: false,
+    locale: "",
+    modules: "",
+    isCrawler: false,
+    includeNotificationCount: false,
+    asTree: false,
+    maxTreeDepth: 0,
+    useFullTranslationIds: false,
+    parentId: "",
+    searchText: "",
+    hashTags: @[],
+    userId: "",
+    customConfigStr: "",
+    afterCommentId: "",
+    beforeCommentId: ""
+  )
 )
 
 if response.isSome:
@@ -138,15 +142,18 @@ let client = newHttpClient()
 # List comments in the moderation dashboard
 let (response, httpResponse) = getApiComments(
   httpClient = client,
-  page = 0,
-  count = 30,
-  textSearch = "",
-  byIPFromComment = "",
-  filters = "",
-  searchFilters = "",
-  sorts = "",
-  demo = false,
-  sso = "your-sso-token"
+  params = ApiGetApiCommentsRequest(
+    page: 0,
+    count: 30,
+    textSearch: "",
+    byIPFromComment: "",
+    filters: "",
+    searchFilters: "",
+    sorts: "",
+    demo: false,
+    tenantId: "your-tenant-id",
+    sso: "your-sso-token"
+  )
 )
 
 if response.isSome:
@@ -176,21 +183,23 @@ client.headers["x-api-key"] = "your-api-key"
 
 let (response, httpResponse) = getComments(
   httpClient = client,
-  tenantId = "your-tenant-id",
-  page = 0,
-  limit = 0,
-  skip = 0,
-  asTree = false,
-  skipChildren = 0,
-  limitChildren = 0,
-  maxTreeDepth = 0,
-  urlId = "your-url-id",
-  userId = "",
-  anonUserId = "",
-  contextUserId = "",
-  hashTag = "",
-  parentId = "",
-  direction = SortDirections.DESC
+  params = ApiGetCommentsRequest(
+    tenantId: "your-tenant-id",
+    page: 0,
+    limit: 0,
+    skip: 0,
+    asTree: false,
+    skipChildren: 0,
+    limitChildren: 0,
+    maxTreeDepth: 0,
+    urlId: "your-url-id",
+    userId: "",
+    anonUserId: "",
+    contextUserId: "",
+    hashTag: "",
+    parentId: "",
+    direction: SortDirections.DESC
+  )
 )
 
 if httpResponse.code == Http200:
