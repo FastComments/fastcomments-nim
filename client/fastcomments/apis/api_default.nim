@@ -179,11 +179,7 @@ proc addDomainConfig*(httpClient: HttpClient, tenantId: string, addDomainConfigP
   constructResult[AddDomainConfigResponse](response)
 
 
-type ApiAddHashTagOptions* = object
-  tenantId*: string
-
-proc addHashTag*(httpClient: HttpClient, createHashTagBody: CreateHashTagBody, options: ApiAddHashTagOptions): (Option[CreateHashTagResponse], Response) =
-  let tenantId = options.tenantId
+proc addHashTag*(httpClient: HttpClient, createHashTagBody: CreateHashTagBody, tenantId: string = ""): (Option[CreateHashTagResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -195,11 +191,7 @@ proc addHashTag*(httpClient: HttpClient, createHashTagBody: CreateHashTagBody, o
   constructResult[CreateHashTagResponse](response)
 
 
-type ApiAddHashTagsBulkOptions* = object
-  tenantId*: string
-
-proc addHashTagsBulk*(httpClient: HttpClient, bulkCreateHashTagsBody: BulkCreateHashTagsBody, options: ApiAddHashTagsBulkOptions): (Option[BulkCreateHashTagsResponse], Response) =
-  let tenantId = options.tenantId
+proc addHashTagsBulk*(httpClient: HttpClient, bulkCreateHashTagsBody: BulkCreateHashTagsBody, tenantId: string = ""): (Option[BulkCreateHashTagsResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -311,11 +303,7 @@ proc blockUserFromComment*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[BlockSuccess](response)
 
 
-type ApiBulkAggregateQuestionResultsOptions* = object
-  forceRecalculate*: bool
-
-proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bulkAggregateQuestionResultsRequest: BulkAggregateQuestionResultsRequest, options: ApiBulkAggregateQuestionResultsOptions): (Option[BulkAggregateQuestionResultsResponse], Response) =
-  let forceRecalculate = options.forceRecalculate
+proc bulkAggregateQuestionResults*(httpClient: HttpClient, tenantId: string, bulkAggregateQuestionResultsRequest: BulkAggregateQuestionResultsRequest, forceRecalculate: bool): (Option[BulkAggregateQuestionResultsResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -596,11 +584,7 @@ proc deleteEmailTemplateRenderError*(httpClient: HttpClient, tenantId: string, i
   constructResult[APIEmptyResponse](response)
 
 
-type ApiDeleteHashTagOptions* = object
-  tenantId*: string
-
-proc deleteHashTag*(httpClient: HttpClient, tag: string, deleteHashTagRequestBody: DeleteHashTagRequestBody, options: ApiDeleteHashTagOptions): (Option[APIEmptyResponse], Response) =
-  let tenantId = options.tenantId
+proc deleteHashTag*(httpClient: HttpClient, tag: string, deleteHashTagRequestBody: DeleteHashTagRequestBody, tenantId: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -611,11 +595,7 @@ proc deleteHashTag*(httpClient: HttpClient, tag: string, deleteHashTagRequestBod
   constructResult[APIEmptyResponse](response)
 
 
-type ApiDeleteModeratorOptions* = object
-  sendEmail*: string
-
-proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, options: ApiDeleteModeratorOptions): (Option[APIEmptyResponse], Response) =
-  let sendEmail = options.sendEmail
+proc deleteModerator*(httpClient: HttpClient, tenantId: string, id: string, sendEmail: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -697,11 +677,7 @@ proc deleteSSOUser*(httpClient: HttpClient, tenantId: string, id: string, option
   constructResult[DeleteSSOUserAPIResponse](response)
 
 
-type ApiDeleteSubscriptionOptions* = object
-  userId*: string
-
-proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, options: ApiDeleteSubscriptionOptions): (Option[DeleteSubscriptionAPIResponse], Response) =
-  let userId = options.userId
+proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, userId: string = ""): (Option[DeleteSubscriptionAPIResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -713,11 +689,7 @@ proc deleteSubscription*(httpClient: HttpClient, tenantId: string, id: string, o
   constructResult[DeleteSubscriptionAPIResponse](response)
 
 
-type ApiDeleteTenantOptions* = object
-  sure*: string
-
-proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, options: ApiDeleteTenantOptions): (Option[APIEmptyResponse], Response) =
-  let sure = options.sure
+proc deleteTenant*(httpClient: HttpClient, tenantId: string, id: string, sure: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -769,11 +741,7 @@ proc deleteUserBadge*(httpClient: HttpClient, tenantId: string, id: string): (Op
   constructResult[APIEmptySuccessResponse](response)
 
 
-type ApiDeleteVoteOptions* = object
-  editKey*: string
-
-proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, options: ApiDeleteVoteOptions): (Option[VoteDeleteResponse], Response) =
-  let editKey = options.editKey
+proc deleteVote*(httpClient: HttpClient, tenantId: string, id: string, editKey: string = ""): (Option[VoteDeleteResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -973,11 +941,7 @@ proc getEmailTemplateDefinitions*(httpClient: HttpClient, tenantId: string): (Op
   constructResult[GetEmailTemplateDefinitionsResponse](response)
 
 
-type ApiGetEmailTemplateRenderErrorsOptions* = object
-  skip*: float64
-
-proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id: string, options: ApiGetEmailTemplateRenderErrorsOptions): (Option[GetEmailTemplateRenderErrorsResponse], Response) =
-  let skip = options.skip
+proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id: string, skip: float64): (Option[GetEmailTemplateRenderErrorsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -989,11 +953,7 @@ proc getEmailTemplateRenderErrors*(httpClient: HttpClient, tenantId: string, id:
   constructResult[GetEmailTemplateRenderErrorsResponse](response)
 
 
-type ApiGetEmailTemplatesOptions* = object
-  skip*: float64
-
-proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, options: ApiGetEmailTemplatesOptions): (Option[GetEmailTemplatesResponse], Response) =
-  let skip = options.skip
+proc getEmailTemplates*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetEmailTemplatesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1029,11 +989,7 @@ proc getFeedPosts*(httpClient: HttpClient, tenantId: string, options: ApiGetFeed
   constructResult[GetFeedPostsResponse](response)
 
 
-type ApiGetHashTagsOptions* = object
-  page*: float64
-
-proc getHashTags*(httpClient: HttpClient, tenantId: string, options: ApiGetHashTagsOptions): (Option[GetHashTagsResponse], Response) =
-  let page = options.page
+proc getHashTags*(httpClient: HttpClient, tenantId: string, page: float64): (Option[GetHashTagsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1055,11 +1011,7 @@ proc getModerator*(httpClient: HttpClient, tenantId: string, id: string): (Optio
   constructResult[GetModeratorResponse](response)
 
 
-type ApiGetModeratorsOptions* = object
-  skip*: float64
-
-proc getModerators*(httpClient: HttpClient, tenantId: string, options: ApiGetModeratorsOptions): (Option[GetModeratorsResponse], Response) =
-  let skip = options.skip
+proc getModerators*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetModeratorsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1246,11 +1198,7 @@ proc getQuestionConfig*(httpClient: HttpClient, tenantId: string, id: string): (
   constructResult[GetQuestionConfigResponse](response)
 
 
-type ApiGetQuestionConfigsOptions* = object
-  skip*: float64
-
-proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, options: ApiGetQuestionConfigsOptions): (Option[GetQuestionConfigsResponse], Response) =
-  let skip = options.skip
+proc getQuestionConfigs*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetQuestionConfigsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1328,11 +1276,7 @@ proc getSSOUserById*(httpClient: HttpClient, tenantId: string, id: string): (Opt
   constructResult[GetSSOUserByIdAPIResponse](response)
 
 
-type ApiGetSSOUsersOptions* = object
-  skip*: int
-
-proc getSSOUsers*(httpClient: HttpClient, tenantId: string, options: ApiGetSSOUsersOptions): (Option[GetSSOUsersResponse], Response) =
-  let skip = options.skip
+proc getSSOUsers*(httpClient: HttpClient, tenantId: string, skip: int): (Option[GetSSOUsersResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1344,11 +1288,7 @@ proc getSSOUsers*(httpClient: HttpClient, tenantId: string, options: ApiGetSSOUs
   constructResult[GetSSOUsersResponse](response)
 
 
-type ApiGetSubscriptionsOptions* = object
-  userId*: string
-
-proc getSubscriptions*(httpClient: HttpClient, tenantId: string, options: ApiGetSubscriptionsOptions): (Option[GetSubscriptionsAPIResponse], Response) =
-  let userId = options.userId
+proc getSubscriptions*(httpClient: HttpClient, tenantId: string, userId: string = ""): (Option[GetSubscriptionsAPIResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1408,11 +1348,7 @@ proc getTenantPackage*(httpClient: HttpClient, tenantId: string, id: string): (O
   constructResult[GetTenantPackageResponse](response)
 
 
-type ApiGetTenantPackagesOptions* = object
-  skip*: float64
-
-proc getTenantPackages*(httpClient: HttpClient, tenantId: string, options: ApiGetTenantPackagesOptions): (Option[GetTenantPackagesResponse], Response) =
-  let skip = options.skip
+proc getTenantPackages*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantPackagesResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1434,11 +1370,7 @@ proc getTenantUser*(httpClient: HttpClient, tenantId: string, id: string): (Opti
   constructResult[GetTenantUserResponse](response)
 
 
-type ApiGetTenantUsersOptions* = object
-  skip*: float64
-
-proc getTenantUsers*(httpClient: HttpClient, tenantId: string, options: ApiGetTenantUsersOptions): (Option[GetTenantUsersResponse], Response) =
-  let skip = options.skip
+proc getTenantUsers*(httpClient: HttpClient, tenantId: string, skip: float64): (Option[GetTenantUsersResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1470,11 +1402,7 @@ proc getTenants*(httpClient: HttpClient, tenantId: string, options: ApiGetTenant
   constructResult[GetTenantsResponse](response)
 
 
-type ApiGetTicketOptions* = object
-  userId*: string
-
-proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, options: ApiGetTicketOptions): (Option[GetTicketResponse], Response) =
-  let userId = options.userId
+proc getTicket*(httpClient: HttpClient, tenantId: string, id: string, userId: string = ""): (Option[GetTicketResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1657,11 +1585,7 @@ proc patchDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate
   constructResult[PatchDomainConfigResponse](response)
 
 
-type ApiPatchHashTagOptions* = object
-  tenantId*: string
-
-proc patchHashTag*(httpClient: HttpClient, tag: string, updateHashTagBody: UpdateHashTagBody, options: ApiPatchHashTagOptions): (Option[UpdateHashTagResponse], Response) =
-  let tenantId = options.tenantId
+proc patchHashTag*(httpClient: HttpClient, tag: string, updateHashTagBody: UpdateHashTagBody, tenantId: string = ""): (Option[UpdateHashTagResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1684,11 +1608,7 @@ proc patchPage*(httpClient: HttpClient, tenantId: string, id: string, updateAPIP
   constructResult[PatchPageAPIResponse](response)
 
 
-type ApiPatchSSOUserOptions* = object
-  updateComments*: bool
-
-proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, options: ApiPatchSSOUserOptions): (Option[PatchSSOUserAPIResponse], Response) =
-  let updateComments = options.updateComments
+proc patchSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PatchSSOUserAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1712,11 +1632,7 @@ proc putDomainConfig*(httpClient: HttpClient, tenantId: string, domainToUpdate: 
   constructResult[PutDomainConfigResponse](response)
 
 
-type ApiPutSSOUserOptions* = object
-  updateComments*: bool
-
-proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, options: ApiPutSSOUserOptions): (Option[PutSSOUserAPIResponse], Response) =
-  let updateComments = options.updateComments
+proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPISSOUserData: UpdateAPISSOUserData, updateComments: bool): (Option[PutSSOUserAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1729,11 +1645,7 @@ proc putSSOUser*(httpClient: HttpClient, tenantId: string, id: string, updateAPI
   constructResult[PutSSOUserAPIResponse](response)
 
 
-type ApiRenderEmailTemplateOptions* = object
-  locale*: string
-
-proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailTemplateBody: RenderEmailTemplateBody, options: ApiRenderEmailTemplateOptions): (Option[RenderEmailTemplateResponse], Response) =
-  let locale = options.locale
+proc renderEmailTemplate*(httpClient: HttpClient, tenantId: string, renderEmailTemplateBody: RenderEmailTemplateBody, locale: string = ""): (Option[RenderEmailTemplateResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1757,11 +1669,7 @@ proc replaceTenantPackage*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[APIEmptyResponse](response)
 
 
-type ApiReplaceTenantUserOptions* = object
-  updateComments*: string
-
-proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantUserBody: ReplaceTenantUserBody, options: ApiReplaceTenantUserOptions): (Option[APIEmptyResponse], Response) =
-  let updateComments = options.updateComments
+proc replaceTenantUser*(httpClient: HttpClient, tenantId: string, id: string, replaceTenantUserBody: ReplaceTenantUserBody, updateComments: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1843,11 +1751,7 @@ proc sendInvite*(httpClient: HttpClient, tenantId: string, id: string, fromName:
   constructResult[APIEmptyResponse](response)
 
 
-type ApiSendLoginLinkOptions* = object
-  redirectURL*: string
-
-proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, options: ApiSendLoginLinkOptions): (Option[APIEmptyResponse], Response) =
-  let redirectURL = options.redirectURL
+proc sendLoginLink*(httpClient: HttpClient, tenantId: string, id: string, redirectURL: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -1958,11 +1862,7 @@ proc updateModerator*(httpClient: HttpClient, tenantId: string, id: string, upda
   constructResult[APIEmptyResponse](response)
 
 
-type ApiUpdateNotificationOptions* = object
-  userId*: string
-
-proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, updateNotificationBody: UpdateNotificationBody, options: ApiUpdateNotificationOptions): (Option[APIEmptyResponse], Response) =
-  let userId = options.userId
+proc updateNotification*(httpClient: HttpClient, tenantId: string, id: string, updateNotificationBody: UpdateNotificationBody, userId: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -1997,11 +1897,7 @@ proc updateQuestionResult*(httpClient: HttpClient, tenantId: string, id: string,
   constructResult[APIEmptyResponse](response)
 
 
-type ApiUpdateSubscriptionOptions* = object
-  userId*: string
-
-proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, updateAPIUserSubscriptionData: UpdateAPIUserSubscriptionData, options: ApiUpdateSubscriptionOptions): (Option[UpdateSubscriptionAPIResponse], Response) =
-  let userId = options.userId
+proc updateSubscription*(httpClient: HttpClient, tenantId: string, id: string, updateAPIUserSubscriptionData: UpdateAPIUserSubscriptionData, userId: string = ""): (Option[UpdateSubscriptionAPIResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -2036,11 +1932,7 @@ proc updateTenantPackage*(httpClient: HttpClient, tenantId: string, id: string, 
   constructResult[APIEmptyResponse](response)
 
 
-type ApiUpdateTenantUserOptions* = object
-  updateComments*: string
-
-proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, updateTenantUserBody: UpdateTenantUserBody, options: ApiUpdateTenantUserOptions): (Option[APIEmptyResponse], Response) =
-  let updateComments = options.updateComments
+proc updateTenantUser*(httpClient: HttpClient, tenantId: string, id: string, updateTenantUserBody: UpdateTenantUserBody, updateComments: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
