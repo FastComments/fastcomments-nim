@@ -1,6 +1,6 @@
 # Package
 
-version       = "2.0.1"
+version       = "3.0.0"
 author        = "FastComments"
 description   = "FastComments Nim SDK - A SDK for interacting with the FastComments API"
 license       = "MIT"
