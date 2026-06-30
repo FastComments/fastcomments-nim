@@ -4,7 +4,7 @@ set -e
 # FastComments openapi-generator build. The Nim generator now references model
 # types by their declared (camelized) names, so no post-generation patching is
 # needed. Just a jar; downloaded on demand.
-JAR_URL="https://github.com/winrid/openapi-generator/releases/download/fastcomments-build-20260619/openapi-generator-cli.jar"
+JAR_URL="https://github.com/winrid/openapi-generator/releases/download/fastcomments-build-20260630/openapi-generator-cli.jar"
 JAR_FILE="./openapi-generator-cli.jar"
 
 [ -f "$JAR_FILE" ] || wget -q "$JAR_URL" -O "$JAR_FILE"

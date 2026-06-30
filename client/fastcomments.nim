@@ -267,7 +267,7 @@ import fastcomments/models/model_patch_domain_config_response
 import fastcomments/models/model_patch_page_api_response
 import fastcomments/models/model_patch_sso_user_api_response
 import fastcomments/models/model_pending_comment_to_sync_outbound
-import fastcomments/models/model_post_remove_comment_response
+import fastcomments/models/model_post_remove_comment_api_response
 import fastcomments/models/model_pre_ban_summary
 import fastcomments/models/model_pub_sub_comment
 import fastcomments/models/model_pub_sub_comment_base
@@ -628,7 +628,7 @@ export model_patch_domain_config_response
 export model_patch_page_api_response
 export model_patch_sso_user_api_response
 export model_pending_comment_to_sync_outbound
-export model_post_remove_comment_response
+export model_post_remove_comment_api_response
 export model_pre_ban_summary
 export model_pub_sub_comment
 export model_pub_sub_comment_base

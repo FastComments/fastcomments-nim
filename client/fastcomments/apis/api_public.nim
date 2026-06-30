@@ -87,7 +87,7 @@ template constructResult[T](response: Response): untyped =
     (none(T.typedesc), response)
 
 
-proc blockFromCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, publicBlockFromCommentParams: PublicBlockFromCommentParams, sso: string): (Option[BlockSuccess], Response) =
+proc blockFromCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, publicBlockFromCommentParams: PublicBlockFromCommentParams, sso: string = ""): (Option[BlockSuccess], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -100,7 +100,7 @@ proc blockFromCommentPublic*(httpClient: HttpClient, tenantId: string, commentId
   constructResult[BlockSuccess](response)
 
 
-proc checkedCommentsForBlocked*(httpClient: HttpClient, tenantId: string, commentIds: string, sso: string): (Option[CheckBlockedCommentsResponse], Response) =
+proc checkedCommentsForBlocked*(httpClient: HttpClient, tenantId: string, commentIds: string, sso: string = ""): (Option[CheckBlockedCommentsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -113,7 +113,13 @@ proc checkedCommentsForBlocked*(httpClient: HttpClient, tenantId: string, commen
   constructResult[CheckBlockedCommentsResponse](response)
 
 
-proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: string, broadcastId: string, commentData: CommentData, sessionId: string, sso: string): (Option[SaveCommentsResponseWithPresence], Response) =
+type CreateCommentPublicOptions* = object
+  sessionId*: string
+  sso*: string
+
+proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: string, broadcastId: string, commentData: CommentData, options: CreateCommentPublicOptions): (Option[SaveCommentsResponseWithPresence], Response) =
+  let sessionId = options.sessionId
+  let sso = options.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -129,7 +135,13 @@ proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: strin
   constructResult[SaveCommentsResponseWithPresence](response)
 
 
-proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, broadcastId: string, sso: string): (Option[CreateFeedPostResponse], Response) =
+type CreateFeedPostPublicOptions* = object
+  broadcastId*: string
+  sso*: string
+
+proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, options: CreateFeedPostPublicOptions): (Option[CreateFeedPostResponse], Response) =
+  let broadcastId = options.broadcastId
+  let sso = options.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -143,7 +155,7 @@ proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedP
   constructResult[CreateFeedPostResponse](response)
 
 
-proc createV1PageReact*(httpClient: HttpClient, tenantId: string, urlId: string, title: string): (Option[CreateV1PageReact], Response) =
+proc createV1PageReact*(httpClient: HttpClient, tenantId: string, urlId: string, title: string = ""): (Option[CreateV1PageReact], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -155,7 +167,7 @@ proc createV1PageReact*(httpClient: HttpClient, tenantId: string, urlId: string,
   constructResult[CreateV1PageReact](response)
 
 
-proc createV2PageReact*(httpClient: HttpClient, tenantId: string, urlId: string, id: string, title: string): (Option[CreateV1PageReact], Response) =
+proc createV2PageReact*(httpClient: HttpClient, tenantId: string, urlId: string, id: string, title: string = ""): (Option[CreateV1PageReact], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -168,7 +180,13 @@ proc createV2PageReact*(httpClient: HttpClient, tenantId: string, urlId: string,
   constructResult[CreateV1PageReact](response)
 
 
-proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, editKey: string, sso: string): (Option[PublicAPIDeleteCommentResponse], Response) =
+type DeleteCommentPublicOptions* = object
+  editKey*: string
+  sso*: string
+
+proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, options: DeleteCommentPublicOptions): (Option[PublicAPIDeleteCommentResponse], Response) =
+  let editKey = options.editKey
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("broadcastId", $broadcastId))
@@ -182,7 +200,13 @@ proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: s
   constructResult[PublicAPIDeleteCommentResponse](response)
 
 
-proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: string, voteId: string, urlId: string, broadcastId: string, editKey: string, sso: string): (Option[VoteDeleteResponse], Response) =
+type DeleteCommentVoteOptions* = object
+  editKey*: string
+  sso*: string
+
+proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: string, voteId: string, urlId: string, broadcastId: string, options: DeleteCommentVoteOptions): (Option[VoteDeleteResponse], Response) =
+  let editKey = options.editKey
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -197,7 +221,13 @@ proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: str
   constructResult[VoteDeleteResponse](response)
 
 
-proc deleteFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, broadcastId: string, sso: string): (Option[DeleteFeedPostPublicResponse], Response) =
+type DeleteFeedPostPublicOptions* = object
+  broadcastId*: string
+  sso*: string
+
+proc deleteFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, options: DeleteFeedPostPublicOptions): (Option[DeleteFeedPostPublicResponse], Response) =
+  let broadcastId = options.broadcastId
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $broadcastId != "":
@@ -231,7 +261,7 @@ proc deleteV2PageReact*(httpClient: HttpClient, tenantId: string, urlId: string,
   constructResult[CreateV1PageReact](response)
 
 
-proc flagCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, isFlagged: bool, sso: string): (Option[APIEmptyResponse], Response) =
+proc flagCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, isFlagged: bool, sso: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -244,7 +274,13 @@ proc flagCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: str
   constructResult[APIEmptyResponse](response)
 
 
-proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, editKey: string, sso: string): (Option[PublicAPIGetCommentTextResponse], Response) =
+type GetCommentTextOptions* = object
+  editKey*: string
+  sso*: string
+
+proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, options: GetCommentTextOptions): (Option[PublicAPIGetCommentTextResponse], Response) =
+  let editKey = options.editKey
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $editKey != "":
@@ -257,7 +293,7 @@ proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string
   constructResult[PublicAPIGetCommentTextResponse](response)
 
 
-proc getCommentVoteUserNames*(httpClient: HttpClient, tenantId: string, commentId: string, dir: int, sso: string): (Option[GetCommentVoteUserNamesSuccessResponse], Response) =
+proc getCommentVoteUserNames*(httpClient: HttpClient, tenantId: string, commentId: string, dir: int, sso: string = ""): (Option[GetCommentVoteUserNamesSuccessResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("dir", $dir))
@@ -269,7 +305,23 @@ proc getCommentVoteUserNames*(httpClient: HttpClient, tenantId: string, commentI
   constructResult[GetCommentVoteUserNamesSuccessResponse](response)
 
 
-proc getCommentsForUser*(httpClient: HttpClient, userId: string, direction: SortDirections, repliesToUserId: string, page: float64, includei10n: bool, locale: string, isCrawler: bool): (Option[GetCommentsForUserResponse], Response) =
+type GetCommentsForUserOptions* = object
+  userId*: string
+  direction*: SortDirections
+  repliesToUserId*: string
+  page*: float64
+  includei10n*: bool
+  locale*: string
+  isCrawler*: bool
+
+proc getCommentsForUser*(httpClient: HttpClient, options: GetCommentsForUserOptions): (Option[GetCommentsForUserResponse], Response) =
+  let userId = options.userId
+  let direction = options.direction
+  let repliesToUserId = options.repliesToUserId
+  let page = options.page
+  let includei10n = options.includei10n
+  let locale = options.locale
+  let isCrawler = options.isCrawler
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $userId != "":
@@ -292,7 +344,61 @@ proc getCommentsForUser*(httpClient: HttpClient, userId: string, direction: Sort
   constructResult[GetCommentsForUserResponse](response)
 
 
-proc getCommentsPublic*(httpClient: HttpClient, tenantId: string, urlId: string, page: int, direction: SortDirections, sso: string, skip: int, skipChildren: int, limit: int, limitChildren: int, countChildren: bool, fetchPageForCommentId: string, includeConfig: bool, countAll: bool, includei10n: bool, locale: string, modules: string, isCrawler: bool, includeNotificationCount: bool, asTree: bool, maxTreeDepth: int, useFullTranslationIds: bool, parentId: string, searchText: string, hashTags: seq[string], userId: string, customConfigStr: string, afterCommentId: string, beforeCommentId: string): (Option[GetCommentsResponseWithPresencePublicComment], Response) =
+type GetCommentsPublicOptions* = object
+  page*: int
+  direction*: SortDirections
+  sso*: string
+  skip*: int
+  skipChildren*: int
+  limit*: int
+  limitChildren*: int
+  countChildren*: bool
+  fetchPageForCommentId*: string
+  includeConfig*: bool
+  countAll*: bool
+  includei10n*: bool
+  locale*: string
+  modules*: string
+  isCrawler*: bool
+  includeNotificationCount*: bool
+  asTree*: bool
+  maxTreeDepth*: int
+  useFullTranslationIds*: bool
+  parentId*: string
+  searchText*: string
+  hashTags*: seq[string]
+  userId*: string
+  customConfigStr*: string
+  afterCommentId*: string
+  beforeCommentId*: string
+
+proc getCommentsPublic*(httpClient: HttpClient, tenantId: string, urlId: string, options: GetCommentsPublicOptions): (Option[GetCommentsResponseWithPresencePublicComment], Response) =
+  let page = options.page
+  let direction = options.direction
+  let sso = options.sso
+  let skip = options.skip
+  let skipChildren = options.skipChildren
+  let limit = options.limit
+  let limitChildren = options.limitChildren
+  let countChildren = options.countChildren
+  let fetchPageForCommentId = options.fetchPageForCommentId
+  let includeConfig = options.includeConfig
+  let countAll = options.countAll
+  let includei10n = options.includei10n
+  let locale = options.locale
+  let modules = options.modules
+  let isCrawler = options.isCrawler
+  let includeNotificationCount = options.includeNotificationCount
+  let asTree = options.asTree
+  let maxTreeDepth = options.maxTreeDepth
+  let useFullTranslationIds = options.useFullTranslationIds
+  let parentId = options.parentId
+  let searchText = options.searchText
+  let hashTags = options.hashTags
+  let userId = options.userId
+  let customConfigStr = options.customConfigStr
+  let afterCommentId = options.afterCommentId
+  let beforeCommentId = options.beforeCommentId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -368,7 +474,21 @@ proc getEventLog*(httpClient: HttpClient, tenantId: string, urlId: string, userI
   constructResult[GetEventLogResponse](response)
 
 
-proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, afterId: string, limit: int, tags: seq[string], sso: string, isCrawler: bool, includeUserInfo: bool): (Option[PublicFeedPostsResponse], Response) =
+type GetFeedPostsPublicOptions* = object
+  afterId*: string
+  limit*: int
+  tags*: seq[string]
+  sso*: string
+  isCrawler*: bool
+  includeUserInfo*: bool
+
+proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, options: GetFeedPostsPublicOptions): (Option[PublicFeedPostsResponse], Response) =
+  let afterId = options.afterId
+  let limit = options.limit
+  let tags = options.tags
+  let sso = options.sso
+  let isCrawler = options.isCrawler
+  let includeUserInfo = options.includeUserInfo
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $afterId != "":
@@ -389,7 +509,7 @@ proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, afterId: stri
   constructResult[PublicFeedPostsResponse](response)
 
 
-proc getFeedPostsStats*(httpClient: HttpClient, tenantId: string, postIds: seq[string], sso: string): (Option[FeedPostsStatsResponse], Response) =
+proc getFeedPostsStats*(httpClient: HttpClient, tenantId: string, postIds: seq[string], sso: string = ""): (Option[FeedPostsStatsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("postIds", $postIds.join(",")))
@@ -411,7 +531,15 @@ proc getGifLarge*(httpClient: HttpClient, tenantId: string, largeInternalURLSani
   constructResult[GifGetLargeResponse](response)
 
 
-proc getGifsSearch*(httpClient: HttpClient, tenantId: string, search: string, locale: string, rating: string, page: float64): (Option[GetGifsSearchResponse], Response) =
+type GetGifsSearchOptions* = object
+  locale*: string
+  rating*: string
+  page*: float64
+
+proc getGifsSearch*(httpClient: HttpClient, tenantId: string, search: string, options: GetGifsSearchOptions): (Option[GetGifsSearchResponse], Response) =
+  let locale = options.locale
+  let rating = options.rating
+  let page = options.page
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("search", $search))
@@ -427,7 +555,15 @@ proc getGifsSearch*(httpClient: HttpClient, tenantId: string, search: string, lo
   constructResult[GetGifsSearchResponse](response)
 
 
-proc getGifsTrending*(httpClient: HttpClient, tenantId: string, locale: string, rating: string, page: float64): (Option[GetGifsTrendingResponse], Response) =
+type GetGifsTrendingOptions* = object
+  locale*: string
+  rating*: string
+  page*: float64
+
+proc getGifsTrending*(httpClient: HttpClient, tenantId: string, options: GetGifsTrendingOptions): (Option[GetGifsTrendingResponse], Response) =
+  let locale = options.locale
+  let rating = options.rating
+  let page = options.page
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $locale != "":
@@ -456,7 +592,13 @@ proc getGlobalEventLog*(httpClient: HttpClient, tenantId: string, urlId: string,
   constructResult[GetEventLogResponse](response)
 
 
-proc getOfflineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, afterName: string, afterUserId: string): (Option[PageUsersOfflineResponse], Response) =
+type GetOfflineUsersOptions* = object
+  afterName*: string
+  afterUserId*: string
+
+proc getOfflineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: GetOfflineUsersOptions): (Option[PageUsersOfflineResponse], Response) =
+  let afterName = options.afterName
+  let afterUserId = options.afterUserId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -470,7 +612,13 @@ proc getOfflineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, a
   constructResult[PageUsersOfflineResponse](response)
 
 
-proc getOnlineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, afterName: string, afterUserId: string): (Option[PageUsersOnlineResponse], Response) =
+type GetOnlineUsersOptions* = object
+  afterName*: string
+  afterUserId*: string
+
+proc getOnlineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: GetOnlineUsersOptions): (Option[PageUsersOnlineResponse], Response) =
+  let afterName = options.afterName
+  let afterUserId = options.afterUserId
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -484,7 +632,19 @@ proc getOnlineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, af
   constructResult[PageUsersOnlineResponse](response)
 
 
-proc getPagesPublic*(httpClient: HttpClient, tenantId: string, cursor: string, limit: int, q: string, sortBy: PagesSortBy, hasComments: bool): (Option[GetPublicPagesResponse], Response) =
+type GetPagesPublicOptions* = object
+  cursor*: string
+  limit*: int
+  q*: string
+  sortBy*: PagesSortBy
+  hasComments*: bool
+
+proc getPagesPublic*(httpClient: HttpClient, tenantId: string, options: GetPagesPublicOptions): (Option[GetPublicPagesResponse], Response) =
+  let cursor = options.cursor
+  let limit = options.limit
+  let q = options.q
+  let sortBy = options.sortBy
+  let hasComments = options.hasComments
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $cursor != "":
@@ -503,7 +663,13 @@ proc getPagesPublic*(httpClient: HttpClient, tenantId: string, cursor: string, l
   constructResult[GetPublicPagesResponse](response)
 
 
-proc getTranslations*(httpClient: HttpClient, namespace: string, component: string, locale: string, useFullTranslationIds: bool): (Option[GetTranslationsResponse], Response) =
+type GetTranslationsOptions* = object
+  locale*: string
+  useFullTranslationIds*: bool
+
+proc getTranslations*(httpClient: HttpClient, namespace: string, component: string, options: GetTranslationsOptions): (Option[GetTranslationsResponse], Response) =
+  let locale = options.locale
+  let useFullTranslationIds = options.useFullTranslationIds
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if $locale != "":
@@ -516,7 +682,7 @@ proc getTranslations*(httpClient: HttpClient, namespace: string, component: stri
   constructResult[GetTranslationsResponse](response)
 
 
-proc getUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: string): (Option[GetUserNotificationCountResponse], Response) =
+proc getUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: string = ""): (Option[GetUserNotificationCountResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -528,7 +694,31 @@ proc getUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: st
   constructResult[GetUserNotificationCountResponse](response)
 
 
-proc getUserNotifications*(httpClient: HttpClient, tenantId: string, urlId: string, pageSize: int, afterId: string, includeContext: bool, afterCreatedAt: int64, unreadOnly: bool, dmOnly: bool, noDm: bool, includeTranslations: bool, includeTenantNotifications: bool, sso: string): (Option[GetMyNotificationsResponse], Response) =
+type GetUserNotificationsOptions* = object
+  urlId*: string
+  pageSize*: int
+  afterId*: string
+  includeContext*: bool
+  afterCreatedAt*: int64
+  unreadOnly*: bool
+  dmOnly*: bool
+  noDm*: bool
+  includeTranslations*: bool
+  includeTenantNotifications*: bool
+  sso*: string
+
+proc getUserNotifications*(httpClient: HttpClient, tenantId: string, options: GetUserNotificationsOptions): (Option[GetMyNotificationsResponse], Response) =
+  let urlId = options.urlId
+  let pageSize = options.pageSize
+  let afterId = options.afterId
+  let includeContext = options.includeContext
+  let afterCreatedAt = options.afterCreatedAt
+  let unreadOnly = options.unreadOnly
+  let dmOnly = options.dmOnly
+  let noDm = options.noDm
+  let includeTranslations = options.includeTranslations
+  let includeTenantNotifications = options.includeTenantNotifications
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -572,7 +762,13 @@ proc getUserPresenceStatuses*(httpClient: HttpClient, tenantId: string, urlIdWS:
   constructResult[GetUserPresenceStatusesResponse](response)
 
 
-proc getUserReactsPublic*(httpClient: HttpClient, tenantId: string, postIds: seq[string], sso: string): (Option[UserReactsResponse], Response) =
+type GetUserReactsPublicOptions* = object
+  postIds*: seq[string]
+  sso*: string
+
+proc getUserReactsPublic*(httpClient: HttpClient, tenantId: string, options: GetUserReactsPublicOptions): (Option[UserReactsResponse], Response) =
+  let postIds = options.postIds
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   if postIds.len > 0:
@@ -626,7 +822,7 @@ proc getV2PageReacts*(httpClient: HttpClient, tenantId: string, urlId: string): 
   constructResult[GetV2PageReacts](response)
 
 
-proc lockComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[APIEmptyResponse], Response) =
+proc lockComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("broadcastId", $broadcastId))
@@ -645,7 +841,7 @@ proc logoutPublic*(httpClient: HttpClient): (Option[APIEmptyResponse], Response)
   constructResult[APIEmptyResponse](response)
 
 
-proc pinComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[ChangeCommentPinStatusResponse], Response) =
+proc pinComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string = ""): (Option[ChangeCommentPinStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("broadcastId", $broadcastId))
@@ -657,7 +853,15 @@ proc pinComment*(httpClient: HttpClient, tenantId: string, commentId: string, br
   constructResult[ChangeCommentPinStatusResponse](response)
 
 
-proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, reactBodyParams: ReactBodyParams, isUndo: bool, broadcastId: string, sso: string): (Option[ReactFeedPostResponse], Response) =
+type ReactFeedPostPublicOptions* = object
+  isUndo*: bool
+  broadcastId*: string
+  sso*: string
+
+proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, reactBodyParams: ReactBodyParams, options: ReactFeedPostPublicOptions): (Option[ReactFeedPostResponse], Response) =
+  let isUndo = options.isUndo
+  let broadcastId = options.broadcastId
+  let sso = options.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -673,7 +877,7 @@ proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: stri
   constructResult[ReactFeedPostResponse](response)
 
 
-proc resetUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: string): (Option[ResetUserNotificationsResponse], Response) =
+proc resetUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: string = ""): (Option[ResetUserNotificationsResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -685,7 +889,21 @@ proc resetUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: 
   constructResult[ResetUserNotificationsResponse](response)
 
 
-proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, afterId: string, afterCreatedAt: int64, unreadOnly: bool, dmOnly: bool, noDm: bool, sso: string): (Option[ResetUserNotificationsResponse], Response) =
+type ResetUserNotificationsOptions* = object
+  afterId*: string
+  afterCreatedAt*: int64
+  unreadOnly*: bool
+  dmOnly*: bool
+  noDm*: bool
+  sso*: string
+
+proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, options: ResetUserNotificationsOptions): (Option[ResetUserNotificationsResponse], Response) =
+  let afterId = options.afterId
+  let afterCreatedAt = options.afterCreatedAt
+  let unreadOnly = options.unreadOnly
+  let dmOnly = options.dmOnly
+  let noDm = options.noDm
+  let sso = options.sso
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -707,7 +925,17 @@ proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, afterId: 
   constructResult[ResetUserNotificationsResponse](response)
 
 
-proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usernameStartsWith: string, mentionGroupIds: seq[string], sso: string, searchSection: string): (Option[SearchUsersResult], Response) =
+type SearchUsersOptions* = object
+  usernameStartsWith*: string
+  mentionGroupIds*: seq[string]
+  sso*: string
+  searchSection*: string
+
+proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: SearchUsersOptions): (Option[SearchUsersResult], Response) =
+  let usernameStartsWith = options.usernameStartsWith
+  let mentionGroupIds = options.mentionGroupIds
+  let sso = options.sso
+  let searchSection = options.searchSection
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("urlId", $urlId))
@@ -725,7 +953,13 @@ proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, usern
   constructResult[SearchUsersResult](response)
 
 
-proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, commentTextUpdateRequest: CommentTextUpdateRequest, editKey: string, sso: string): (Option[PublicAPISetCommentTextResponse], Response) =
+type SetCommentTextOptions* = object
+  editKey*: string
+  sso*: string
+
+proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, commentTextUpdateRequest: CommentTextUpdateRequest, options: SetCommentTextOptions): (Option[PublicAPISetCommentTextResponse], Response) =
+  let editKey = options.editKey
+  let sso = options.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -740,7 +974,7 @@ proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string
   constructResult[PublicAPISetCommentTextResponse](response)
 
 
-proc unBlockCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, publicBlockFromCommentParams: PublicBlockFromCommentParams, sso: string): (Option[UnblockSuccess], Response) =
+proc unBlockCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, publicBlockFromCommentParams: PublicBlockFromCommentParams, sso: string = ""): (Option[UnblockSuccess], Response) =
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -752,7 +986,7 @@ proc unBlockCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: 
   constructResult[UnblockSuccess](response)
 
 
-proc unLockComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[APIEmptyResponse], Response) =
+proc unLockComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string = ""): (Option[APIEmptyResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("broadcastId", $broadcastId))
@@ -764,7 +998,7 @@ proc unLockComment*(httpClient: HttpClient, tenantId: string, commentId: string,
   constructResult[APIEmptyResponse](response)
 
 
-proc unPinComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string): (Option[ChangeCommentPinStatusResponse], Response) =
+proc unPinComment*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, sso: string = ""): (Option[ChangeCommentPinStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("broadcastId", $broadcastId))
@@ -776,7 +1010,13 @@ proc unPinComment*(httpClient: HttpClient, tenantId: string, commentId: string, 
   constructResult[ChangeCommentPinStatusResponse](response)
 
 
-proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, updateFeedPostParams: UpdateFeedPostParams, broadcastId: string, sso: string): (Option[CreateFeedPostResponse], Response) =
+type UpdateFeedPostPublicOptions* = object
+  broadcastId*: string
+  sso*: string
+
+proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, updateFeedPostParams: UpdateFeedPostParams, options: UpdateFeedPostPublicOptions): (Option[CreateFeedPostResponse], Response) =
+  let broadcastId = options.broadcastId
+  let sso = options.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
@@ -790,7 +1030,7 @@ proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: str
   constructResult[CreateFeedPostResponse](response)
 
 
-proc updateUserNotificationCommentSubscriptionStatus*(httpClient: HttpClient, tenantId: string, notificationId: string, optedInOrOut: string, commentId: string, sso: string): (Option[UpdateUserNotificationCommentSubscriptionStatusResponse], Response) =
+proc updateUserNotificationCommentSubscriptionStatus*(httpClient: HttpClient, tenantId: string, notificationId: string, optedInOrOut: string, commentId: string, sso: string = ""): (Option[UpdateUserNotificationCommentSubscriptionStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -803,7 +1043,7 @@ proc updateUserNotificationCommentSubscriptionStatus*(httpClient: HttpClient, te
   constructResult[UpdateUserNotificationCommentSubscriptionStatusResponse](response)
 
 
-proc updateUserNotificationPageSubscriptionStatus*(httpClient: HttpClient, tenantId: string, urlId: string, url: string, pageTitle: string, subscribedOrUnsubscribed: string, sso: string): (Option[UpdateUserNotificationPageSubscriptionStatusResponse], Response) =
+proc updateUserNotificationPageSubscriptionStatus*(httpClient: HttpClient, tenantId: string, urlId: string, url: string, pageTitle: string, subscribedOrUnsubscribed: string, sso: string = ""): (Option[UpdateUserNotificationPageSubscriptionStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -818,7 +1058,7 @@ proc updateUserNotificationPageSubscriptionStatus*(httpClient: HttpClient, tenan
   constructResult[UpdateUserNotificationPageSubscriptionStatusResponse](response)
 
 
-proc updateUserNotificationStatus*(httpClient: HttpClient, tenantId: string, notificationId: string, newStatus: string, sso: string): (Option[UpdateUserNotificationStatusResponse], Response) =
+proc updateUserNotificationStatus*(httpClient: HttpClient, tenantId: string, notificationId: string, newStatus: string, sso: string = ""): (Option[UpdateUserNotificationStatusResponse], Response) =
   ## 
   var query_params_list: seq[(string, string)] = @[]
   query_params_list.add(("tenantId", $tenantId))
@@ -830,7 +1070,13 @@ proc updateUserNotificationStatus*(httpClient: HttpClient, tenantId: string, not
   constructResult[UpdateUserNotificationStatusResponse](response)
 
 
-proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, sizePreset: SizePreset, urlId: string): (Option[UploadImageResponse], Response) =
+type UploadImageOptions* = object
+  sizePreset*: SizePreset
+  urlId*: string
+
+proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, options: UploadImageOptions): (Option[UploadImageResponse], Response) =
+  let sizePreset = options.sizePreset
+  let urlId = options.urlId
   ## 
   httpClient.headers["Content-Type"] = "multipart/form-data"
   var query_params_list: seq[(string, string)] = @[]
@@ -847,7 +1093,13 @@ proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, sizePr
   constructResult[UploadImageResponse](response)
 
 
-proc voteComment*(httpClient: HttpClient, tenantId: string, commentId: string, urlId: string, broadcastId: string, voteBodyParams: VoteBodyParams, sessionId: string, sso: string): (Option[VoteResponse], Response) =
+type VoteCommentOptions* = object
+  sessionId*: string
+  sso*: string
+
+proc voteComment*(httpClient: HttpClient, tenantId: string, commentId: string, urlId: string, broadcastId: string, voteBodyParams: VoteBodyParams, options: VoteCommentOptions): (Option[VoteResponse], Response) =
+  let sessionId = options.sessionId
+  let sso = options.sso
   ## 
   httpClient.headers["Content-Type"] = "application/json"
   var query_params_list: seq[(string, string)] = @[]
