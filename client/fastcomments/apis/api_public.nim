@@ -113,11 +113,11 @@ proc checkedCommentsForBlocked*(httpClient: HttpClient, tenantId: string, commen
   constructResult[CheckBlockedCommentsResponse](response)
 
 
-type ApiCreateCommentPublicOptions* = object
+type CreateCommentPublicOptions* = object
   sessionId*: string
   sso*: string
 
-proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: string, broadcastId: string, commentData: CommentData, options: ApiCreateCommentPublicOptions): (Option[SaveCommentsResponseWithPresence], Response) =
+proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: string, broadcastId: string, commentData: CommentData, options: CreateCommentPublicOptions): (Option[SaveCommentsResponseWithPresence], Response) =
   let sessionId = options.sessionId
   let sso = options.sso
   ## 
@@ -135,11 +135,11 @@ proc createCommentPublic*(httpClient: HttpClient, tenantId: string, urlId: strin
   constructResult[SaveCommentsResponseWithPresence](response)
 
 
-type ApiCreateFeedPostPublicOptions* = object
+type CreateFeedPostPublicOptions* = object
   broadcastId*: string
   sso*: string
 
-proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, options: ApiCreateFeedPostPublicOptions): (Option[CreateFeedPostResponse], Response) =
+proc createFeedPostPublic*(httpClient: HttpClient, tenantId: string, createFeedPostParams: CreateFeedPostParams, options: CreateFeedPostPublicOptions): (Option[CreateFeedPostResponse], Response) =
   let broadcastId = options.broadcastId
   let sso = options.sso
   ## 
@@ -180,11 +180,11 @@ proc createV2PageReact*(httpClient: HttpClient, tenantId: string, urlId: string,
   constructResult[CreateV1PageReact](response)
 
 
-type ApiDeleteCommentPublicOptions* = object
+type DeleteCommentPublicOptions* = object
   editKey*: string
   sso*: string
 
-proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, options: ApiDeleteCommentPublicOptions): (Option[PublicAPIDeleteCommentResponse], Response) =
+proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, options: DeleteCommentPublicOptions): (Option[PublicAPIDeleteCommentResponse], Response) =
   let editKey = options.editKey
   let sso = options.sso
   ## 
@@ -200,11 +200,11 @@ proc deleteCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: s
   constructResult[PublicAPIDeleteCommentResponse](response)
 
 
-type ApiDeleteCommentVoteOptions* = object
+type DeleteCommentVoteOptions* = object
   editKey*: string
   sso*: string
 
-proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: string, voteId: string, urlId: string, broadcastId: string, options: ApiDeleteCommentVoteOptions): (Option[VoteDeleteResponse], Response) =
+proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: string, voteId: string, urlId: string, broadcastId: string, options: DeleteCommentVoteOptions): (Option[VoteDeleteResponse], Response) =
   let editKey = options.editKey
   let sso = options.sso
   ## 
@@ -221,11 +221,11 @@ proc deleteCommentVote*(httpClient: HttpClient, tenantId: string, commentId: str
   constructResult[VoteDeleteResponse](response)
 
 
-type ApiDeleteFeedPostPublicOptions* = object
+type DeleteFeedPostPublicOptions* = object
   broadcastId*: string
   sso*: string
 
-proc deleteFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, options: ApiDeleteFeedPostPublicOptions): (Option[DeleteFeedPostPublicResponse], Response) =
+proc deleteFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, options: DeleteFeedPostPublicOptions): (Option[DeleteFeedPostPublicResponse], Response) =
   let broadcastId = options.broadcastId
   let sso = options.sso
   ## 
@@ -274,11 +274,11 @@ proc flagCommentPublic*(httpClient: HttpClient, tenantId: string, commentId: str
   constructResult[APIEmptyResponse](response)
 
 
-type ApiGetCommentTextOptions* = object
+type GetCommentTextOptions* = object
   editKey*: string
   sso*: string
 
-proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, options: ApiGetCommentTextOptions): (Option[PublicAPIGetCommentTextResponse], Response) =
+proc getCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, options: GetCommentTextOptions): (Option[PublicAPIGetCommentTextResponse], Response) =
   let editKey = options.editKey
   let sso = options.sso
   ## 
@@ -305,7 +305,7 @@ proc getCommentVoteUserNames*(httpClient: HttpClient, tenantId: string, commentI
   constructResult[GetCommentVoteUserNamesSuccessResponse](response)
 
 
-type ApiGetCommentsForUserOptions* = object
+type GetCommentsForUserOptions* = object
   userId*: string
   direction*: SortDirections
   repliesToUserId*: string
@@ -314,7 +314,7 @@ type ApiGetCommentsForUserOptions* = object
   locale*: string
   isCrawler*: bool
 
-proc getCommentsForUser*(httpClient: HttpClient, options: ApiGetCommentsForUserOptions): (Option[GetCommentsForUserResponse], Response) =
+proc getCommentsForUser*(httpClient: HttpClient, options: GetCommentsForUserOptions): (Option[GetCommentsForUserResponse], Response) =
   let userId = options.userId
   let direction = options.direction
   let repliesToUserId = options.repliesToUserId
@@ -344,7 +344,7 @@ proc getCommentsForUser*(httpClient: HttpClient, options: ApiGetCommentsForUserO
   constructResult[GetCommentsForUserResponse](response)
 
 
-type ApiGetCommentsPublicOptions* = object
+type GetCommentsPublicOptions* = object
   page*: int
   direction*: SortDirections
   sso*: string
@@ -372,7 +372,7 @@ type ApiGetCommentsPublicOptions* = object
   afterCommentId*: string
   beforeCommentId*: string
 
-proc getCommentsPublic*(httpClient: HttpClient, tenantId: string, urlId: string, options: ApiGetCommentsPublicOptions): (Option[GetCommentsResponseWithPresencePublicComment], Response) =
+proc getCommentsPublic*(httpClient: HttpClient, tenantId: string, urlId: string, options: GetCommentsPublicOptions): (Option[GetCommentsResponseWithPresencePublicComment], Response) =
   let page = options.page
   let direction = options.direction
   let sso = options.sso
@@ -474,7 +474,7 @@ proc getEventLog*(httpClient: HttpClient, tenantId: string, urlId: string, userI
   constructResult[GetEventLogResponse](response)
 
 
-type ApiGetFeedPostsPublicOptions* = object
+type GetFeedPostsPublicOptions* = object
   afterId*: string
   limit*: int
   tags*: seq[string]
@@ -482,7 +482,7 @@ type ApiGetFeedPostsPublicOptions* = object
   isCrawler*: bool
   includeUserInfo*: bool
 
-proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, options: ApiGetFeedPostsPublicOptions): (Option[PublicFeedPostsResponse], Response) =
+proc getFeedPostsPublic*(httpClient: HttpClient, tenantId: string, options: GetFeedPostsPublicOptions): (Option[PublicFeedPostsResponse], Response) =
   let afterId = options.afterId
   let limit = options.limit
   let tags = options.tags
@@ -531,12 +531,12 @@ proc getGifLarge*(httpClient: HttpClient, tenantId: string, largeInternalURLSani
   constructResult[GifGetLargeResponse](response)
 
 
-type ApiGetGifsSearchOptions* = object
+type GetGifsSearchOptions* = object
   locale*: string
   rating*: string
   page*: float64
 
-proc getGifsSearch*(httpClient: HttpClient, tenantId: string, search: string, options: ApiGetGifsSearchOptions): (Option[GetGifsSearchResponse], Response) =
+proc getGifsSearch*(httpClient: HttpClient, tenantId: string, search: string, options: GetGifsSearchOptions): (Option[GetGifsSearchResponse], Response) =
   let locale = options.locale
   let rating = options.rating
   let page = options.page
@@ -555,12 +555,12 @@ proc getGifsSearch*(httpClient: HttpClient, tenantId: string, search: string, op
   constructResult[GetGifsSearchResponse](response)
 
 
-type ApiGetGifsTrendingOptions* = object
+type GetGifsTrendingOptions* = object
   locale*: string
   rating*: string
   page*: float64
 
-proc getGifsTrending*(httpClient: HttpClient, tenantId: string, options: ApiGetGifsTrendingOptions): (Option[GetGifsTrendingResponse], Response) =
+proc getGifsTrending*(httpClient: HttpClient, tenantId: string, options: GetGifsTrendingOptions): (Option[GetGifsTrendingResponse], Response) =
   let locale = options.locale
   let rating = options.rating
   let page = options.page
@@ -592,11 +592,11 @@ proc getGlobalEventLog*(httpClient: HttpClient, tenantId: string, urlId: string,
   constructResult[GetEventLogResponse](response)
 
 
-type ApiGetOfflineUsersOptions* = object
+type GetOfflineUsersOptions* = object
   afterName*: string
   afterUserId*: string
 
-proc getOfflineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: ApiGetOfflineUsersOptions): (Option[PageUsersOfflineResponse], Response) =
+proc getOfflineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: GetOfflineUsersOptions): (Option[PageUsersOfflineResponse], Response) =
   let afterName = options.afterName
   let afterUserId = options.afterUserId
   ## 
@@ -612,11 +612,11 @@ proc getOfflineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, o
   constructResult[PageUsersOfflineResponse](response)
 
 
-type ApiGetOnlineUsersOptions* = object
+type GetOnlineUsersOptions* = object
   afterName*: string
   afterUserId*: string
 
-proc getOnlineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: ApiGetOnlineUsersOptions): (Option[PageUsersOnlineResponse], Response) =
+proc getOnlineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: GetOnlineUsersOptions): (Option[PageUsersOnlineResponse], Response) =
   let afterName = options.afterName
   let afterUserId = options.afterUserId
   ## 
@@ -632,14 +632,14 @@ proc getOnlineUsers*(httpClient: HttpClient, tenantId: string, urlId: string, op
   constructResult[PageUsersOnlineResponse](response)
 
 
-type ApiGetPagesPublicOptions* = object
+type GetPagesPublicOptions* = object
   cursor*: string
   limit*: int
   q*: string
   sortBy*: PagesSortBy
   hasComments*: bool
 
-proc getPagesPublic*(httpClient: HttpClient, tenantId: string, options: ApiGetPagesPublicOptions): (Option[GetPublicPagesResponse], Response) =
+proc getPagesPublic*(httpClient: HttpClient, tenantId: string, options: GetPagesPublicOptions): (Option[GetPublicPagesResponse], Response) =
   let cursor = options.cursor
   let limit = options.limit
   let q = options.q
@@ -663,11 +663,11 @@ proc getPagesPublic*(httpClient: HttpClient, tenantId: string, options: ApiGetPa
   constructResult[GetPublicPagesResponse](response)
 
 
-type ApiGetTranslationsOptions* = object
+type GetTranslationsOptions* = object
   locale*: string
   useFullTranslationIds*: bool
 
-proc getTranslations*(httpClient: HttpClient, namespace: string, component: string, options: ApiGetTranslationsOptions): (Option[GetTranslationsResponse], Response) =
+proc getTranslations*(httpClient: HttpClient, namespace: string, component: string, options: GetTranslationsOptions): (Option[GetTranslationsResponse], Response) =
   let locale = options.locale
   let useFullTranslationIds = options.useFullTranslationIds
   ## 
@@ -694,7 +694,7 @@ proc getUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: st
   constructResult[GetUserNotificationCountResponse](response)
 
 
-type ApiGetUserNotificationsOptions* = object
+type GetUserNotificationsOptions* = object
   urlId*: string
   pageSize*: int
   afterId*: string
@@ -707,7 +707,7 @@ type ApiGetUserNotificationsOptions* = object
   includeTenantNotifications*: bool
   sso*: string
 
-proc getUserNotifications*(httpClient: HttpClient, tenantId: string, options: ApiGetUserNotificationsOptions): (Option[GetMyNotificationsResponse], Response) =
+proc getUserNotifications*(httpClient: HttpClient, tenantId: string, options: GetUserNotificationsOptions): (Option[GetMyNotificationsResponse], Response) =
   let urlId = options.urlId
   let pageSize = options.pageSize
   let afterId = options.afterId
@@ -762,11 +762,11 @@ proc getUserPresenceStatuses*(httpClient: HttpClient, tenantId: string, urlIdWS:
   constructResult[GetUserPresenceStatusesResponse](response)
 
 
-type ApiGetUserReactsPublicOptions* = object
+type GetUserReactsPublicOptions* = object
   postIds*: seq[string]
   sso*: string
 
-proc getUserReactsPublic*(httpClient: HttpClient, tenantId: string, options: ApiGetUserReactsPublicOptions): (Option[UserReactsResponse], Response) =
+proc getUserReactsPublic*(httpClient: HttpClient, tenantId: string, options: GetUserReactsPublicOptions): (Option[UserReactsResponse], Response) =
   let postIds = options.postIds
   let sso = options.sso
   ## 
@@ -853,12 +853,12 @@ proc pinComment*(httpClient: HttpClient, tenantId: string, commentId: string, br
   constructResult[ChangeCommentPinStatusResponse](response)
 
 
-type ApiReactFeedPostPublicOptions* = object
+type ReactFeedPostPublicOptions* = object
   isUndo*: bool
   broadcastId*: string
   sso*: string
 
-proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, reactBodyParams: ReactBodyParams, options: ApiReactFeedPostPublicOptions): (Option[ReactFeedPostResponse], Response) =
+proc reactFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, reactBodyParams: ReactBodyParams, options: ReactFeedPostPublicOptions): (Option[ReactFeedPostResponse], Response) =
   let isUndo = options.isUndo
   let broadcastId = options.broadcastId
   let sso = options.sso
@@ -889,7 +889,7 @@ proc resetUserNotificationCount*(httpClient: HttpClient, tenantId: string, sso: 
   constructResult[ResetUserNotificationsResponse](response)
 
 
-type ApiResetUserNotificationsOptions* = object
+type ResetUserNotificationsOptions* = object
   afterId*: string
   afterCreatedAt*: int64
   unreadOnly*: bool
@@ -897,7 +897,7 @@ type ApiResetUserNotificationsOptions* = object
   noDm*: bool
   sso*: string
 
-proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, options: ApiResetUserNotificationsOptions): (Option[ResetUserNotificationsResponse], Response) =
+proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, options: ResetUserNotificationsOptions): (Option[ResetUserNotificationsResponse], Response) =
   let afterId = options.afterId
   let afterCreatedAt = options.afterCreatedAt
   let unreadOnly = options.unreadOnly
@@ -925,13 +925,13 @@ proc resetUserNotifications*(httpClient: HttpClient, tenantId: string, options: 
   constructResult[ResetUserNotificationsResponse](response)
 
 
-type ApiSearchUsersOptions* = object
+type SearchUsersOptions* = object
   usernameStartsWith*: string
   mentionGroupIds*: seq[string]
   sso*: string
   searchSection*: string
 
-proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: ApiSearchUsersOptions): (Option[SearchUsersResult], Response) =
+proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, options: SearchUsersOptions): (Option[SearchUsersResult], Response) =
   let usernameStartsWith = options.usernameStartsWith
   let mentionGroupIds = options.mentionGroupIds
   let sso = options.sso
@@ -953,11 +953,11 @@ proc searchUsers*(httpClient: HttpClient, tenantId: string, urlId: string, optio
   constructResult[SearchUsersResult](response)
 
 
-type ApiSetCommentTextOptions* = object
+type SetCommentTextOptions* = object
   editKey*: string
   sso*: string
 
-proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, commentTextUpdateRequest: CommentTextUpdateRequest, options: ApiSetCommentTextOptions): (Option[PublicAPISetCommentTextResponse], Response) =
+proc setCommentText*(httpClient: HttpClient, tenantId: string, commentId: string, broadcastId: string, commentTextUpdateRequest: CommentTextUpdateRequest, options: SetCommentTextOptions): (Option[PublicAPISetCommentTextResponse], Response) =
   let editKey = options.editKey
   let sso = options.sso
   ## 
@@ -1010,11 +1010,11 @@ proc unPinComment*(httpClient: HttpClient, tenantId: string, commentId: string, 
   constructResult[ChangeCommentPinStatusResponse](response)
 
 
-type ApiUpdateFeedPostPublicOptions* = object
+type UpdateFeedPostPublicOptions* = object
   broadcastId*: string
   sso*: string
 
-proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, updateFeedPostParams: UpdateFeedPostParams, options: ApiUpdateFeedPostPublicOptions): (Option[CreateFeedPostResponse], Response) =
+proc updateFeedPostPublic*(httpClient: HttpClient, tenantId: string, postId: string, updateFeedPostParams: UpdateFeedPostParams, options: UpdateFeedPostPublicOptions): (Option[CreateFeedPostResponse], Response) =
   let broadcastId = options.broadcastId
   let sso = options.sso
   ## 
@@ -1070,11 +1070,11 @@ proc updateUserNotificationStatus*(httpClient: HttpClient, tenantId: string, not
   constructResult[UpdateUserNotificationStatusResponse](response)
 
 
-type ApiUploadImageOptions* = object
+type UploadImageOptions* = object
   sizePreset*: SizePreset
   urlId*: string
 
-proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, options: ApiUploadImageOptions): (Option[UploadImageResponse], Response) =
+proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, options: UploadImageOptions): (Option[UploadImageResponse], Response) =
   let sizePreset = options.sizePreset
   let urlId = options.urlId
   ## 
@@ -1093,11 +1093,11 @@ proc uploadImage*(httpClient: HttpClient, tenantId: string, file: string, option
   constructResult[UploadImageResponse](response)
 
 
-type ApiVoteCommentOptions* = object
+type VoteCommentOptions* = object
   sessionId*: string
   sso*: string
 
-proc voteComment*(httpClient: HttpClient, tenantId: string, commentId: string, urlId: string, broadcastId: string, voteBodyParams: VoteBodyParams, options: ApiVoteCommentOptions): (Option[VoteResponse], Response) =
+proc voteComment*(httpClient: HttpClient, tenantId: string, commentId: string, urlId: string, broadcastId: string, voteBodyParams: VoteBodyParams, options: VoteCommentOptions): (Option[VoteResponse], Response) =
   let sessionId = options.sessionId
   let sso = options.sso
   ## 

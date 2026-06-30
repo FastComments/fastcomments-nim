@@ -40,7 +40,7 @@ suite "SSO Integration Tests":
       httpClient = client,
       tenantId = tenantID,
       urlId = "sdk-test-page",
-      options = ApiGetCommentsPublicOptions(
+      options = GetCommentsPublicOptions(
         direction: SortDirections.NF
       )
     )
@@ -81,7 +81,7 @@ suite "SSO Integration Tests":
       urlId = "sdk-test-nim",
       broadcastId = "test-" & $timestamp,
       commentData = commentData,
-      options = ApiCreateCommentPublicOptions(
+      options = CreateCommentPublicOptions(
         sso: token
       )
     )
@@ -94,7 +94,7 @@ suite "SSO Integration Tests":
       httpClient = client,
       tenantId = tenantID,
       urlId = "sdk-test-nim",
-      options = ApiGetCommentsPublicOptions(
+      options = GetCommentsPublicOptions(
         direction: SortDirections.NF,
         sso: token
       )
@@ -139,7 +139,7 @@ suite "SSO Integration Tests":
       urlId = testUrlId,
       broadcastId = "test-" & $timestamp,
       commentData = commentData,
-      options = ApiCreateCommentPublicOptions(
+      options = CreateCommentPublicOptions(
         sso: token
       )
     )
@@ -157,7 +157,7 @@ suite "SSO Integration Tests":
     let (getResponse, getHttpResponse) = getComments(
       httpClient = authClient,
       tenantId = tenantID,
-      options = ApiGetCommentsOptions(
+      options = GetCommentsOptions(
         urlId: testUrlId,
         direction: SortDirections.NF
       )
@@ -207,7 +207,7 @@ suite "SSO Integration Tests":
       urlId = testUrlId,
       broadcastId = "test-" & $timestamp,
       commentData = commentData,
-      options = ApiCreateCommentPublicOptions(
+      options = CreateCommentPublicOptions(
         sso: token
       )
     )
@@ -223,7 +223,7 @@ suite "SSO Integration Tests":
       httpClient = client,
       tenantId = tenantID,
       urlId = testUrlId,
-      options = ApiGetCommentsPublicOptions(
+      options = GetCommentsPublicOptions(
         direction: SortDirections.NF,
         sso: token
       )

@@ -54,7 +54,7 @@ client.headers["x-api-key"] = "your-api-key"
 let (response, httpResponse) = getComments(
   httpClient = client,
   tenantId = "your-tenant-id",
-  options = ApiGetCommentsOptions(
+  options = GetCommentsOptions(
     urlId: "your-url-id",
     direction: SortDirections.DESC
   )
@@ -83,7 +83,7 @@ let (response, httpResponse) = getCommentsPublic(
   httpClient = client,
   tenantId = "your-tenant-id",
   urlId = "your-url-id",
-  options = ApiGetCommentsPublicOptions(
+  options = GetCommentsPublicOptions(
     direction: SortDirections.DESC
   )
 )
@@ -109,7 +109,7 @@ let client = newHttpClient()
 # This operation has no required parameters, so everything is optional.
 let (response, httpResponse) = getApiComments(
   httpClient = client,
-  options = ApiGetApiCommentsOptions(
+  options = GetApiCommentsOptions(
     count: 30,
     tenantId: "your-tenant-id",
     sso: "your-sso-token"
@@ -146,7 +146,7 @@ client.headers["x-api-key"] = "your-api-key"
 let (response, httpResponse) = getComments(
   httpClient = client,
   tenantId = "your-tenant-id",
-  options = ApiGetCommentsOptions(
+  options = GetCommentsOptions(
     urlId: "your-url-id",
     direction: SortDirections.DESC
   )

@@ -16,29 +16,29 @@ import model_delete_comment_result
 import model_remove_comment_action_response
 
 # AnyOf type
-type PostRemoveCommentResponseKind* {.pure.} = enum
+type PostRemoveCommentApiResponseKind* {.pure.} = enum
   DeleteCommentResultVariant
   RemoveCommentActionResponseVariant
 
-type PostRemoveCommentResponse* = object
+type PostRemoveCommentApiResponse* = object
   ## 
-  case kind*: PostRemoveCommentResponseKind
-  of PostRemoveCommentResponseKind.DeleteCommentResultVariant:
+  case kind*: PostRemoveCommentApiResponseKind
+  of PostRemoveCommentApiResponseKind.DeleteCommentResultVariant:
     DeleteCommentResultValue*: DeleteCommentResult
-  of PostRemoveCommentResponseKind.RemoveCommentActionResponseVariant:
+  of PostRemoveCommentApiResponseKind.RemoveCommentActionResponseVariant:
     RemoveCommentActionResponseValue*: RemoveCommentActionResponse
 
-proc to*(node: JsonNode, T: typedesc[PostRemoveCommentResponse]): PostRemoveCommentResponse =
+proc to*(node: JsonNode, T: typedesc[PostRemoveCommentApiResponse]): PostRemoveCommentApiResponse =
   ## Custom deserializer for anyOf type - tries each variant
   try:
-    return PostRemoveCommentResponse(kind: PostRemoveCommentResponseKind.DeleteCommentResultVariant, DeleteCommentResultValue: to(node, DeleteCommentResult))
+    return PostRemoveCommentApiResponse(kind: PostRemoveCommentApiResponseKind.DeleteCommentResultVariant, DeleteCommentResultValue: to(node, DeleteCommentResult))
   except Exception as e:
     when defined(debug):
       echo "Failed to deserialize as DeleteCommentResult: ", e.msg
   try:
-    return PostRemoveCommentResponse(kind: PostRemoveCommentResponseKind.RemoveCommentActionResponseVariant, RemoveCommentActionResponseValue: to(node, RemoveCommentActionResponse))
+    return PostRemoveCommentApiResponse(kind: PostRemoveCommentApiResponseKind.RemoveCommentActionResponseVariant, RemoveCommentActionResponseValue: to(node, RemoveCommentActionResponse))
   except Exception as e:
     when defined(debug):
       echo "Failed to deserialize as RemoveCommentActionResponse: ", e.msg
-  raise newException(ValueError, "Unable to deserialize into any variant of PostRemoveCommentResponse. JSON: " & $node)
+  raise newException(ValueError, "Unable to deserialize into any variant of PostRemoveCommentApiResponse. JSON: " & $node)
 
